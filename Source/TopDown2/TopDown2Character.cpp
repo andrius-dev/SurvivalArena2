@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TopDown2Character.h"
+
+#include "EnhancedInputComponent.h"
+#include "TopDown2PlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -48,4 +51,40 @@ ATopDown2Character::ATopDown2Character()
 void ATopDown2Character::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+	// Set up action bindings
+	if (auto EInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+		EInputComponent->BindAction(
+			MovementInputAction,
+			ETriggerEvent::Triggered,
+			this,
+			&ATopDown2Character::Move
+		);
+	} else {
+		UE_LOG(
+			LogTemplateCharacter,
+			Error,
+			TEXT(
+				"'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
+			),
+			*GetNameSafe(this)
+		);
+	}
+}
+
+
+void ATopDown2Character::Move(const FInputActionValue& Value) {
+	if (Controller == nullptr) {
+		UE_LOG(LogTemplateCharacter, Error, TEXT("bybis"), *GetNameSafe(this));
+		return;
+	}
+	auto MovementVector = Value.Get<FVector>();
+	const FRotator YawRotation(0, 0, 0);
+	const auto ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const auto RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	AddMovementInput(RightDirection, MovementVector.X);
 }
