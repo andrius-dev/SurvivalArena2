@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "TopDown2Editor Editor Linux Development (TopDown2)",
+            "compilerPath": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+            "compilerArgs": [
+                "-isysroot",
+                "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64",
+            "compileCommands": "/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2.json"
+        },
+        {
+            "name": "Linux",
+            "compilerPath": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+            "compilerArgs": [
+                "-isysroot",
+                "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64",
+            "compileCommands": "/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_Default.json"
+        }
+    ],
+    "version": 4
+}
