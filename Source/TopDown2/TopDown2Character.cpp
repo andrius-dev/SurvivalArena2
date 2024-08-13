@@ -115,12 +115,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		this,
 		&ATopDown2Character::GunAttack
 	);
-	// inputComponent->BindAction(
-	// 	MouseLookInputAction,
-	// 	ETriggerEvent::Triggered,
-	// 	this,
-	// 	&ATopDown2Character::MouseLook
-	// );
 }
 
 void ATopDown2Character::PossessedBy(AController* NewController) {
@@ -138,13 +132,12 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 		UE_LOG(LogTemplateCharacter, Error, TEXT("šikna"), *GetNameSafe(this));
 		return;
 	}
-	// if (GetMesh()->GetAnimInstance()->Montage_IsPlaying(MeleeAttackAnimMontage)) {
-	// 	return;
-	// }
 	const auto MovementVector = Value.Get<FVector>();
-	const FRotator YawRotation(0, 0, 0);
-	const auto ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const auto RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const auto ComponentRotation = RootComponent->GetComponentRotation();
+	const auto ForwardDirection = 
+		FRotationMatrix(ComponentRotation).GetUnitAxis(EAxis::X);
+	const auto RightDirection =
+		FRotationMatrix(ComponentRotation).GetUnitAxis(EAxis::Y);
 
 	AddMovementInput(ForwardDirection, MovementVector.Y);
 	AddMovementInput(RightDirection, MovementVector.X);
