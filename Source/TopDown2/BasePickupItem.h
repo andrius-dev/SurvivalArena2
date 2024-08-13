@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/GameMode.h"
 #include "BasePickupItem.generated.h"
 
 UCLASS()
@@ -14,17 +15,8 @@ class TOPDOWN2_API ABasePickupItem : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ABasePickupItem();
-	
-	virtual void NotifyHit(
-		UPrimitiveComponent* MyComp,
-		AActor* Other,
-		UPrimitiveComponent* OtherComp,
-		bool bSelfMoved,
-		FVector HitLocation,
-		FVector HitNormal,
-		FVector NormalImpulse,
-		const FHitResult& Hit
-	) override;
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Pickup")
 	bool bIsPickupActive;
@@ -35,11 +27,14 @@ public:
 	float YawRotationSpeed = 0.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Pickup")
 	float RollRotationSpeed = 0.f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="GameMode")
+	AGameMode* GameMode;
+
+	virtual void OnPickedUp();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UStaticMeshComponent* ItemMesh;	
 

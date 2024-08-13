@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputAction.h"
 #include "InputActionValue.h"
+#include "TopDown2PlayerController.h"
 #include "GameFramework/Character.h"
 #include "TopDown2Character.generated.h"
 
@@ -15,22 +16,26 @@ class ATopDown2Character : public ACharacter
 
 public:
 	ATopDown2Character();
-
-	// Called every frame.
-	virtual void Tick(float DeltaSeconds) override;
-
-	/** Returns TopDownCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
-	/** Movement Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* MovementInputAction;
+	virtual void Tick(float DeltaSeconds) override;
+	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	UFUNCTION(BlueprintCallable, Category=Animation)
+	void StartHitDetection();
+	// Higher means rotation will be more abrubt.
+	UPROPERTY(EditAnywhere)
+	float RotationEase = 10.f;
+	// Max speed of rotation
+	UPROPERTY(EditAnywhere)
+	float RotationMaxSpeed = 25.f;
 
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	virtual void PossessedBy(AController* NewController) override;
 	void Move(const FInputActionValue& Value);
+	void MeleeAttack(const FInputActionValue& Value);
+	void GunAttack(const FInputActionValue& Value);
+	void MouseLook(USceneComponent* Comp, float DeltaTime);
 
 private:
 	/** Top down camera */
@@ -40,5 +45,25 @@ private:
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* MovementInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* MeleeAttackInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* GunAttackInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* MouseLookInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
+	UAnimMontage* MeleeAttackAnimMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
+	FName RightHandSocketName;
+
+	ATopDown2PlayerController* PlayerController;
 };
 

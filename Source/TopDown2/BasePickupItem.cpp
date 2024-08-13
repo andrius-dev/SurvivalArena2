@@ -3,26 +3,26 @@
 
 #include "BasePickupItem.h"
 
+#include "GameTags.h"
+
 // Sets default values
 ABasePickupItem::ABasePickupItem() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh item"));
 	RootComponent = ItemMesh;
+	GameMode = CreateDefaultSubobject<AGameMode>(TEXT("Game mode"));
 }
 
-void ABasePickupItem::NotifyHit(
-	UPrimitiveComponent* MyComp,
-	AActor* Other,
-	UPrimitiveComponent* OtherComp,
-	bool bSelfMoved,
-	FVector HitLocation,
-	FVector HitNormal,
-	FVector NormalImpulse,
-	const FHitResult& Hit
-) {
-	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-	Destroy();
+void ABasePickupItem::NotifyActorBeginOverlap(AActor* OtherActor) {
+	Super::NotifyActorBeginOverlap(OtherActor);
+	if (OtherActor->ActorHasTag(FName(GameTags::Player))) {
+		OnPickedUp();
+		Destroy();
+	}
+}
+
+void ABasePickupItem::OnPickedUp() {
 }
 
 // Called when the game starts or when spawned
