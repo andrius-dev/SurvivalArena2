@@ -144,7 +144,9 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 }
 
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
-	PlayAnimMontage(MeleeAttackAnimMontage, 1);
+	float AnimDuration = PlayAnimMontage(MeleeAttackAnimMontage, 1);
+	FString str = std::to_string(AnimDuration).c_str();
+	UE_LOG(LogTemplateCharacter, Error, TEXT("Anim duration: %s"), *str);
 }
 
 void ATopDown2Character::GunAttack(const FInputActionValue& Value) {
