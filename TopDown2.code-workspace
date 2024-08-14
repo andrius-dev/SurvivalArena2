@@ -6,7 +6,7 @@
 		},
 		{
 			"name": "UE5",
-			"path": "/home/andrius/.local/bin/UnrealEngine_5.3"
+			"path": "/home/andrius/.local/bin/UnrealEngine5"
 		}
 	],
 	"settings": {
@@ -16,10 +16,7 @@
 	"extensions": {
 		"recommendations": [
 			"ms-vscode.cpptools",
-			"ms-dotnettools.csharp",
-			"vadimcn.vscode-lldb",
-			"ms-vscode.mono-debug",
-			"dfarley1.file-picker"
+			"ms-dotnettools.csharp"
 		]
 	},
 	"tasks": {
@@ -39,7 +36,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -59,7 +56,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -77,7 +74,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -94,7 +91,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -114,7 +111,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -132,7 +129,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -149,7 +146,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -169,7 +166,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -187,7 +184,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -204,7 +201,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -224,7 +221,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -242,7 +239,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -259,7 +256,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -279,7 +276,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -297,7 +294,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -314,7 +311,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -334,7 +331,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -352,7 +349,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -369,7 +366,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -389,7 +386,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -407,7 +404,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -424,7 +421,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -444,7 +441,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -462,7 +459,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -479,7 +476,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -499,7 +496,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -517,7 +514,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -534,7 +531,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -554,7 +551,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -572,7 +569,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -589,7 +586,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -609,7 +606,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -627,7 +624,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -644,7 +641,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -664,7 +661,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -682,7 +679,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -699,7 +696,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -719,7 +716,7 @@
 				],
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			},
 			{
@@ -737,7 +734,7 @@
 				"problemMatcher": "$msCompile",
 				"type": "shell",
 				"options": {
-					"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 				}
 			}
 		]
@@ -752,9 +749,9 @@
 				"preLaunchTask": "TopDown2 Linux Debug Build",
 				"args": [
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
@@ -764,9 +761,9 @@
 				"preLaunchTask": "TopDown2 Linux DebugGame Build",
 				"args": [
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
@@ -776,9 +773,9 @@
 				"preLaunchTask": "TopDown2 Linux Development Build",
 				"args": [
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
@@ -788,9 +785,9 @@
 				"preLaunchTask": "TopDown2 Linux Test Build",
 				"args": [
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
@@ -800,48 +797,48 @@
 				"preLaunchTask": "TopDown2 Linux Shipping Build",
 				"args": [
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
 				"name": "Launch TopDown2Editor (Debug)",
 				"request": "launch",
-				"program": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Binaries/Linux/UnrealEditor-Linux-Debug",
+				"program": "/home/andrius/.local/bin/UnrealEngine5/Engine/Binaries/Linux/UnrealEditor-Linux-Debug",
 				"preLaunchTask": "TopDown2Editor Linux Debug Build",
 				"args": [
 					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject"
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
 				"name": "Launch TopDown2Editor (DebugGame)",
 				"request": "launch",
-				"program": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame",
+				"program": "/home/andrius/.local/bin/UnrealEngine5/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame",
 				"preLaunchTask": "TopDown2Editor Linux DebugGame Build",
 				"args": [
 					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject"
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
 				"name": "Launch TopDown2Editor (Development)",
 				"request": "launch",
-				"program": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Binaries/Linux/UnrealEditor",
+				"program": "/home/andrius/.local/bin/UnrealEngine5/Engine/Binaries/Linux/UnrealEditor",
 				"preLaunchTask": "TopDown2Editor Linux Development Build",
 				"args": [
 					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject"
 				],
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3",
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5",
 				"type": "cppdbg",
-				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"visualizerFile": "/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
 				"showDisplayString": true
 			},
 			{
@@ -849,7 +846,7 @@
 				"type": "coreclr",
 				"request": "launch",
 				"preLaunchTask": "UnrealBuildTool Linux Development Build",
-				"program": "/home/andrius/.local/bin/UnrealEngine_5.3/Engine/Build/BatchFiles/RunUBT.bat",
+				"program": "/home/andrius/.local/bin/UnrealEngine5/Engine/Build/BatchFiles/RunUBT.bat",
 				"args": [
 					"-projectfiles",
 					"-vscode",
@@ -861,7 +858,7 @@
 				"console": "internalConsole",
 				"internalConsoleOptions": "openOnSessionStart",
 				"stopAtEntry": false,
-				"cwd": "/home/andrius/.local/bin/UnrealEngine_5.3"
+				"cwd": "/home/andrius/.local/bin/UnrealEngine5"
 			}
 		]
 	}

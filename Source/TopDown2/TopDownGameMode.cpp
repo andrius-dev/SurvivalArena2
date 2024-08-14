@@ -3,6 +3,8 @@
 
 #include "TopDownGameMode.h"
 
+#include <string>
+
 int ATopDownGameMode::GetScore() const {
 	return score;
 }
