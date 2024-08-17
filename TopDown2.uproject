@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"AnimGraph"
 			]
 		}
 	],
@@ -35,6 +36,10 @@
 		{
 			"Name": "GooglePAD",
 			"Enabled": false
+		},
+		{
+			"Name": "StateTree",
+			"Enabled": true
 		}
 	]
 }

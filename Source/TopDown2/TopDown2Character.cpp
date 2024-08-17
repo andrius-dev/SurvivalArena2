@@ -126,7 +126,6 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	PlayerController->bEnableMouseOverEvents = true;
 }
 
-
 void ATopDown2Character::Move(const FInputActionValue& Value) {
 	if (Controller == nullptr) {
 		UE_LOG(LogTemplateCharacter, Error, TEXT("šikna"), *GetNameSafe(this));
