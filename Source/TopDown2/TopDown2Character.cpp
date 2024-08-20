@@ -4,20 +4,15 @@
 
 #include "EnhancedInputComponent.h"
 #include "GameTags.h"
-#include "KismetTraceUtils.h"
 #include "TopDown2PlayerController.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Util/ColorConstants.h"
 
 ATopDown2Character::ATopDown2Character() {
 	// Set size for player capsule
@@ -47,16 +42,12 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Activate ticking in order to update the cursor every frame.
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
-	Tags.Add(FName(GameTags::Player));
-	
+	// Activate ticking in order to update the cursor every frame in blueprint
 }
 
-void ATopDown2Character::Tick(float DeltaSeconds) {
+void ATopDown2Character::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
-	MouseLook(GetMesh(), DeltaSeconds);
+	DeltaTimeSecs = DeltaSeconds;
 }
 
 void ATopDown2Character::StartHitDetection() {
@@ -85,8 +76,8 @@ void ATopDown2Character::StartHitDetection() {
 
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	// Set up action bindings
-	auto inputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (!inputComponent) {
+	const auto InputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (!InputComponent) {
 		UE_LOG(
 			LogTemplateCharacter,
 			Error,
@@ -97,24 +88,38 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		);
 		return;
 	}
-	inputComponent->BindAction(
+	InputComponent->BindAction(
 		MovementInputAction,
 		ETriggerEvent::Triggered,
 		this,
 		&ATopDown2Character::Move
 	);
-	inputComponent->BindAction(
+	InputComponent->BindAction(
 		MeleeAttackInputAction,
 		ETriggerEvent::Triggered,
 		this,
 		&ATopDown2Character::MeleeAttack
 	);
-	inputComponent->BindAction(
+	InputComponent->BindAction(
 		GunAttackInputAction,
 		ETriggerEvent::Triggered,
 		this,
 		&ATopDown2Character::GunAttack
 	);
+	InputComponent->BindActionValueLambda(
+		MouseLookInputAction,
+		ETriggerEvent::None,
+		[this](const FInputActionValue& Value) {
+			MouseLook(Value, DeltaTimeSecs);
+		}
+	);
+	InputComponent->BindAction(
+		ControllerLookInputAction,
+		ETriggerEvent::None,
+		this,
+		&ATopDown2Character::ControllerLook
+	);
+	
 }
 
 void ATopDown2Character::PossessedBy(AController* NewController) {
@@ -151,12 +156,74 @@ void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
 void ATopDown2Character::GunAttack(const FInputActionValue& Value) {
 }
 
-void ATopDown2Character::MouseLook(USceneComponent* Comp1, float DeltaTime) {
-	if (!PlayerController) {
-		return;
-	}
+// void AUnrealThirdPersonCharacter::Move(const FInputActionValue& Value) {
+// 	// input is a Vector2D
+// 	FVector2D MovementVector = Value.Get<FVector2D>();
+//
+// 	if (Controller != nullptr) {
+// 		// find out which way is forward
+// 		const FRotator Rotation = Controller->GetControlRotation();
+// 		const FRotator YawRotation(0, Rotation.Yaw, 0);
+//
+// 		// get forward vector
+// 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+//
+// 		// get right vector 
+// 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+//
+// 		// add movement 
+// 		AddMovementInput(ForwardDirection, MovementVector.Y);
+// 		AddMovementInput(RightDirection, MovementVector.X);
+// 	}
+// }
+//
+// void AUnrealThirdPersonCharacter::Look(const FInputActionValue& Value) {
+// 	// input is a Vector2D
+// 	FVector2D LookAxisVector = Value.Get<FVector2D>();
+//
+// 	if (Controller != nullptr) {
+// 		// add yaw and pitch input to controller
+// 		AddControllerYawInput(LookAxisVector.X);
+// 		AddControllerPitchInput(LookAxisVector.Y);
+// 	}
+// }
+
+void ATopDown2Character::ControllerLook(const FInputActionValue& Value) {
+	const auto Values2D = Value.Get<FVector2d>();
+	const auto Values = Value.Get<FVector>();
+	const FVector2d Intersection2D = Values2D;
+	const FVector Intersection = Values;
+	const auto ActorLocation = GetActorLocation();
+	const auto ActorForwardVector = GetActorForwardVector();
+	const auto ActorLocation2d = FVector2D(ActorLocation.X, ActorLocation.Y);
+	const auto ActorForward2d = FVector2D(ActorForwardVector.X, ActorForwardVector.Y);
+	const auto ActorRightVector = GetActorRightVector();
+	const auto ActorRight2d = FVector2D(ActorRightVector.X, ActorRightVector.Y);
+	const FVector2d DirToIntersection = (Intersection2D - ActorLocation2d).GetSafeNormal();
+	
+	// // Calculate direction vector from the pawn body forward vector to intersection vector.
+	// // Gets the cosine of the angle between the pawns body forward vector and the direction to intersection.
+	float dotForward = ActorForward2d | DirToIntersection;
+	// // Converts the cosine of the angle to degrees.
+	float Angle = acos(dotForward) * (180.f / PI);
+	// // Clamp to limit how fast the component can rotate.
+	Angle = FMath::Clamp(Angle, 0.f, RotationMaxSpeed);
+	// // Gets the cosine of the angle with the right vector against direction to intersection to know on what side of the component is the intersection.
+	float dotSide = ActorRight2d | DirToIntersection;
+	// // Negates the value depending on what side is the intersection relative to the component.
+	Angle *= RotationEase * ((dotSide > 0.f) ? 1.f : -1.f);
+	// // Create rotator with variable.
+	const FRotator BodyRotator = FRotator(0.f, Angle * DeltaTimeSecs, 0.f);
+	// // Add rotation to pawn body component.
+	AddActorLocalRotation(BodyRotator);
+	DrawDebugLine(GetWorld(), GetActorLocation(), Intersection, FColor::Orange, false, -1.f, 0, 4.f);
+}
+
+
+void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float DeltaTime) {
 	FVector MouseDir = FVector::ZeroVector;
 	FVector MousePos = FVector::ZeroVector;
+	
 	PlayerController->DeprojectMousePositionToWorld(MousePos, MouseDir);
 
 	// Declaration of vector of intersection.
@@ -175,24 +242,28 @@ void ATopDown2Character::MouseLook(USceneComponent* Comp1, float DeltaTime) {
 		Intersection
 	);
 	// Do stuff if line intersected.
-	if (bIntersectionSuccess) {
-		// Calculate direction vector from the pawn body forward vector to intersection vector.
-		FVector DirToIntersection = (Intersection - GetActorLocation()).GetSafeNormal();
-		// Gets the cosine of the angle between the pawns body forward vector and the direction to intersection.
-		float dotForward = GetActorForwardVector() | DirToIntersection;
-		// Converts the cosine of the angle to degrees.
-		float Angle = acos(dotForward) * (180.f / PI);
-		// Clamp to limit how fast the component can rotate.
-		Angle = FMath::Clamp(Angle, 0.f, RotationMaxSpeed);
-		// Gets the cosine of the angle with the right vector against direction to intersection to know on what side of the component is the intersection.
-		float dotSide = GetActorRightVector() | DirToIntersection;
-		// Negates the value depending on what side is the intersection relative to the component.
-		Angle *= RotationEase * ((dotSide > 0.f) ? 1.f : -1.f);
-		// Create rotator with variable.
-		FRotator BodyRotator = FRotator(0.f, Angle * DeltaTime, 0.f);
-		// Add rotation to pawn body component.
-		AddActorLocalRotation(BodyRotator);
+	if (!bIntersectionSuccess) {
+		return;
 	}
+	
+	// Calculate direction vector from the pawn body forward vector to intersection vector.
+	FVector DirToIntersection = (Intersection - GetActorLocation()).GetSafeNormal();
+	UE_LOG(LogTemplateCharacter, Error, TEXT("DirToIntersection Mouse: %s"), *DirToIntersection.ToString());
+	// Gets the cosine of the angle between the pawns body forward vector and the direction to intersection.
+	float dotForward = GetActorForwardVector() | DirToIntersection;
+	// Converts the cosine of the angle to degrees.
+	float Angle = acos(dotForward) * (180.f / PI);
+	// Clamp to limit how fast the component can rotate.
+	Angle = FMath::Clamp(Angle, 0.f, RotationMaxSpeed);
+	// Gets the cosine of the angle with the right vector against direction to intersection to know on what side of the component is the intersection.
+	float dotSide = GetActorRightVector() | DirToIntersection;
+	// Negates the value depending on what side is the intersection relative to the component.
+	Angle *= RotationEase * ((dotSide > 0.f) ? 1.f : -1.f);
+	// Create rotator with variable.
+	FRotator BodyRotator = FRotator(0.f, Angle * DeltaTime, 0.f);
+	// Add rotation to pawn body component.
+	AddActorLocalRotation(BodyRotator);
+	
 	// Debug
 	DrawDebugLine(GetWorld(), GetActorLocation(), Intersection, FColor::Orange, false, -1.f, 0, 4.f);
 	DrawDebugSphere(GetWorld(), Intersection, 10.f, 16, FColor::Red, false);

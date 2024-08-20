@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InputActionValue.h"
+#include "EnhancedInputSubsystemInterface.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "TopDown2PlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
 class UNiagaraSystem;
-class UInputMappingContext;
 class UInputAction;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -25,8 +24,9 @@ public:
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
-
+	UInputMappingContext* MappingContextKeyboardMouse;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputMappingContext* MappingContextController;
 protected:
 	virtual void SetupInputComponent() override;
 	// To add mapping context

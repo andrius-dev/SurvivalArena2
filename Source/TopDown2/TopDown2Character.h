@@ -35,7 +35,9 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void MeleeAttack(const FInputActionValue& Value);
 	void GunAttack(const FInputActionValue& Value);
-	void MouseLook(USceneComponent* Comp, float DeltaTime);
+	void MouseLook(const FInputActionValue& Value, const float DeltaTime);
+	void ControllerLook(const FInputActionValue& Value);
+	double DeltaTimeSecs;
 
 private:
 	/** Top down camera */
@@ -44,7 +46,7 @@ private:
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	USpringArmComponent* CameraBoom;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MovementInputAction;
@@ -57,6 +59,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MouseLookInputAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ControllerLookInputAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
 	UAnimMontage* MeleeAttackAnimMontage;
@@ -64,6 +69,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
 	FName RightHandSocketName;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	ATopDown2PlayerController* PlayerController;
+	
 };
 
