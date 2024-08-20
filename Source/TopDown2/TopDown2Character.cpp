@@ -142,9 +142,14 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 		FRotationMatrix(ComponentRotation).GetUnitAxis(EAxis::X);
 	const auto RightDirection =
 		FRotationMatrix(ComponentRotation).GetUnitAxis(EAxis::Y);
-
+	auto vec = FVector(MovementVector.X, MovementVector.Y, 0);
 	AddMovementInput(ForwardDirection, MovementVector.Y);
 	AddMovementInput(RightDirection, MovementVector.X);
+	float dotForward = MovementVector.Dot(ForwardDirection);
+	// Converts the cosine of the angle to degrees.
+	float Angle = acos(dotForward) * (180.f / PI);
+	FRotator BodyRotator = FRotator(0.f, Angle * DeltaTimeSecs, 0.f);
+    AddActorLocalRotation(BodyRotator);
 }
 
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
@@ -189,34 +194,13 @@ void ATopDown2Character::GunAttack(const FInputActionValue& Value) {
 // }
 
 void ATopDown2Character::ControllerLook(const FInputActionValue& Value) {
-	const auto Values2D = Value.Get<FVector2d>();
-	const auto Values = Value.Get<FVector>();
-	const FVector2d Intersection2D = Values2D;
-	const FVector Intersection = Values;
-	const auto ActorLocation = GetActorLocation();
-	const auto ActorForwardVector = GetActorForwardVector();
-	const auto ActorLocation2d = FVector2D(ActorLocation.X, ActorLocation.Y);
-	const auto ActorForward2d = FVector2D(ActorForwardVector.X, ActorForwardVector.Y);
-	const auto ActorRightVector = GetActorRightVector();
-	const auto ActorRight2d = FVector2D(ActorRightVector.X, ActorRightVector.Y);
-	const FVector2d DirToIntersection = (Intersection2D - ActorLocation2d).GetSafeNormal();
-	
-	// // Calculate direction vector from the pawn body forward vector to intersection vector.
-	// // Gets the cosine of the angle between the pawns body forward vector and the direction to intersection.
-	float dotForward = ActorForward2d | DirToIntersection;
-	// // Converts the cosine of the angle to degrees.
-	float Angle = acos(dotForward) * (180.f / PI);
-	// // Clamp to limit how fast the component can rotate.
-	Angle = FMath::Clamp(Angle, 0.f, RotationMaxSpeed);
-	// // Gets the cosine of the angle with the right vector against direction to intersection to know on what side of the component is the intersection.
-	float dotSide = ActorRight2d | DirToIntersection;
-	// // Negates the value depending on what side is the intersection relative to the component.
-	Angle *= RotationEase * ((dotSide > 0.f) ? 1.f : -1.f);
-	// // Create rotator with variable.
-	const FRotator BodyRotator = FRotator(0.f, Angle * DeltaTimeSecs, 0.f);
-	// // Add rotation to pawn body component.
-	AddActorLocalRotation(BodyRotator);
-	DrawDebugLine(GetWorld(), GetActorLocation(), Intersection, FColor::Orange, false, -1.f, 0, 4.f);
+	// // input is a Vector2D
+	// FVector2D LookAxisVector = Value.Get<FVector2D>();
+	// if (Controller == nullptr) {
+	// 	return;
+	// }
+ //    // add yaw and pitch input to controller
+ //    AddControllerYawInput(LookAxisVector.X);
 }
 
 
