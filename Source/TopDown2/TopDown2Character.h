@@ -36,7 +36,6 @@ protected:
 	void MeleeAttack(const FInputActionValue& Value);
 	void GunAttack(const FInputActionValue& Value);
 	void MouseLook(const FInputActionValue& Value, const float DeltaTime);
-	void ControllerLook(const FInputActionValue& Value);
 	double DeltaTimeSecs;
 
 private:
@@ -71,6 +70,14 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	ATopDown2PlayerController* PlayerController;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	float CharacterAngle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	float ControllerX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	float ControllerY;
 };
 

@@ -113,13 +113,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			MouseLook(Value, DeltaTimeSecs);
 		}
 	);
-	InputComponent->BindAction(
-		ControllerLookInputAction,
-		ETriggerEvent::None,
-		this,
-		&ATopDown2Character::ControllerLook
-	);
-	
 }
 
 void ATopDown2Character::PossessedBy(AController* NewController) {
@@ -136,20 +129,23 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 		UE_LOG(LogTemplateCharacter, Error, TEXT("šikna"), *GetNameSafe(this));
 		return;
 	}
-	const auto MovementVector = Value.Get<FVector>();
-	const auto ComponentRotation = RootComponent->GetComponentRotation();
+	
+	const auto ControllerVector = Value.Get<FVector>();
+	
+	float Angle = atan2(ControllerVector.X, ControllerVector.Y) * (180.f / PI);
+	CharacterAngle = Angle;
+	ControllerX = ControllerVector.X;
+	ControllerY = ControllerVector.Y;
+	FRotator BodyRotator = FRotator(0.f, Angle, 0.f);
+    SetActorRotation(BodyRotator);
+	
+	const FRotator ZeroRotation(0, 0, 0);
 	const auto ForwardDirection = 
-		FRotationMatrix(ComponentRotation).GetUnitAxis(EAxis::X);
+		FRotationMatrix(ZeroRotation).GetUnitAxis(EAxis::X);
 	const auto RightDirection =
-		FRotationMatrix(ComponentRotation).GetUnitAxis(EAxis::Y);
-	auto vec = FVector(MovementVector.X, MovementVector.Y, 0);
-	AddMovementInput(ForwardDirection, MovementVector.Y);
-	AddMovementInput(RightDirection, MovementVector.X);
-	float dotForward = MovementVector.Dot(ForwardDirection);
-	// Converts the cosine of the angle to degrees.
-	float Angle = acos(dotForward) * (180.f / PI);
-	FRotator BodyRotator = FRotator(0.f, Angle * DeltaTimeSecs, 0.f);
-    AddActorLocalRotation(BodyRotator);
+		FRotationMatrix(ZeroRotation).GetUnitAxis(EAxis::Y);
+	AddMovementInput(ForwardDirection, ControllerVector.Y);
+	AddMovementInput(RightDirection, ControllerVector.X);
 }
 
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
@@ -160,49 +156,6 @@ void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
 
 void ATopDown2Character::GunAttack(const FInputActionValue& Value) {
 }
-
-// void AUnrealThirdPersonCharacter::Move(const FInputActionValue& Value) {
-// 	// input is a Vector2D
-// 	FVector2D MovementVector = Value.Get<FVector2D>();
-//
-// 	if (Controller != nullptr) {
-// 		// find out which way is forward
-// 		const FRotator Rotation = Controller->GetControlRotation();
-// 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-//
-// 		// get forward vector
-// 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-//
-// 		// get right vector 
-// 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-//
-// 		// add movement 
-// 		AddMovementInput(ForwardDirection, MovementVector.Y);
-// 		AddMovementInput(RightDirection, MovementVector.X);
-// 	}
-// }
-//
-// void AUnrealThirdPersonCharacter::Look(const FInputActionValue& Value) {
-// 	// input is a Vector2D
-// 	FVector2D LookAxisVector = Value.Get<FVector2D>();
-//
-// 	if (Controller != nullptr) {
-// 		// add yaw and pitch input to controller
-// 		AddControllerYawInput(LookAxisVector.X);
-// 		AddControllerPitchInput(LookAxisVector.Y);
-// 	}
-// }
-
-void ATopDown2Character::ControllerLook(const FInputActionValue& Value) {
-	// // input is a Vector2D
-	// FVector2D LookAxisVector = Value.Get<FVector2D>();
-	// if (Controller == nullptr) {
-	// 	return;
-	// }
- //    // add yaw and pitch input to controller
- //    AddControllerYawInput(LookAxisVector.X);
-}
-
 
 void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float DeltaTime) {
 	FVector MouseDir = FVector::ZeroVector;
