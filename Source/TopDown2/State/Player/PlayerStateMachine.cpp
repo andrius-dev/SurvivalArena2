@@ -1,7 +1,5 @@
 #include "PlayerStateMachine.h"
 
-#include "TopDown2/TopDown2PlayerController.h"
-
 PlayerStateMachine::PlayerStateMachine() {
 	
 }

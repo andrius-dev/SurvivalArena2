@@ -2,8 +2,9 @@
 
 #include "TopDown2Character.h"
 
+#include <string>
+
 #include "EnhancedInputComponent.h"
-#include "GameTags.h"
 #include "TopDown2PlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -13,6 +14,7 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "TopDown2/Constants.h"
 
 ATopDown2Character::ATopDown2Character() {
 	// Set size for player capsule
@@ -131,19 +133,18 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 	}
 	
 	const auto ControllerVector = Value.Get<FVector>();
-	
-	float Angle = atan2(ControllerVector.X, ControllerVector.Y) * (180.f / PI);
+
+	float Angle = atan2(ControllerVector.X, ControllerVector.Y) * Constants::RadToDeg;
 	CharacterAngle = Angle;
 	ControllerX = ControllerVector.X;
 	ControllerY = ControllerVector.Y;
 	FRotator BodyRotator = FRotator(0.f, Angle, 0.f);
     SetActorRotation(BodyRotator);
-	
-	const FRotator ZeroRotation(0, 0, 0);
+
 	const auto ForwardDirection = 
-		FRotationMatrix(ZeroRotation).GetUnitAxis(EAxis::X);
+		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::X);
 	const auto RightDirection =
-		FRotationMatrix(ZeroRotation).GetUnitAxis(EAxis::Y);
+		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Y);
 	AddMovementInput(ForwardDirection, ControllerVector.Y);
 	AddMovementInput(RightDirection, ControllerVector.X);
 }
