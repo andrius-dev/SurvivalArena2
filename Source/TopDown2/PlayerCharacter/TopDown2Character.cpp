@@ -1,8 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "TopDown2Character.h"
-
-#include <string>
 
 #include "EnhancedInputComponent.h"
 #include "TopDown2PlayerController.h"
@@ -16,6 +12,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "TopDown2/Constants.h"
 
+// todo: clean this up, most of these params should be set in blueprint
 ATopDown2Character::ATopDown2Character() {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -52,6 +49,7 @@ void ATopDown2Character::Tick(const float DeltaSeconds) {
 	DeltaTimeSecs = DeltaSeconds;
 }
 
+// todo: rewrite the function from blueprint
 void ATopDown2Character::StartHitDetection() {
 	// if (RightHandSocketName == "") {
 	// 	return;
@@ -102,12 +100,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		this,
 		&ATopDown2Character::MeleeAttack
 	);
-	InputComponent->BindAction(
-		GunAttackInputAction,
-		ETriggerEvent::Triggered,
-		this,
-		&ATopDown2Character::GunAttack
-	);
 	InputComponent->BindActionValueLambda(
 		MouseLookInputAction,
 		ETriggerEvent::None,
@@ -122,8 +114,8 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	if (!PlayerController || !PlayerController->IsLocalController()) {
 		return;
 	}
-	PlayerController->SetShowMouseCursor(true);
-	PlayerController->bEnableMouseOverEvents = true;
+	PlayerController->SetShowMouseCursor(false); // true
+	PlayerController->bEnableMouseOverEvents = false; // true
 }
 
 void ATopDown2Character::Move(const FInputActionValue& Value) {
@@ -132,30 +124,21 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 		return;
 	}
 	
-	const auto ControllerVector = Value.Get<FVector>();
-
-	float Angle = atan2(ControllerVector.X, ControllerVector.Y) * Constants::RadToDeg;
-	CharacterAngle = Angle;
-	ControllerX = ControllerVector.X;
-	ControllerY = ControllerVector.Y;
-	FRotator BodyRotator = FRotator(0.f, Angle, 0.f);
+	const auto GamepadInput = Value.Get<FVector>();
+	const float Angle = CalculateAngleFromGamepadInput(GamepadInput);
+	const FRotator BodyRotator = FRotator(0.f, Angle, 0.f);
     SetActorRotation(BodyRotator);
 
 	const auto ForwardDirection = 
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::X);
 	const auto RightDirection =
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Y);
-	AddMovementInput(ForwardDirection, ControllerVector.Y);
-	AddMovementInput(RightDirection, ControllerVector.X);
+	AddMovementInput(ForwardDirection, GamepadInput.Y);
+	AddMovementInput(RightDirection, GamepadInput.X);
 }
 
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
-	float AnimDuration = PlayAnimMontage(MeleeAttackAnimMontage, 1);
-	FString str = std::to_string(AnimDuration).c_str();
-	UE_LOG(LogTemplateCharacter, Error, TEXT("Anim duration: %s"), *str);
-}
-
-void ATopDown2Character::GunAttack(const FInputActionValue& Value) {
+	PlayAnimMontage(MeleeAttackAnimMontage, 1);
 }
 
 void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float DeltaTime) {
@@ -205,4 +188,8 @@ void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float D
 	// Debug
 	DrawDebugLine(GetWorld(), GetActorLocation(), Intersection, FColor::Orange, false, -1.f, 0, 4.f);
 	DrawDebugSphere(GetWorld(), Intersection, 10.f, 16, FColor::Red, false);
+}
+
+float ATopDown2Character::CalculateAngleFromGamepadInput(const FVector& GamepadInput) {
+	return atan2(GamepadInput.X, GamepadInput.Y) * Constants::RadToDeg;
 }

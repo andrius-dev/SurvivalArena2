@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -34,8 +32,8 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	void Move(const FInputActionValue& Value);
 	void MeleeAttack(const FInputActionValue& Value);
-	void GunAttack(const FInputActionValue& Value);
 	void MouseLook(const FInputActionValue& Value, const float DeltaTime);
+	static float CalculateAngleFromGamepadInput(const FVector& GamepadInput);
 	double DeltaTimeSecs;
 
 private:
@@ -64,20 +62,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
 	UAnimMontage* MeleeAttackAnimMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
-	FName RightHandSocketName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	ATopDown2PlayerController* PlayerController;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	float CharacterAngle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	float ControllerX;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	float ControllerY;
 };
-
