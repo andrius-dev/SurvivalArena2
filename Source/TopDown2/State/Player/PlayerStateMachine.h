@@ -6,7 +6,6 @@
 class PlayerStateMachine : IStateMachine {
 public:
 	PlayerStateMachine();
-	virtual void Tick(double Delta) override;
 	void HandleMovementInput(
 		UE::Math::TVector<double> ForwardDirection,
 		UE::Math::TVector<double> RightDirection

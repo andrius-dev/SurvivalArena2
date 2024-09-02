@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "TopDownGameMode.generated.h"

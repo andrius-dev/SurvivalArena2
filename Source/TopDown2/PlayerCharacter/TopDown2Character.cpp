@@ -76,8 +76,8 @@ void ATopDown2Character::StartHitDetection() {
 
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	// Set up action bindings
-	const auto InputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (!InputComponent) {
+	const auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (!EnhancedInputComponent) {
 		UE_LOG(
 			LogTemplateCharacter,
 			Error,
@@ -88,19 +88,19 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		);
 		return;
 	}
-	InputComponent->BindAction(
+	EnhancedInputComponent->BindAction(
 		MovementInputAction,
 		ETriggerEvent::Triggered,
 		this,
 		&ATopDown2Character::Move
 	);
-	InputComponent->BindAction(
+	EnhancedInputComponent->BindAction(
 		MeleeAttackInputAction,
 		ETriggerEvent::Triggered,
 		this,
 		&ATopDown2Character::MeleeAttack
 	);
-	InputComponent->BindActionValueLambda(
+	EnhancedInputComponent->BindActionValueLambda(
 		MouseLookInputAction,
 		ETriggerEvent::None,
 		[this](const FInputActionValue& Value) {
