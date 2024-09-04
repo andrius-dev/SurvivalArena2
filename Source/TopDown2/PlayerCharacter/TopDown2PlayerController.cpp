@@ -13,12 +13,9 @@ ATopDown2PlayerController::ATopDown2PlayerController() {
 }
 
 void ATopDown2PlayerController::BeginPlay() {
-	// Call the base class  
 	Super::BeginPlay();
-	//Add Input Mapping Context
 	const auto Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (!Subsystem) {
-		// todo add new logging function
 		UE_LOG(LogTemplateCharacter, Error, TEXT("error initializing input subsystem!"));
 		return;	
 	}
@@ -30,6 +27,6 @@ void ATopDown2PlayerController::BeginPlay() {
 }
 
 void ATopDown2PlayerController::SetupInputComponent() {
-	// set up gameplay key bindings
 	Super::SetupInputComponent();
+	// set up gameplay key bindings
 }

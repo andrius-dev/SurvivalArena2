@@ -169,7 +169,6 @@ void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float D
 	
 	// Calculate direction vector from the pawn body forward vector to intersection vector.
 	FVector DirToIntersection = (Intersection - GetActorLocation()).GetSafeNormal();
-	UE_LOG(LogTemplateCharacter, Error, TEXT("DirToIntersection Mouse: %s"), *DirToIntersection.ToString());
 	// Gets the cosine of the angle between the pawns body forward vector and the direction to intersection.
 	float dotForward = GetActorForwardVector() | DirToIntersection;
 	// Converts the cosine of the angle to degrees.
