@@ -28,5 +28,6 @@ void ATopDown2PlayerController::BeginPlay() {
 
 void ATopDown2PlayerController::SetupInputComponent() {
 	Super::SetupInputComponent();
+	// InputComponent->ApplyWorldOffset()
 	// set up gameplay key bindings
 }

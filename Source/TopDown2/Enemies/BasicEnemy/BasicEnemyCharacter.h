@@ -1,7 +1,9 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "GameFramework/Character.h"
 #include "BasicEnemyCharacter.generated.h"
 
@@ -15,24 +17,15 @@ public:
 	ABasicEnemyCharacter();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	
-	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
-	TArray<UClass*> KickableAssTypes;
-	
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="AI|Components|PawnSensing")
-	void MoveToAss(AActor* Target);
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="AI|Components|PawnSensing")
-	bool IsKickableAss(APawn* Pawn);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	ACharacter* PlayerCharacter;
 private:
-	void LogPawnAction(const FString& PawnAction, const FString& Name);
-	UPROPERTY()
-	AAIController *SelfAIController;
-	
+	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	UBehaviorTree* DefaultBehaviorTree;
+
+	void RunAIBehavior();
 };

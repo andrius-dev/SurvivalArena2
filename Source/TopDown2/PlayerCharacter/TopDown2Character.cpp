@@ -40,6 +40,7 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	CameraYawAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 
 	// Activate ticking in order to update the cursor every frame in blueprint
 }
@@ -126,15 +127,20 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 	
 	const auto GamepadInput = Value.Get<FVector>();
 	const float Angle = CalculateAngleFromGamepadInput(GamepadInput);
-	const FRotator BodyRotator = FRotator(0.f, Angle, 0.f);
+	const FRotator BodyRotator = FRotator(0.f, Angle + 45, 0.f);
     SetActorRotation(BodyRotator);
 
 	const auto ForwardDirection = 
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::X);
 	const auto RightDirection =
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Y);
-	AddMovementInput(ForwardDirection, GamepadInput.Y);
-	AddMovementInput(RightDirection, GamepadInput.X);
+	const auto UpDirection =
+		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Z);
+	
+	const auto OffsetInput = GamepadInput.RotateAngleAxis(-45, UpDirection);
+		
+	AddMovementInput(ForwardDirection, OffsetInput.Y);
+	AddMovementInput(RightDirection, OffsetInput.X);
 }
 
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
