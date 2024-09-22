@@ -144,7 +144,14 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 }
 
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
-	PlayAnimMontage(MeleeAttackAnimMontage, 1);
+	if (!MeleeAttackAnimMontage) {
+		return;	
+	}
+	PlayAnimMontage(MeleeAttackAnimMontage);
+	auto AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(MeleeAttackAnimMontage);
+	auto name = MeleeAttackAnimMontage->GetName();
+	UE_LOG(LogTemplateCharacter, Error, TEXT("%s"), *name);
 }
 
 void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float DeltaTime) {
