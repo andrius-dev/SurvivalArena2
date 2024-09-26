@@ -16,6 +16,7 @@ ABasePickupItem::ABasePickupItem() {
 
 void ABasePickupItem::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
+	// todo check for component instead of tag
 	if (OtherActor->ActorHasTag(FName(GameTags::Player))) {
 		OnPickedUp();
 		Destroy();

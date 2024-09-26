@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,6 +6,10 @@
 
 class UHealthComponent;
 
+/**
+ * Declare blueprint events. 1st param is event name,
+ * and the following params are four type - name pairs.
+ */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
 	FOnHealthChanged,
 	UHealthComponent*, HealthComponent,
@@ -21,31 +23,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
 	UHealthComponent*, HealthComponent
 );
 
-UCLASS(Blueprintable, meta=(BlueprintSpawnableComponent) )
-class TOPDOWN2_API UHealthComponent : public UActorComponent
-{
+UCLASS(Blueprintable, meta=(BlueprintSpawnableComponent))
+class TOPDOWN2_API UHealthComponent : public UActorComponent {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
+public:
 	UHealthComponent();
-
-	UFUNCTION(BlueprintPure, BlueprintCallable, Category="Health")
-	static UHealthComponent* FindHealthComponent(const AActor* Actor);
 	
-	UFUNCTION(BlueprintCallable, Category="Health")
-	float GetMaxHealth() const;
-
-	UFUNCTION(BlueprintCallable, Category="Health")
-	float GetCurrentHealth();
-
-	/**
-	 * 
-	 * @param Amount Raw attack value
-	 * @return Actual damage taken
-	 */
-	UFUNCTION(BlueprintCallable, Category="Health")
-	float TakeDamage(const float Amount);
+	const float DEFAULT_MAX_HEALTH = 100.f;
 
 	UPROPERTY(BlueprintAssignable, Category="Health")
 	FOnHealthChanged OnHealthChanged;
@@ -53,12 +38,27 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Health")
 	FOnDeath OnDeath;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintPure, BlueprintCallable, Category="Health")
+	static UHealthComponent* FindHealthComponent(const AActor* Actor);
 
-private:
-	UPROPERTY()
-	float CurrentHealth;
-	const float MaxHealth = 100.f;
+	UFUNCTION(BlueprintCallable, Category="Health")
+	float GetMaxHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category="Health")
+	float GetCurrentHealth();
+
+	/**
+	 * @param Amount Raw attack value
+	 * @return Actual damage taken
+	 */
+	UFUNCTION(BlueprintCallable, Category="Health")
+	float TakeDamage(const float Amount);
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	float MaxHealth = DEFAULT_MAX_HEALTH;
+	UPROPERTY(BlueprintReadOnly)
+	float CurrentHealth = MaxHealth;
+	
+	virtual void BeginPlay() override;
 };

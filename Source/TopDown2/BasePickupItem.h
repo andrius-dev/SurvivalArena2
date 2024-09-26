@@ -28,18 +28,18 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Pickup")
 	float RollRotationSpeed = 0.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="GameMode")
-	AGameMode* GameMode;
+	TObjectPtr<AGameMode> GameMode = nullptr;
 
 	virtual void OnPickedUp();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
 	UPROPERTY(VisibleAnywhere, Category="Components")
-	UStaticMeshComponent* ItemMesh;	
+	TObjectPtr<UStaticMeshComponent> ItemMesh = nullptr;	
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };

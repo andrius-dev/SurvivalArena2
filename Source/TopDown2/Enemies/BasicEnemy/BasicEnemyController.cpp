@@ -43,13 +43,13 @@ void ABasicEnemyController::RunAIBehaviors(
 	ACharacter* PlayerCharacter
 ) {
 	// if (World == nullptr) {
-	// 	UE_LOG(LogTemplateCharacter, Log, TEXT("null PlayerController"));
+	// 	UE_LOG(LogTopDown2, Log, TEXT("null PlayerController"));
 	// 	return;
 	// }
 	// Blackboard->SetValueAsObject("PlayerCharacter", PlayerCharacter);
 	// auto test = Blackboard->GetValueAsObject("PlayerCharacter");
 	// if (test == nullptr) {
-	// 	UE_LOG(LogTemplateCharacter, Log, TEXT("null PlayerController"));
+	// 	UE_LOG(LogTopDown2, Log, TEXT("null PlayerController"));
 	// }
 	// RunBehaviorTree(BehaviorTree);
 }
@@ -57,7 +57,7 @@ void ABasicEnemyController::RunAIBehaviors(
 // todo make basic functions for logging: for errors, warnings, etc.
 void ABasicEnemyController::LogPawnAction(const FString& PawnAction, const FString& Name) {
 	UE_LOG(
-		LogTemplateCharacter,
+		LogTopDown2,
 		Log,
 		TEXT("%s: %s"),
 		*Name,

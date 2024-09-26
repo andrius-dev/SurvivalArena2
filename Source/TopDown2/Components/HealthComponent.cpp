@@ -4,7 +4,6 @@ UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 	PrimaryComponentTick.bCanEverTick = false;
-	CurrentHealth = MaxHealth;
 }
 
 UHealthComponent* UHealthComponent::FindHealthComponent(const AActor* Actor) {
@@ -14,8 +13,6 @@ UHealthComponent* UHealthComponent::FindHealthComponent(const AActor* Actor) {
 	return Actor->FindComponentByClass<UHealthComponent>();
 }
 
-
-// Called when the game starts
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
