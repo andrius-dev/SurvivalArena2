@@ -1,13 +1,9 @@
 #include "TopDown2PlayerController.h"
 
-#include <functional>
-
 #include "GameFramework/Pawn.h"
 #include "Engine/World.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
-
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ATopDown2PlayerController::ATopDown2PlayerController() {
 }
@@ -16,7 +12,7 @@ void ATopDown2PlayerController::BeginPlay() {
 	Super::BeginPlay();
 	const auto Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (!Subsystem) {
-		UE_LOG(LogTemplateCharacter, Error, TEXT("error initializing input subsystem!"));
+		UE_LOG(LogTopDown2, Error, TEXT("error initializing input subsystem!"));
 		return;	
 	}
 	// todo separate function

@@ -12,7 +12,7 @@
 class UNiagaraSystem;
 class UInputAction;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogTopDown2, Log, All);
 
 UCLASS()
 class ATopDown2PlayerController : public APlayerController

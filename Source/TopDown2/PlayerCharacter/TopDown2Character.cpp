@@ -2,6 +2,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "TopDown2PlayerController.h"
+#include "AI/NavigationSystemBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -40,7 +41,7 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	CameraYawAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
+	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 
 	// Activate ticking in order to update the cursor every frame in blueprint
 }
@@ -80,7 +81,7 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	const auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (!EnhancedInputComponent) {
 		UE_LOG(
-			LogTemplateCharacter,
+			LogTopDown2,
 			Error,
 			TEXT(
 				"'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
@@ -93,7 +94,13 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		MovementInputAction,
 		ETriggerEvent::Triggered,
 		this,
-		&ATopDown2Character::Move
+		&ATopDown2Character::AddMovement
+	);
+	EnhancedInputComponent->BindAction(
+		MovementInputAction,
+		ETriggerEvent::Completed,
+		this,
+		&ATopDown2Character::StopMovement
 	);
 	EnhancedInputComponent->BindAction(
 		MeleeAttackInputAction,
@@ -119,15 +126,21 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	PlayerController->bEnableMouseOverEvents = false; // true
 }
 
-void ATopDown2Character::Move(const FInputActionValue& Value) {
+void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
 	if (Controller == nullptr) {
-		UE_LOG(LogTemplateCharacter, Error, TEXT("šikna"), *GetNameSafe(this));
+		UE_LOG(LogTopDown2, Error, TEXT("Controller is null"));
+		return;
+	}
+	
+	if (!Value.IsNonZero()) {
+		UE_LOG(LogTopDown2, Error, TEXT("Value is zero"));	
 		return;
 	}
 	
 	const auto GamepadInput = Value.Get<FVector>();
+	
 	const float Angle = CalculateAngleFromGamepadInput(GamepadInput);
-	const FRotator BodyRotator = FRotator(0.f, Angle + 45, 0.f);
+	const FRotator BodyRotator = FRotator(0.f, Angle + MovementDeltaAngle, 0.f);
     SetActorRotation(BodyRotator);
 
 	const auto ForwardDirection = 
@@ -137,14 +150,26 @@ void ATopDown2Character::Move(const FInputActionValue& Value) {
 	const auto UpDirection =
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Z);
 	
-	const auto OffsetInput = GamepadInput.RotateAngleAxis(-45, UpDirection);
-		
+	const auto OffsetInput = GamepadInput.RotateAngleAxis(-MovementDeltaAngle, UpDirection);
+	
 	AddMovementInput(ForwardDirection, OffsetInput.Y);
 	AddMovementInput(RightDirection, OffsetInput.X);
 }
 
+void ATopDown2Character::StopMovement() {
+	AddMovement(FInputActionValue());
+}
+
+// todo combat component
 void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
-	PlayAnimMontage(MeleeAttackAnimMontage, 1);
+	if (!MeleeAttackAnimMontage) {
+		return;	
+	}
+	PlayAnimMontage(MeleeAttackAnimMontage);
+	auto AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(MeleeAttackAnimMontage);
+	auto name = MeleeAttackAnimMontage->GetName();
+	UE_LOG(LogTopDown2, All, TEXT("%s"), *name);
 }
 
 void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float DeltaTime) {
