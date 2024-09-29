@@ -4,8 +4,8 @@
 
 #include "HealthComponent.h"
 #include "WeaponMeshComponent.h"
+#include "Engine/StaticMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
-#include "MaterialEditor/MaterialEditorMeshComponent.h"
 #include "TopDown2/TopDown2.h"
 
 UCombatComponent::UCombatComponent()
@@ -25,34 +25,37 @@ void UCombatComponent::BeginPlay()
 	}
 
 	EquippedWeaponMesh = Owner->FindComponentByClass<UWeaponMeshComponent>();
-	auto MeshComponent = Owner->FindComponentByClass<UStaticMeshComponent>();
-	EquippedWeaponMesh->SetStaticMesh(MeshComponent->GetStaticMesh());
 	
 	if (EquippedWeaponMesh != nullptr) {
-		BladeStart = EquippedWeaponMesh->GetSocketLocation("bladeStart");
-		BladeEnd = EquippedWeaponMesh->GetSocketLocation("bladeEnd");
-	} else {
-		BladeStart = FVector();
-		BladeEnd = FVector();
+		BladeStart = EquippedWeaponMesh->GetSocketByName("bladeStart");
+		BladeEnd = EquippedWeaponMesh->GetSocketByName("bladeEnd");
 	}
 }
 
+FVector UCombatComponent::GetSocketLocation(const UStaticMeshSocket* Socket) const {
+	FTransform Transform;
+	bool IsSuccess = Socket->GetSocketTransform(Transform, EquippedWeaponMesh);
+	if (!IsSuccess) {
+		UE_LOG(LogTopDown2, Error, TEXT("Failed to get socket transform"));
+		return FVector();
+	}
+	return Transform.GetLocation();
+}
+
+// todo: call events when another actor is hit instead of modifying it
 void UCombatComponent::DetectMeleeHits() {
 	TArray<FHitResult> HitResults;
 	// todo bad check
-	
-    EquippedWeaponMesh = GetOwner()->FindComponentByClass<UWeaponMeshComponent>();
-    const auto BladeStart1 = EquippedWeaponMesh->GetSocketLocation("bladeStart");
-    const auto BladeEnd1 = EquippedWeaponMesh->GetSocketLocation("bladeEnd");
-	if (BladeStart1.IsZero() || BladeEnd1.IsZero()) {
+
+	if (BladeStart == nullptr || BladeEnd == nullptr) {
 		UE_LOG(LogTopDown2, Error, TEXT("Invalid socket locations"))
 		return;	
 	}
 	
 	UKismetSystemLibrary::SphereTraceMulti(
 		GetOwner(),
-		BladeStart1,
-		BladeEnd1,
+		GetSocketLocation(BladeStart),
+		GetSocketLocation(BladeEnd),
 		HitRadius,
 		ETraceTypeQuery::TraceTypeQuery2,
 		false, // bTraceComplex
@@ -66,6 +69,9 @@ void UCombatComponent::DetectMeleeHits() {
 	
 	for (const FHitResult& TempResult : HitResults) {
 		const auto Actor = TempResult.GetActor();
+		if (!Actor) {
+			continue;
+		}
 		const auto HealthComponent = Actor->FindComponentByClass<UHealthComponent>();
 		if (!HealthComponent) {
 			continue;
@@ -75,6 +81,7 @@ void UCombatComponent::DetectMeleeHits() {
 		}
 		
 		HitIdSet.insert(Actor->GetUniqueID());
+		// todo event
 		HealthComponent->TakeDamage(DamagePerHit);
 	}
 }

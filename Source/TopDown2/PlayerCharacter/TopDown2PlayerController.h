@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,12 +6,14 @@
 #include "GameFramework/PlayerController.h"
 #include "TopDown2PlayerController.generated.h"
 
-/** Forward declaration to improve compiling times */
+/** todo use Forward declaration to improve compiling times */
 class UNiagaraSystem;
 class UInputAction;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTopDown2, Log, All);
 
+// todo map controller input and calculate it here instead of doing it
+// in character itself.
 UCLASS()
 class ATopDown2PlayerController : public APlayerController
 {

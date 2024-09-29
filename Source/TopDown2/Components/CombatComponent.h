@@ -41,9 +41,11 @@ protected:
 	float HitRadius = DEFAULT_HIT_RADIUS;
 
 private:	
-	UPROPERTY()
-	FVector BladeStart = FVector();
+	UPROPERTY(VisibleAnywhere, Category="Combat")
+	TObjectPtr<UStaticMeshSocket const> BladeStart = nullptr;
 
-	UPROPERTY()
-	FVector BladeEnd = FVector();
+	UPROPERTY(VisibleAnywhere, Category="Combat")
+	TObjectPtr<UStaticMeshSocket const> BladeEnd = nullptr;
+
+	FVector GetSocketLocation(const UStaticMeshSocket* Socket) const;
 };

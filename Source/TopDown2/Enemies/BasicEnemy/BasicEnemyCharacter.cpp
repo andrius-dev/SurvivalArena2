@@ -1,12 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
-
-#include "AIController.h"
 #include "BasicEnemyController.h"
-#include "Kismet/GameplayStatics.h"
-#include "Tests/AutomationCommon.h"
 
 // Sets default values
 ABasicEnemyCharacter::ABasicEnemyCharacter()
@@ -17,9 +10,10 @@ ABasicEnemyCharacter::ABasicEnemyCharacter()
 void ABasicEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	AIControllerClass = ABasicEnemyController::StaticClass();
+	
 	if (DefaultBehaviorTree == nullptr) {
 		UE_LOG(LogTemp, Error, TEXT("DefaultBehaviorTree is null"));
-		return;
 	}
 
 	FTimerHandle TimerHandle;
