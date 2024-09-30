@@ -55,9 +55,9 @@ public:
 	float TakeDamage(const float Amount);
 
 protected:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	float MaxHealth = DEFAULT_MAX_HEALTH;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	float CurrentHealth = MaxHealth;
 	
 	virtual void BeginPlay() override;
