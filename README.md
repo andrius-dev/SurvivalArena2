@@ -1,12 +1,12 @@
 TODO: Rename this repository
 
-# Battlemage 2
+# Survival Arena something 2
 
 ## Gameplay description
-Single player game. 
+Single player and co-op game.
 
 Top down perspective, isometric view.
-Level is small, up to 3x3 screen sizes.
+Level size depends but will probably be up to 10 screen sizes in width and height
 
 Player is able to melee attack with a sword or shoot with a gun. Both weapons are aimed. Player turns with the "look" controller (mouse, joystick, touchscreen, etc.)
 
@@ -23,3 +23,42 @@ Sword and board gameplay option
 Online leaderboard
 Touchscreen support
 Android release
+
+# GAMEPLAY LOOP:
+enemies drop weapons randomly. every N enemies defeated or so.
+
+at the end of every wave player has a chance to store items for storage
+
+after player's defeat, player gets sent back some levels or waves, lose inventory but gets to keep what's in storage
+
+every time levels are kind of randomized (enemies, building placement)
+
+buildings placed in level can be used for strategy or cover (for example, a wall to get away from enemies for a moment or a canon)
+
+player will have abilities that affect enemy status, movement, attention, etc.
+
+
+## Notes
+
+ICombatCharacter
+GetCombatComponent();
+GetHealthComponent();
+GetWeaponComponent();
+
+Controllers
+Controller handles input and translates it to PlayerCharacter. Then PlayerCharacter could be
+reference controllers instead of characters!
+
+Kameros valdymas
+Su desiniu joysticku valdoma kamera aplink zaideja
+Aukstis nesivaldo arba valdosi atskirai
+
+UE_LOG
+naujos macro funkcijos ue logui.
+LOG_ERROR(Text, Args)
+LOG_ALL(Text, Args)
+etc
+
+Gamemode Couch co-op
+
+

@@ -17,12 +17,13 @@
 ATopDown2Character::ATopDown2Character() {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	PrimaryActorTick.bCanEverTick = true;
 
 	// Don't rotate character to camera direction
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
+	
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
@@ -43,37 +44,11 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 
-	// Activate ticking in order to update the cursor every frame in blueprint
 }
 
 void ATopDown2Character::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	DeltaTimeSecs = DeltaSeconds;
-}
-
-// todo: rewrite the function from blueprint
-void ATopDown2Character::StartHitDetection() {
-	// if (RightHandSocketName == "") {
-	// 	return;
-	// }
-	// auto socketLocation = GetMesh()->GetSocketLocation(RightHandSocketName);
-	// FHitResult hitResult;
-	// UKismetSystemLibrary::CapsuleTraceMultiForObjects(
-	// 	
-	// );
-	// DrawDebugSphereTraceSingle(
-	// 	GetWorld(),
-	// 	socketLocation,
-	// 	socketLocation,
-	// 	50.f,
-	// 	EDrawDebugTrace::ForDuration,
-	// 	false,
-	// 	hitResult,
-	// 	FLinearColor::Yellow,
-	// 	FLinearColor::Red,
-	// 	4.f
-	// 	);
-	// 	UGameplayStatics::BreakHitResult(hitResult);
 }
 
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -114,6 +89,13 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		[this](const FInputActionValue& Value) {
 			MouseLook(Value, DeltaTimeSecs);
 		}
+	);
+	EnhancedInputComponent->BindActionValueLambda(
+		JumpInputAction,
+		ETriggerEvent::Triggered,
+		[this](const FInputActionValue& Value) {
+			Jump();
+		}	
 	);
 }
 

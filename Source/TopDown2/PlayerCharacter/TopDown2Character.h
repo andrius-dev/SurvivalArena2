@@ -38,9 +38,6 @@ public:
 		return CameraBoom;
 	}
 
-	UFUNCTION(BlueprintCallable, Category=Animation)
-	void StartHitDetection();
-
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController) override;
@@ -75,10 +72,15 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> ControllerLookInputAction = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> JumpInputAction = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UAnimMontage> MeleeAttackAnimMontage = nullptr;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ATopDown2PlayerController> PlayerController = nullptr;
+	
 };
