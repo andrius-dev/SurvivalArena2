@@ -23,6 +23,751 @@
 		"version": "2.0.0",
 		"tasks": [
 			{
+				"label": "TopDown2 Android Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Debug",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Debug Cook+Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Debug",
+					"-ServerConfig=Debug",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Debug Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Debug Cook",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Debug",
+					"-ServerConfig=Debug",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Debug Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Debug Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Debug",
+					"-ServerConfig=Debug",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-DeploySoToDevice",
+					"-SkipCook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2 Android Debug Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Debug",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"TopDown2 Android Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Debug",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"DebugGame",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android DebugGame Cook+Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=DebugGame",
+					"-ServerConfig=DebugGame",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android DebugGame Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android DebugGame Cook",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=DebugGame",
+					"-ServerConfig=DebugGame",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android DebugGame Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android DebugGame Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=DebugGame",
+					"-ServerConfig=DebugGame",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-DeploySoToDevice",
+					"-SkipCook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2 Android DebugGame Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"DebugGame",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"TopDown2 Android DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"DebugGame",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Development",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Development Cook+Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Development",
+					"-ServerConfig=Development",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Development Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Development Cook",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Development",
+					"-ServerConfig=Development",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Development Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Development Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Development",
+					"-ServerConfig=Development",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-DeploySoToDevice",
+					"-SkipCook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2 Android Development Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Development",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"TopDown2 Android Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Development",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Test",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Test Cook+Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Test",
+					"-ServerConfig=Test",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Test Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Test Cook",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Test",
+					"-ServerConfig=Test",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Test Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Test Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Test",
+					"-ServerConfig=Test",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-DeploySoToDevice",
+					"-SkipCook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2 Android Test Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Test",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"TopDown2 Android Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Test",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Shipping",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Shipping Cook+Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Shipping",
+					"-ServerConfig=Shipping",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Shipping Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Shipping Cook",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Shipping",
+					"-ServerConfig=Shipping",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-Cook"
+				],
+				"dependsOn": [
+					"TopDown2Editor Linux Development Build",
+					"TopDown2 Android Shipping Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Shipping Deploy",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/RunUAT.sh",
+				"args": [
+					"BuildCookRun",
+					"-ScriptsForProject=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-Project=/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-noP4",
+					"-ClientConfig=Shipping",
+					"-ServerConfig=Shipping",
+					"-NoCompileEditor",
+					"-utf8output",
+					"-Platform=Android",
+					"-TargetPlatform=Android",
+					"-ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:BlueprintNativizationMethod=Disabled",
+					"-Compressed",
+					"-IterativeCooking",
+					"-IterativeDeploy",
+					"-DeploySoToDevice",
+					"-SkipCook",
+					"-Stage",
+					"-Deploy"
+				],
+				"dependsOn": [
+					"TopDown2 Android Shipping Build"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Shipping",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"TopDown2 Android Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
+				"label": "TopDown2 Android Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"TopDown2",
+					"Android",
+					"Shipping",
+					"/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/home/andrius/.local/bin/UnrealEngine5"
+				}
+			},
+			{
 				"label": "TopDown2 Linux Debug Build",
 				"group": "build",
 				"command": "Engine/Build/BatchFiles/Linux/Build.sh",

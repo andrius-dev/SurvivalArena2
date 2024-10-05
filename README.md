@@ -24,6 +24,10 @@ Online leaderboard
 Touchscreen support
 Android release
 
+# Theme/setting
+Not decided yet but some ideas:
+    - British city in future
+
 # GAMEPLAY LOOP:
 enemies drop weapons randomly. every N enemies defeated or so.
 

@@ -16,7 +16,191 @@
 		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
 	},
 	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/CharacterSpawner.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/CharacterSpawner.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Components/CombatComponent.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Components/CombatComponent.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Components/HealthComponent.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Components/HealthComponent.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Components/WeaponMeshComponent.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Components/WeaponMeshComponent.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Constants.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Enemies/BasicEnemy/BasicEnemyController.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/Enemies/BasicEnemy/BasicEnemyController.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/GameLogMacros.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/GameLogMacros.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/GameModeSurvival.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/GameModeSurvival.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
 		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/GameTags.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/PlayerCharacter/TopDown2Character.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/PlayerCharacter/TopDown2Character.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/PlayerCharacter/TopDown2PlayerController.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/PlayerCharacter/TopDown2PlayerController.h",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/SpawnManager.cpp",
+		"arguments": [
+			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
+			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
+		],
+		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
+	},
+	{
+		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/SpawnManager.h",
 		"arguments": [
 			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
 			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
@@ -41,54 +225,6 @@
 	},
 	{
 		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDown2.h",
-		"arguments": [
-			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
-			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
-		],
-		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
-	},
-	{
-		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDown2Character.cpp",
-		"arguments": [
-			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
-			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
-		],
-		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
-	},
-	{
-		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDown2Character.h",
-		"arguments": [
-			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
-			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
-		],
-		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
-	},
-	{
-		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDown2PlayerController.cpp",
-		"arguments": [
-			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
-			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
-		],
-		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
-	},
-	{
-		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDown2PlayerController.h",
-		"arguments": [
-			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
-			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
-		],
-		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
-	},
-	{
-		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDownGameMode.cpp",
-		"arguments": [
-			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
-			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"
-		],
-		"directory": "/home/andrius/.local/bin/UnrealEngine5/Engine/Source"
-	},
-	{
-		"file": "/home/andrius/Projektai/Games/TopDown2/Source/TopDown2/TopDownGameMode.h",
 		"arguments": [
 			"/home/andrius/.local/bin/UnrealEngine5/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v22_clang-16.0.6-centos7/x86_64-unknown-linux-gnu/bin/clang++",
 			"@/home/andrius/Projektai/Games/TopDown2/.vscode/compileCommands_TopDown2/TopDown2.1.rsp"

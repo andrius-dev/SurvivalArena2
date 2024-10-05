@@ -17,6 +17,14 @@ public class TopDown2 : ModuleRules {
 			"Niagara",
 			"EnhancedInput"
 		});
+		 if (Target.bBuildEditor)
+		  {
+			PrivateDependencyModuleNames.AddRange(new string[] { "LevelEditor", "UnrealEd" });
+		  }
+		  else
+		  {
+			PrivateDependencyModuleNames.AddRange(new string[] { });
+		  }
 	}
 
 }

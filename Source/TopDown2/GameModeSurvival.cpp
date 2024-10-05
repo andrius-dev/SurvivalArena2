@@ -1,8 +1,5 @@
 #include "GameModeSurvival.h"
 
-#include "GameModeInfoCustomizer.h"
-#include "ToolBuilderUtil.h"
-
 class AGameSession;
 
 AGameModeSurvival::AGameModeSurvival() {
