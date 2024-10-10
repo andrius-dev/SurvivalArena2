@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "TopDown2/Constants.h"
 
@@ -17,6 +18,7 @@
 ATopDown2Character::ATopDown2Character() {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	DeltaTimeSecs = 0.0;
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Don't rotate character to camera direction
@@ -43,12 +45,27 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
-
 }
 
 void ATopDown2Character::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	DeltaTimeSecs = DeltaSeconds;
+}
+
+bool ATopDown2Character::IsDodgePressed_Implementation() {
+	return bDodgePressed;
+}
+
+bool ATopDown2Character::IsAttackPressed_Implementation() {
+	return bAttackPressed;
+}
+
+int ATopDown2Character::AttackInputCount_Implementation() {
+	return AttackInputCount;
+}
+
+void ATopDown2Character::ResetAttackInputChain_Implementation() {
+	AttackInputCount = 0;
 }
 
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -65,11 +82,14 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		);
 		return;
 	}
-	EnhancedInputComponent->BindAction(
+	EnhancedInputComponent->BindActionValueLambda(
 		MovementInputAction,
 		ETriggerEvent::Triggered,
-		this,
-		&ATopDown2Character::AddMovement
+		[this](const FInputActionValue& Value) {
+			if (!GetCharacterMovement()->IsFalling()) {
+				AddMovement(Value);	
+			}	
+		}	
 	);
 	EnhancedInputComponent->BindAction(
 		MovementInputAction,
@@ -87,16 +107,44 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		MouseLookInputAction,
 		ETriggerEvent::None,
 		[this](const FInputActionValue& Value) {
-			MouseLook(Value, DeltaTimeSecs);
+			if (GetCharacterMovement()->IsFalling()) {
+				MouseLook(Value.Get<FVector>(), DeltaTimeSecs);
+			}
 		}
 	);
 	EnhancedInputComponent->BindActionValueLambda(
 		JumpInputAction,
 		ETriggerEvent::Triggered,
 		[this](const FInputActionValue& Value) {
+			bIsJumpPressed = Value.Get<bool>();
 			Jump();
 		}	
 	);
+	EnhancedInputComponent->BindActionValueLambda(
+		JumpInputAction,
+		ETriggerEvent::Canceled,
+		[this](const FInputActionValue& Value) {
+			bIsJumpPressed = Value.Get<bool>();
+		}	
+	);
+	EnhancedInputComponent->BindActionValueLambda(
+		DodgeInputAction,
+		ETriggerEvent::Triggered,
+		[this](const FInputActionValue& Value) {
+			bDodgePressed = true;
+		}
+	);
+	EnhancedInputComponent->BindActionValueLambda(
+		DodgeInputAction,
+		ETriggerEvent::Canceled,
+		[this](const FInputActionValue& Value) {
+			bDodgePressed = false;
+		}
+	);
+}
+
+void ATopDown2Character::Dodge(const FInputActionValue& Value) {
+	bDodgePressed = Value.Get<bool>();
 }
 
 void ATopDown2Character::PossessedBy(AController* NewController) {
@@ -104,8 +152,10 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	if (!PlayerController || !PlayerController->IsLocalController()) {
 		return;
 	}
-	PlayerController->SetShowMouseCursor(false); // true
-	PlayerController->bEnableMouseOverEvents = false; // true
+	PlayerController->SetShowMouseCursor(true); // true
+	PlayerController->bEnableMouseOverEvents = true; // true
+	PlayerController->SetInputMode(FInputModeGameOnly());
+	
 }
 
 void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
@@ -154,17 +204,22 @@ void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
 	UE_LOG(LogTopDown2, All, TEXT("%s"), *name);
 }
 
-void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float DeltaTime) {
+void ATopDown2Character::MouseLook(const FVector& Value, const float DeltaTime) {
 	FVector MouseDir = FVector::ZeroVector;
 	FVector MousePos = FVector::ZeroVector;
+	if (Value.IsZero()) {
 	
-	PlayerController->DeprojectMousePositionToWorld(MousePos, MouseDir);
+		PlayerController->DeprojectMousePositionToWorld(MousePos, MouseDir);
+	} else {
+		const auto ScreenPos = FVector2D(Value.X, Value.Y);
+		UGameplayStatics::DeprojectScreenToWorld(PlayerController, ScreenPos, MousePos, MouseDir);
+	}
 
 	// Declaration of vector of intersection.
 	FVector Intersection = FVector::ZeroVector;
 	float t = 0.f;
 	// Vector from camera that crosses the plane we want the intersection.
-	FVector LineEnd = MousePos + MouseDir * 2000.f;
+	FVector LineEnd = MousePos + MouseDir * 3000.f;
 	// Get intersection vector. Returns true if intersection was possible.
 
 	bool bIntersectionSuccess = UKismetMathLibrary::LinePlaneIntersection_OriginNormal(
@@ -177,6 +232,7 @@ void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float D
 	);
 	// Do stuff if line intersected.
 	if (!bIntersectionSuccess) {
+		// Debug
 		return;
 	}
 	
@@ -193,7 +249,7 @@ void ATopDown2Character::MouseLook(const FInputActionValue& Value, const float D
 	// Negates the value depending on what side is the intersection relative to the component.
 	Angle *= RotationEase * ((dotSide > 0.f) ? 1.f : -1.f);
 	// Create rotator with variable.
-	FRotator BodyRotator = FRotator(0.f, Angle * DeltaTime, 0.f);
+	const FRotator BodyRotator = FRotator(0.f, Angle * DeltaTime, 0.f);
 	// Add rotation to pawn body component.
 	AddActorLocalRotation(BodyRotator);
 	
