@@ -131,14 +131,18 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		DodgeInputAction,
 		ETriggerEvent::Triggered,
 		[this](const FInputActionValue& Value) {
-			bDodgePressed = true;
+			UE_LOG(LogTopDown2, Warning, TEXT("Value %s"), *Value.ToString());
+			bool lele = Value.Get<bool>();
+			bDodgePressed = lele;
 		}
 	);
 	EnhancedInputComponent->BindActionValueLambda(
 		DodgeInputAction,
-		ETriggerEvent::Canceled,
+		ETriggerEvent::Completed,
 		[this](const FInputActionValue& Value) {
-			bDodgePressed = false;
+			UE_LOG(LogTopDown2, Warning, TEXT("Value cancel %s"), *Value.ToString());
+			bool lele = Value.Get<bool>();
+			bDodgePressed = lele;
 		}
 	);
 }
