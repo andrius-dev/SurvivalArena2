@@ -97,12 +97,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		this,
 		&ATopDown2Character::StopMovement
 	);
-	EnhancedInputComponent->BindAction(
-		MeleeAttackInputAction,
-		ETriggerEvent::Triggered,
-		this,
-		&ATopDown2Character::MeleeAttack
-	);
 	EnhancedInputComponent->BindActionValueLambda(
 		MouseLookInputAction,
 		ETriggerEvent::None,
@@ -110,39 +104,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			if (GetCharacterMovement()->IsFalling()) {
 				MouseLook(Value.Get<FVector>(), DeltaTimeSecs);
 			}
-		}
-	);
-	EnhancedInputComponent->BindActionValueLambda(
-		JumpInputAction,
-		ETriggerEvent::Triggered,
-		[this](const FInputActionValue& Value) {
-			bIsJumpPressed = Value.Get<bool>();
-			Jump();
-		}	
-	);
-	EnhancedInputComponent->BindActionValueLambda(
-		JumpInputAction,
-		ETriggerEvent::Canceled,
-		[this](const FInputActionValue& Value) {
-			bIsJumpPressed = Value.Get<bool>();
-		}	
-	);
-	EnhancedInputComponent->BindActionValueLambda(
-		DodgeInputAction,
-		ETriggerEvent::Triggered,
-		[this](const FInputActionValue& Value) {
-			UE_LOG(LogTopDown2, Warning, TEXT("Value %s"), *Value.ToString());
-			bool lele = Value.Get<bool>();
-			bDodgePressed = lele;
-		}
-	);
-	EnhancedInputComponent->BindActionValueLambda(
-		DodgeInputAction,
-		ETriggerEvent::Completed,
-		[this](const FInputActionValue& Value) {
-			UE_LOG(LogTopDown2, Warning, TEXT("Value cancel %s"), *Value.ToString());
-			bool lele = Value.Get<bool>();
-			bDodgePressed = lele;
 		}
 	);
 }

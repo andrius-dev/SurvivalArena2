@@ -15,7 +15,8 @@ public class TopDown2 : ModuleRules {
 			"NavigationSystem",
 			"AIModule",
 			"Niagara",
-			"EnhancedInput"
+			"EnhancedInput",
+			"GameplayTags"
 		});
 		 if (Target.bBuildEditor)
 		  {
