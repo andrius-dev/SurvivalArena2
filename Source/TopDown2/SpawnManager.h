@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Actor.h"

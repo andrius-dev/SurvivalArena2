@@ -19,8 +19,6 @@ public:
 	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	UBehaviorTree* BaseBehaviourTree;
 	
-	void RunAIBehaviors(UBehaviorTree* BehaviorTree, UWorld* World, ACharacter* PlayerCharacter);
-	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="AI|Components|PawnSensing")
 	bool IsKickableAss(APawn* InPawn);
 

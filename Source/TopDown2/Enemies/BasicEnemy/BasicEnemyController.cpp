@@ -1,8 +1,5 @@
 #include "BasicEnemyController.h"
 
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "TopDown2/PlayerCharacter/TopDown2Character.h"
 
 // Sets default values
@@ -35,23 +32,6 @@ bool ABasicEnemyController::IsKickableAss(APawn* InPawn) {
 	}	
 	LogPawnAction("This ass can't be kicked", InPawn->GetName());	
 	return false;
-}
-
-void ABasicEnemyController::RunAIBehaviors(
-	UBehaviorTree* BehaviorTree,
-	UWorld* World,
-	ACharacter* PlayerCharacter
-) {
-	// if (World == nullptr) {
-	// 	UE_LOG(LogTopDown2, Log, TEXT("null PlayerController"));
-	// 	return;
-	// }
-	// Blackboard->SetValueAsObject("PlayerCharacter", PlayerCharacter);
-	// auto test = Blackboard->GetValueAsObject("PlayerCharacter");
-	// if (test == nullptr) {
-	// 	UE_LOG(LogTopDown2, Log, TEXT("null PlayerController"));
-	// }
-	// RunBehaviorTree(BehaviorTree);
 }
 
 // todo make basic functions for logging: for errors, warnings, etc.

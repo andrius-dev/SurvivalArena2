@@ -26,6 +26,4 @@ protected:
 private:
 	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	UBehaviorTree* DefaultBehaviorTree = nullptr;
-
-	void RunAIBehavior();
 };

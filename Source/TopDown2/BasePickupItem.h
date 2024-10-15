@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,7 +11,6 @@ class TOPDOWN2_API ABasePickupItem : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABasePickupItem();
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
@@ -27,13 +24,10 @@ public:
 	float YawRotationSpeed = 0.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Pickup")
 	float RollRotationSpeed = 0.f;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="GameMode")
-	TObjectPtr<AGameMode> GameMode = nullptr;
 
 	virtual void OnPickedUp();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")
