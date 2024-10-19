@@ -26,32 +26,34 @@ void ASpawnManager::BeginPlay() {
 	}
 }
 
-void ASpawnManager::LoadEnemiesAtStartLocation(UBehaviorTree* BehaviorTree) {
-	for (const auto Spawner : SpawnersList) {
-		const auto NewActor = UAIBlueprintHelperLibrary::SpawnAIFromClass(
-			this,
-			Spawner->GetSpawnedClass(),
-			BehaviorTree,
-			GetActorLocation(),
-			FRotator::ZeroRotator,
-			true // bNoCollisionFail
-		);
-		UE_LOG(LogTopDown2, Warning, TEXT("Spawning character: %s"), *NewActor->GetActorLocation().ToString());
-		const auto NewCharacter = Cast<ACharacter>(NewActor);
-		CharactersPool.Add(NewCharacter);
-	}
+TArray<AActor*> ASpawnManager::GetCharactersPool() {
+	return CharactersPool;
 }
 
-void ASpawnManager::MoveEnemiesToSpawners() {
-	const int CharactersCount = CharactersPool.Num();
+TArray<AActor*> ASpawnManager::LoadEnemiesAtStartLocation(UBehaviorTree* BehaviorTree) {
+	for (const auto Spawner : SpawnersList) {
+		const auto NewPawn = Spawner->LoadCharacterWithBehaviorTree(BehaviorTree);
+		CharactersPool.Add(NewPawn);
+	}
+	return CharactersPool;
+}
+
+void ASpawnManager::MoveEnemiesToSpawners(TArray<AActor*> const EnemiesToMove) {
+	const int CharactersCount = EnemiesToMove.Num();
 	for (int i = 0; i < SpawnersList.Num(); i++) {
 		if (i >= CharactersCount) {
 			break;
 		}
 		const auto Spawner = SpawnersList[i];
-		CharactersPool[i]->SetActorLocation(Spawner->GetActorLocation());
-		
-		UE_LOG(LogTopDown2, Warning, TEXT("Moving character to: %s"), *Spawner->GetActorLocation().ToString());
+		const auto Enemy  = EnemiesToMove[i];
+		if (!Enemy) {
+			UE_LOG(LogTopDown2, Error, TEXT("MoveEnemiesToSpawners element is null"));
+			continue;
+		}
+		Enemy->SetActorLocationAndRotation(
+			Spawner->GetActorLocation(),
+			Spawner->GetActorRotation()
+		);
 	}
 }
 

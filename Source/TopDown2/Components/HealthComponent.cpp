@@ -26,7 +26,7 @@ float UHealthComponent::GetCurrentHealth() {
 	return CurrentHealth;
 }
 
-float UHealthComponent::TakeDamage(const float Amount) {
+float UHealthComponent::TakeDamage(const float Amount, AActor* Initiator) {
 	const float OldHealth = CurrentHealth;
 	CurrentHealth -= Amount;
 	if (CurrentHealth < 0.f) {
@@ -37,7 +37,7 @@ float UHealthComponent::TakeDamage(const float Amount) {
 		this,
 		OldHealth,
 		CurrentHealth,
-		this->GetOwner()
+		Initiator
 	);
 	
 	if (CurrentHealth == 0) {

@@ -9,7 +9,7 @@
 #include "TopDown2Character.generated.h"
 
 UCLASS(Blueprintable)
-class ATopDown2Character : public ACharacter, public ICharacterAnimationInputs
+class ATopDown2Character : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -39,32 +39,24 @@ public:
 		return CameraBoom;
 	}
 	
-	virtual bool IsDodgePressed_Implementation() override;	
-	virtual bool IsAttackPressed_Implementation() override;
-	virtual int AttackInputCount_Implementation() override;
-	virtual void ResetAttackInputChain_Implementation() override;
-	
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController) override;
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
 	void AddMovement(const FInputActionValue& Value);
-	void StopMovement();
-	void MeleeAttack(const FInputActionValue& Value);
-	void Dodge(const FInputActionValue& Value);
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void MouseLook(const FVector& Value, const float DeltaTime);
 	
+	UFUNCTION(BlueprintCallable, Category="Input")
 	static float CalculateAngleFromGamepadInput(const FVector& GamepadInput);
+	
 	double DeltaTimeSecs;
 
-private:
-	
-	bool bDodgePressed = false;
-	bool bAttackPressed = false;
-	bool bIsJumpPressed = false;
 	int AttackInputCount = 0;
 	
+private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> TopDownCameraComponent = nullptr;
@@ -94,10 +86,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> DodgeInputAction = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Animation, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<UAnimMontage> MeleeAttackAnimMontage = nullptr;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ATopDown2PlayerController> PlayerController = nullptr;
-	
 };

@@ -31,14 +31,23 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	TObjectPtr<UWeaponMeshComponent> EquippedWeaponMesh = nullptr;
 
-	UPROPERTY()
-	TArray<AActor*> ActorsToIgnore = TArray<AActor*>();
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
+	bool bDamageActorsOfSelfClass = true;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
+	TArray<FName> TagsToIgnoreDamage;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	float DamagePerHit = DEFAULT_DAMAGE;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	float HitRadius = DEFAULT_HIT_RADIUS;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
+	FLinearColor AttackTraceMissColor;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
+	FLinearColor AttackTraceHitColor;
 
 private:	
 	UPROPERTY(VisibleAnywhere, Category="Combat")
@@ -48,4 +57,7 @@ private:
 	TObjectPtr<UStaticMeshSocket const> BladeEnd = nullptr;
 
 	FVector GetSocketLocation(const UStaticMeshSocket* Socket) const;
+	
+	UPROPERTY()
+	TArray<AActor*> ActorsToIgnoreTrace;
 };

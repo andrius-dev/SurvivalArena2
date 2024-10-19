@@ -88,6 +88,10 @@
 		{
 			"Name": "OptionalMobileFeaturesBPLibrary",
 			"Enabled": true
+		},
+		{
+			"Name": "AnimationWarping",
+			"Enabled": true
 		}
 	]
 }

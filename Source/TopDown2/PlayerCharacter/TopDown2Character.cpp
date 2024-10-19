@@ -52,22 +52,6 @@ void ATopDown2Character::Tick(const float DeltaSeconds) {
 	DeltaTimeSecs = DeltaSeconds;
 }
 
-bool ATopDown2Character::IsDodgePressed_Implementation() {
-	return bDodgePressed;
-}
-
-bool ATopDown2Character::IsAttackPressed_Implementation() {
-	return bAttackPressed;
-}
-
-int ATopDown2Character::AttackInputCount_Implementation() {
-	return AttackInputCount;
-}
-
-void ATopDown2Character::ResetAttackInputChain_Implementation() {
-	AttackInputCount = 0;
-}
-
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	// Set up action bindings
 	const auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
@@ -91,12 +75,12 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			}	
 		}	
 	);
-	EnhancedInputComponent->BindAction(
-		MovementInputAction,
-		ETriggerEvent::Completed,
-		this,
-		&ATopDown2Character::StopMovement
-	);
+	// EnhancedInputComponent->BindAction(
+	// 	MovementInputAction,
+	// 	ETriggerEvent::Completed,
+	// 	this,
+	// 	&ATopDown2Character::StopMovement
+	// );
 	EnhancedInputComponent->BindActionValueLambda(
 		MouseLookInputAction,
 		ETriggerEvent::None,
@@ -108,10 +92,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	);
 }
 
-void ATopDown2Character::Dodge(const FInputActionValue& Value) {
-	bDodgePressed = Value.Get<bool>();
-}
-
 void ATopDown2Character::PossessedBy(AController* NewController) {
 	PlayerController = Cast<ATopDown2PlayerController>(NewController);
 	if (!PlayerController || !PlayerController->IsLocalController()) {
@@ -120,7 +100,6 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	PlayerController->SetShowMouseCursor(true); // true
 	PlayerController->bEnableMouseOverEvents = true; // true
 	PlayerController->SetInputMode(FInputModeGameOnly());
-	
 }
 
 void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
@@ -151,22 +130,6 @@ void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
 	
 	AddMovementInput(ForwardDirection, OffsetInput.Y);
 	AddMovementInput(RightDirection, OffsetInput.X);
-}
-
-void ATopDown2Character::StopMovement() {
-	AddMovement(FInputActionValue());
-}
-
-// todo combat component
-void ATopDown2Character::MeleeAttack(const FInputActionValue& Value) {
-	if (!MeleeAttackAnimMontage) {
-		return;	
-	}
-	PlayAnimMontage(MeleeAttackAnimMontage);
-	auto AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->Montage_Play(MeleeAttackAnimMontage);
-	auto name = MeleeAttackAnimMontage->GetName();
-	UE_LOG(LogTopDown2, All, TEXT("%s"), *name);
 }
 
 void ATopDown2Character::MouseLook(const FVector& Value, const float DeltaTime) {

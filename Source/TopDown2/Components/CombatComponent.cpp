@@ -12,7 +12,10 @@ UCombatComponent::UCombatComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	HitRadius = DEFAULT_HIT_RADIUS;
-	ActorsToIgnore = TArray<AActor*>();
+	ActorsToIgnoreTrace = TArray<AActor*>();
+	bDamageActorsOfSelfClass = false;
+	AttackTraceHitColor = FLinearColor::Green;
+	AttackTraceMissColor = FLinearColor::Red;
 }
 
 void UCombatComponent::BeginPlay()
@@ -24,11 +27,16 @@ void UCombatComponent::BeginPlay()
 		return;
 	}
 
-	EquippedWeaponMesh = Owner->FindComponentByClass<UWeaponMeshComponent>();
-	
-	if (EquippedWeaponMesh != nullptr) {
-		BladeStart = EquippedWeaponMesh->GetSocketByName("bladeStart");
-		BladeEnd = EquippedWeaponMesh->GetSocketByName("bladeEnd");
+	if (!EquippedWeaponMesh) {
+		EquippedWeaponMesh = Owner->FindComponentByClass<UWeaponMeshComponent>();
+	}
+	if (EquippedWeaponMesh) {
+		if (!BladeStart) {
+			BladeStart = EquippedWeaponMesh->GetSocketByName("SocketBladeStart");
+		}
+		if (!BladeEnd) {
+			BladeEnd = EquippedWeaponMesh->GetSocketByName("SocketBladeEnd");
+		}
 	}
 }
 
@@ -47,41 +55,60 @@ void UCombatComponent::DetectMeleeHits() {
 	TArray<FHitResult> HitResults;
 	// todo bad check
 
-	if (BladeStart == nullptr || BladeEnd == nullptr) {
+	if (!BladeStart || !BladeEnd) {
 		UE_LOG(LogTopDown2, Error, TEXT("Invalid socket locations"))
 		return;	
 	}
-	
-	UKismetSystemLibrary::SphereTraceMulti(
+
+	UKismetSystemLibrary::LineTraceMulti(
 		GetOwner(),
 		GetSocketLocation(BladeStart),
 		GetSocketLocation(BladeEnd),
-		HitRadius,
 		ETraceTypeQuery::TraceTypeQuery2,
 		false, // bTraceComplex
-		ActorsToIgnore,
+		ActorsToIgnoreTrace,
 		EDrawDebugTrace::ForDuration,
 		HitResults,
-		true // bIgnoreSelf
+		true,
+		AttackTraceMissColor,
+		AttackTraceHitColor
 	);
+	// UKismetSystemLibrary::SphereTraceMulti(
+	// 	GetOwner(),
+	// 	GetSocketLocation(BladeStart),
+	// 	GetSocketLocation(BladeEnd),
+	// 	HitRadius,
+	// 	ETraceTypeQuery::TraceTypeQuery2,
+	// 	false, // bTraceComplex
+	// 	ActorsToIgnoreTrace,
+	// 	EDrawDebugTrace::ForDuration,
+	// 	HitResults,
+	// 	true // bIgnoreSelf
+	// );
 
-	auto HitIdSet = std::set<uint32>();
+	auto HitActorsIdSet = std::set<uint32>();
 	
 	for (const FHitResult& TempResult : HitResults) {
-		const auto Actor = TempResult.GetActor();
-		if (!Actor) {
+		const auto HitActor = TempResult.GetActor();
+		if (!HitActor) {
 			continue;
 		}
-		const auto HealthComponent = Actor->FindComponentByClass<UHealthComponent>();
-		if (!HealthComponent) {
+		const auto HealthComponent = HitActor->FindComponentByClass<UHealthComponent>();
+		
+		if (!HealthComponent ||
+			HitActorsIdSet.contains(HitActor->GetUniqueID()) ||
+			(!bDamageActorsOfSelfClass && HitActor->IsA(GetOwner()->StaticClass()))
+		) {
 			continue;
 		}
-		if (HitIdSet.contains(Actor->GetUniqueID())) {
+		const bool bTagIgnored = TagsToIgnoreDamage.ContainsByPredicate([HitActor](const FName& Tag) {
+			return HitActor->ActorHasTag(Tag);
+		});
+		if (bTagIgnored) {
 			continue;		
 		}
 		
-		HitIdSet.insert(Actor->GetUniqueID());
-		// todo event
-		HealthComponent->TakeDamage(DamagePerHit);
+		HitActorsIdSet.insert(HitActor->GetUniqueID());
+		HealthComponent->TakeDamage(DamagePerHit, this->GetOwner());
 	}
 }

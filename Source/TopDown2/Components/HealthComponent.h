@@ -48,16 +48,18 @@ public:
 	float GetCurrentHealth();
 
 	/**
+	 * Reduces CurrentHealth by Amount and broadcasts OnHealthChanged
 	 * @param Amount Raw attack value
 	 * @return Actual damage taken
+	 * @param Initiator Actor that attacked this component's owner
 	 */
 	UFUNCTION(BlueprintCallable, Category="Health")
-	float TakeDamage(const float Amount);
+	float TakeDamage(const float Amount, AActor* Initiator);
 
 protected:
 	UPROPERTY(EditAnywhere)
 	float MaxHealth = DEFAULT_MAX_HEALTH;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 	float CurrentHealth = MaxHealth;
 	
 	virtual void BeginPlay() override;

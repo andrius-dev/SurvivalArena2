@@ -8,6 +8,36 @@ UGameplayAbility_Jump::UGameplayAbility_Jump() {
 	bReplicateEndAbility = true;
 }
 
+void UGameplayAbility_Jump::OnGiveAbility(
+	const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilitySpec& Spec
+) {
+	Super::OnGiveAbility(ActorInfo, Spec);
+	TempOwnerInfo = ActorInfo;
+	TempHandle = Spec.Handle;
+	
+	const auto Character = CastChecked<ACharacter>(ActorInfo->AvatarActor.Get());
+	Character->LandedDelegate.AddDynamic(
+		this,
+		&UGameplayAbility_Jump::OnLanded
+	);
+	Character->OnReachedJumpApex.AddDynamic(
+		this,
+		&UGameplayAbility_Jump::OnReachedJumpApex	
+	);
+}
+
+void UGameplayAbility_Jump::OnRemoveAbility(
+	const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilitySpec& Spec
+) {
+	Super::OnRemoveAbility(ActorInfo, Spec);
+	
+	const auto Character = CastChecked<ACharacter>(ActorInfo->AvatarActor.Get());
+	Character->LandedDelegate.RemoveAll(this);
+	Character->OnReachedJumpApex.RemoveAll(this);
+}
+
 void UGameplayAbility_Jump::ActivateAbility(
 	const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* OwnerInfo,
@@ -25,27 +55,7 @@ void UGameplayAbility_Jump::ActivateAbility(
 	this->TempActivationInfo = ActivationInfo;
 	const auto Character = CastChecked<ACharacter>(OwnerInfo->AvatarActor.Get());
 	
-	Character->LandedDelegate.AddDynamic(
-		this,
-		&UGameplayAbility_Jump::OnLanded
-	);
-	Character->OnReachedJumpApex.AddDynamic(
-		this,
-		&UGameplayAbility_Jump::OnReachedJumpApex	
-	);
 	Character->Jump();
-}
-
-void UGameplayAbility_Jump::OnLanded(const FHitResult& HitResult) {
-	if (TempOwnerInfo == nullptr) {
-		UE_LOG(LogTopDown2, Error, TEXT("OwnerInfo null, can't end ability"));
-		return;
-	}
-	EndAbility(TempHandle, TempOwnerInfo, TempActivationInfo, bReplicateEndAbility, false);
-	UE_LOG(LogTopDown2, All, TEXT("Jump ability ended"));
-}
-
-void UGameplayAbility_Jump::OnReachedJumpApex() {
 }
 
 void UGameplayAbility_Jump::InputPressed(
@@ -97,4 +107,16 @@ void UGameplayAbility_Jump::CancelAbility(
 void UGameplayAbility_Jump::BeginDestroy() {
 	Super::BeginDestroy();
 	TempOwnerInfo = nullptr;
+}
+
+void UGameplayAbility_Jump::OnLanded(const FHitResult& HitResult) {
+	if (TempOwnerInfo == nullptr) {
+		UE_LOG(LogTopDown2, Error, TEXT("OwnerInfo null, can't end ability"));
+		return;
+	}
+	EndAbility(TempHandle, TempOwnerInfo, TempActivationInfo, bReplicateEndAbility, false);
+	UE_LOG(LogTopDown2, All, TEXT("Jump ability ended"));
+}
+
+void UGameplayAbility_Jump::OnReachedJumpApex() {
 }

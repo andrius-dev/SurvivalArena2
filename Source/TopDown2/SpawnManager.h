@@ -1,5 +1,6 @@
 #pragma once
 
+#include <new>
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Actor.h"
@@ -19,19 +20,22 @@ public:
 	void AddCharacterToList(ACharacter* NewCharacter);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void MoveEnemiesToSpawners();
+	void MoveEnemiesToSpawners(TArray<AActor*> const EnemiesToMove);
 
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void LoadEnemiesAtStartLocation(UBehaviorTree* BehaviorTree);
+	TArray<AActor*> LoadEnemiesAtStartLocation(UBehaviorTree* BehaviorTree);
 
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(BlueprintReadOnly, Category="AI")
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	TArray<AActor*> GetCharactersPool();
+	
+private:
+	UPROPERTY()
 	TArray<AActor*> CharactersPool;
 	
-	UPROPERTY(BlueprintReadOnly, Category="AI")
+	UPROPERTY()
 	TArray<ACharacterSpawner*> SpawnersList;
 };

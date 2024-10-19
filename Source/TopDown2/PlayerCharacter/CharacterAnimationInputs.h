@@ -17,6 +17,7 @@ class TOPDOWN2_API ICharacterAnimationInputs
 {
 	GENERATED_BODY()
 
+	// todo clean-up, not needed anymore
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat")
 	bool IsDodgePressed();

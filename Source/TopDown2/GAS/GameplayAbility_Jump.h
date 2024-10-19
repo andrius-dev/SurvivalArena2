@@ -7,6 +7,12 @@
 /**
  * 
  */
+// todo: add states class/enum
+
+enum EAbilityState {
+	
+};
+
 UCLASS()
 class TOPDOWN2_API UGameplayAbility_Jump : public UGameplayAbility_CharacterJump
 {
@@ -14,6 +20,16 @@ class TOPDOWN2_API UGameplayAbility_Jump : public UGameplayAbility_CharacterJump
 
 public:
 	UGameplayAbility_Jump();
+	
+	virtual void OnGiveAbility(
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilitySpec& Spec
+	) override;
+	
+	virtual void OnRemoveAbility(
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilitySpec& Spec
+	) override;
 	
 	virtual void ActivateAbility(
 		const FGameplayAbilitySpecHandle Handle,
