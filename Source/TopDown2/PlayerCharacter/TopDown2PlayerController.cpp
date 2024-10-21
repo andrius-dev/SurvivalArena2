@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
+#include "TopDown2/TopDown2.h"
 
 ATopDown2PlayerController::ATopDown2PlayerController() {
 }

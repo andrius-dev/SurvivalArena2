@@ -10,8 +10,6 @@
 class UNiagaraSystem;
 class UInputAction;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTopDown2, Log, All);
-
 // todo map controller input and calculate it here instead of doing it
 // in character itself.
 UCLASS()

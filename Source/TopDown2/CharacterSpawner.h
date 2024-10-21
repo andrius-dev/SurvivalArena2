@@ -27,9 +27,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	AActor* LoadCharacterWithBehaviorTree(UBehaviorTree* BehaviorTree);
 	
-	UFUNCTION(BlueprintCallable, Category = "AI")
-	void SpawnCharacter(AActor* Actor);
-	
 	TSubclassOf<ACharacter> GetSpawnedClass() {
 		return SpawnedClass;
 	}

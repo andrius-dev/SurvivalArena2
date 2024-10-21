@@ -30,11 +30,3 @@ AActor* ACharacterSpawner::LoadCharacterWithBehaviorTree(UBehaviorTree* Behavior
 	);
 	return LoadedPawn;
 }
-
-void ACharacterSpawner::SpawnCharacter(AActor* Actor) {
-	Actor->SetActorLocationAndRotation(
-		GetActorLocation(),
-		GetActorRotation()
-	);
-	
-}

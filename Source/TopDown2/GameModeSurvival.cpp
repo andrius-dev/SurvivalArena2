@@ -4,6 +4,7 @@ class AGameSession;
 
 AGameModeSurvival::AGameModeSurvival() {
 	bSpawnPlayerOnStart = true;
+	Score = 0;
 }
 
 int AGameModeSurvival::GetScore() const {
