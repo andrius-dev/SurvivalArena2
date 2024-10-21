@@ -1,7 +1,7 @@
 #include "CharacterSpawner.h"
 
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Enemies/BasicEnemy/BasicEnemyCharacter.h"
+#include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 ACharacterSpawner::ACharacterSpawner() {

@@ -3,13 +3,10 @@
 #include <vector>
 
 #include "CoreMinimal.h"
-#include "CharacterSpawner.h"
 #include "GameFramework/GameModeBase.h"
+#include "TopDown2/PlayerCharacter/TopDown2Character.h"
 #include "GameFramework/GameSession.h"
-#include "PlayerCharacter/TopDown2Character.h"
 #include "GameModeSurvival.generated.h"
-
-class AGameSession;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
 	FOnScoreChanged,
@@ -23,6 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
 
 /**
  * Game loop description to be added here
+ * Online feature - game master. He/she will control how enemies spawn
  */
 UCLASS()
 class TOPDOWN2_API AGameModeSurvival : public AGameModeBase {

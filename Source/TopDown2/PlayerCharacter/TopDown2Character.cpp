@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "TopDown2/Util/Constants.h"
+#include "TopDown2/Util/Log.h"
 
 // todo: clean this up, most of these params should be set in blueprint
 ATopDown2Character::ATopDown2Character() {

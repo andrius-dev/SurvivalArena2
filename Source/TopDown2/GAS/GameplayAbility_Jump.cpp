@@ -2,6 +2,7 @@
 
 #include "GameFramework/Character.h"
 #include "TopDown2/TopDown2.h"
+#include "TopDown2/Util/Log.h"
 
 
 UGameplayAbility_Jump::UGameplayAbility_Jump() {

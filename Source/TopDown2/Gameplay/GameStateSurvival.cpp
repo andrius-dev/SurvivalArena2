@@ -1,8 +1,6 @@
 
 #include "GameStateSurvival.h"
 
-#include "TopDown2.h"
-
 AGameStateSurvival::AGameStateSurvival() {
 	EnemyIdSet = TSet<uint32>();
 }
@@ -47,14 +45,14 @@ int AGameStateSurvival::GetRemainingEnemyCount() const {
 
 void AGameStateSurvival::HandleEnemyDefeated(AActor* Enemy) {
 	EnemyIdSet.Remove(Enemy->GetUniqueID());
-	if (EnemyIdSet.Num() <= 0) {
+	if (EnemyIdSet.IsEmpty()) {
 		OnAllEnemiesDefeated.Broadcast();
 	}
 }
 
 void AGameStateSurvival::HandleEnemyAdded(AActor* Enemy) {
 	if (EnemyIdSet.Contains(Enemy->GetUniqueID())) {
-		UE_LOG(LogTopDown2, Error, TEXT("Trying to add the same enemy twice"));
+		// UE_LOG(LogTopDown2, Error, TEXT("Trying to add the same enemy twice"));
 		return;	
 	}
 	EnemyIdSet.Add(Enemy->GetUniqueID());

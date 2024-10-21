@@ -7,6 +7,7 @@
 #include "Engine/StaticMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "TopDown2/TopDown2.h"
+#include "TopDown2/Util/Log.h"
 
 UCombatComponent::UCombatComponent()
 {

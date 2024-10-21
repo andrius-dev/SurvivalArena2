@@ -1,15 +1,17 @@
 #include "SpawnManager.h"
 
 #include "AIController.h"
+#include "AudioDeviceNotificationSubsystem.h"
 #include "CharacterSpawner.h"
-#include "TopDown2.h"
+#include "Algo/Count.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "TopDown2/Util/Log.h"
+
 
 ASpawnManager::ASpawnManager() {
 	PrimaryActorTick.bCanEverTick = false;
-	SpawnMode = EEnemySpawnMode::CustomCount;
 	bNoCollisionFail = false;
 }
 
@@ -29,45 +31,20 @@ void ASpawnManager::BeginPlay() {
 }
 
 TArray<AActor*> ASpawnManager::InitializeEnemies(
-	UBehaviorTree* BehaviorTree,
-	EEnemySpawnMode Mode,
+	UEnemySpawnMode* Mode,
+	// todo maybe remove 
 	TArray<FSpawnParams> SpawnParams
 ) {
+	check(Mode);
 	SpawnMode = Mode;
 
-	switch (SpawnMode) {
-	case EEnemySpawnMode::SpawnerCountMax:
-		return InitializeEnemiesSpawnerCountMode(BehaviorTree);
-	case EEnemySpawnMode::CustomCount:
-		return InitializeEnemiesCustomCountMode(BehaviorTree, SpawnParams);
-	}
-
-	return InitializeEnemiesSpawnerCountMode(BehaviorTree);
-}
-
-TArray<AActor*> ASpawnManager::InitializeEnemiesSpawnerCountMode(
-	UBehaviorTree* BehaviorTree
-) {
-	for (const auto Spawner : SpawnersList) {
-		const auto NewPawn = Spawner->LoadCharacterWithBehaviorTree(
-			BehaviorTree
-		);
-		CharactersPool.Add(NewPawn);
-	}
-	return CharactersPool;
-}
-
-TArray<AActor*> ASpawnManager::InitializeEnemiesCustomCountMode(
-	UBehaviorTree* BehaviorTree,
-	const TArray<FSpawnParams>& SpawnParams
-) {
 	for (int i = 0; i < SpawnParams.Num(); i++) {
 		const auto SpawnParam = SpawnParams[i];
 		for (int j = 0; j < SpawnParam.Count; j++) {
 			const auto NewPawn = UAIBlueprintHelperLibrary::SpawnAIFromClass(
 				this,
 				SpawnParam.EnemyClass,
-				BehaviorTree,
+				SpawnParam.BehaviorTree,
 				GetActorLocation(),
 				GetActorRotation(),
 				bNoCollisionFail
@@ -75,6 +52,7 @@ TArray<AActor*> ASpawnManager::InitializeEnemiesCustomCountMode(
 			CharactersPool.Add(NewPawn);
 		}
 	}
+
 	return CharactersPool;
 }
 
@@ -93,15 +71,29 @@ void ASpawnManager::SpawnEnemy(
 	EnemyToSpawn->SetState(EEnemyGameState::Active);
 }
 
-void ASpawnManager::MoveEnemiesToSpawners(TArray<AActor*> const EnemiesToMove) {
-	switch (SpawnMode) {
-	case EEnemySpawnMode::CustomCount:
-		MoveEnemiesToSpawnersCustomCountMode(EnemiesToMove);
-		break;
-	case EEnemySpawnMode::SpawnerCountMax:
-		MoveEnemiesToSpawnerCountMode(EnemiesToMove);
-		break;
+void ASpawnManager::InitialEnemySpawn(int Count) {
+	if (Count > CharactersPool.Num()) {
+		UE_LOG(LogTopDown2, Warning, TEXT("Enemy pool is less than Count, to be implemented"));
 	}
+
+	// switch (SpawnMode->GetModeType()) {
+	// case UEnemySpawnModeContinuous::StaticClass():
+	// 	if (Count <= SpawnersList.Num()) {
+	// 		for (int i = 0; i < Count; i++) {
+	// 			const auto Spawner = SpawnersList[i];
+	// 			CharactersPool[i]->SetActorLocationAndRotation(
+	// 				Spawner->GetActorLocation(),
+	// 				Spawner->GetActorRotation()
+	// 			);
+	// 		}
+	// 	}
+	// 	break;
+	// case UEnemySpawnModeWaves::StaticClass():
+	// 	UE_LOG(LogTopDown2, Warning, TEXT("Wave mode is not implemented"));
+	// 	break;
+	// default:
+	// 	UE_LOG(LogTopDown2, Error, TEXT("Invalid SpawnMode"));
+	// }
 }
 
 void ASpawnManager::MoveEnemiesToSpawnerCountMode(
@@ -127,11 +119,6 @@ void ASpawnManager::MoveEnemiesToSpawnerCountMode(
 			Spawner->GetActorRotation()
 		);
 	}
-}
-
-void ASpawnManager::MoveEnemiesToSpawnersCustomCountMode(
-	TArray<AActor*> const EnemiesToMove
-) {
 }
 
 void ASpawnManager::EndPlay(const EEndPlayReason::Type EndPlayReason) {

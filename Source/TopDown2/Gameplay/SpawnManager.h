@@ -2,31 +2,27 @@
 
 #include <new>
 #include "CoreMinimal.h"
+#include "EnemySpawnMode.h"
 #include "GameModeSurvival.h"
 #include "BehaviorTree/BehaviorTree.h"
-#include "Enemies/BasicEnemy/BasicEnemyCharacter.h"
+#include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
 #include "GameFramework/Actor.h"
 #include "SpawnManager.generated.h"
 
 class ACharacterSpawner;
 
-UENUM(BlueprintType)
-enum class EEnemySpawnMode : uint8 {
-	SpawnerCountMax,
-	CustomCount	
-};
-
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Category="GameState")
 struct FSpawnParams {
-	GENERATED_BODY()
-	
-	UPROPERTY(BlueprintReadOnly, Category=AI)
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite, Category=AI)
 	TObjectPtr<UClass> EnemyClass;
 	
-	UPROPERTY(BlueprintReadOnly, Category=AI)
+	UPROPERTY(BlueprintReadWrite, Category=AI)
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 	
-	UPROPERTY(BlueprintReadOnly, Category=AI)
+	UPROPERTY(BlueprintReadWrite, Category=AI)
 	int Count;	
 };
 
@@ -39,9 +35,8 @@ public:
 	ASpawnManager();
 
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	
 	TArray<AActor*> InitializeEnemies(
-		EEnemySpawnMode Mode,
+		UEnemySpawnMode* Mode,
 		TArray<FSpawnParams> SpawnParams
 	);
 	
@@ -49,7 +44,7 @@ public:
 	void AddCharacterToList(ACharacter* NewCharacter);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void MoveEnemiesToSpawners(TArray<AActor*> const EnemiesToMove);
+	void InitialEnemySpawn(int Count);
 
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -75,10 +70,7 @@ private:
 	TObjectPtr<AGameModeSurvival> GameModeSurvival = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, Category = "GameState")
-	EEnemySpawnMode SpawnMode;
+	UEnemySpawnMode* SpawnMode = nullptr;
 
-	TArray<AActor*> InitializeEnemiesSpawnerCountMode(UBehaviorTree* BehaviorTree);
-	TArray<AActor*> InitializeEnemiesCustomCountMode(const TArray<FSpawnParams>& SpawnParams);
 	void MoveEnemiesToSpawnerCountMode(TArray<AActor*> const EnemiesToMove);
-	void MoveEnemiesToSpawnersCustomCountMode(TArray<AActor*> const EnemiesToMove);
 };

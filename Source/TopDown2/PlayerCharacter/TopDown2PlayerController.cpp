@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "TopDown2/TopDown2.h"
+#include "TopDown2/Util/Log.h"
 
 ATopDown2PlayerController::ATopDown2PlayerController() {
 }
