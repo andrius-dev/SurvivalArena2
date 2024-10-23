@@ -30,102 +30,103 @@ void ASpawnManager::BeginPlay() {
 	}
 }
 
-TArray<FPooledEnemy> ASpawnManager::InitEnemyPool(
+TArray<UEnemyCharacter*> ASpawnManager::InitEnemyPool(
 	TArray<FSpawnParams> EnemiesToInitialize
 ) {
+	InactiveEnemyPool.Reset();
+	ActiveEnemyPool.Reset();
+
 	for (int i = 0; i < EnemiesToInitialize.Num(); i++) {
 		const auto SpawnParam = EnemiesToInitialize[i];
 		for (int j = 0; j < SpawnParam.Count; j++) {
 			const auto NewPawn = UAIBlueprintHelperLibrary::SpawnAIFromClass(
 				this,
-				SpawnParam.EnemyClass,
+				SpawnParam.EnemyClass.GetClass(),
 				SpawnParam.BehaviorTree,
 				GetActorLocation(),
 				GetActorRotation(),
 				bNoCollisionFail
 			);
-			const auto PooledEnemy = FPooledEnemy(NewPawn, false);
-			EnemiesPool.Add(PooledEnemy);
+			InactiveEnemyPool.Add(Cast<UEnemyCharacter>(NewPawn));
 		}
 	}
 
-	return EnemiesPool;
+	return InactiveEnemyPool;
 }
 
 void ASpawnManager::AddEnemyToPool(FSpawnParams EnemyToAdd) {
 }
 
-TArray<FPooledEnemy> ASpawnManager::SpawnEnemiesOnAllSpawnersFromPoolTop() {
-	const auto InactiveEnemies =
-		EnemiesPool.FilterByPredicate(
-			[&](const FPooledEnemy& Enemy) {
-				return !Enemy.bActive;
-			}
-		);
-
-	TArray<FPooledEnemy> SpawnEnemies;
+TArray<const UEnemyCharacter*> ASpawnManager::SpawnEnemiesOnAllSpawnersFromPoolTop() {
+	TMap<uint32, const UEnemyCharacter*> EnemiesToActivate;
 	for (int i = 0; i < SpawnersList.Num(); i++) {
-		if (i >= InactiveEnemies.Num()) {
+		if (i >= InactiveEnemyPool.Num()) {
 			break;
 		}
 		const auto Spawner = SpawnersList[i];
-		const auto Enemy = EnemiesPool[i];
-		SpawnEnemy(Enemy.Character, Spawner);
-		SpawnEnemies.Add(Enemy);
+		const auto Enemy = InactiveEnemyPool[i];
+		EnemiesToActivate.Add(Enemy->GetUniqueID(), Enemy);
+		SpawnEnemy(Enemy, Spawner);
 	}
-	return SpawnEnemies;
+	InactiveEnemyPool.RemoveAll(
+		[EnemiesToActivate](const UEnemyCharacter* Enemy) {
+			return EnemiesToActivate.Contains(Enemy->GetUniqueID());
+		}
+	);
+	TArray<const UEnemyCharacter*> SpawnedEnemies;
+	EnemiesToActivate.GenerateValueArray(SpawnedEnemies);
+
+	return SpawnedEnemies;
 }
 
 bool ASpawnManager::ReturnEnemyToPool(AActor* Enemy) {
 	const auto MatchingEnemy =
-		EnemiesPool.FindByPredicate(
+		ActiveEnemyPool.FindByPredicate(
 			[Enemy](const FPooledEnemy& PoolEnemy) {
-				return PoolEnemy.Character->GetUniqueID() == Enemy->
-					GetUniqueID();
+				return Cast<AActor>(PoolEnemy.Character) == Enemy;
 			}
 		);
 	if (!MatchingEnemy) {
 		return false;
 	}
-	MatchingEnemy->bActive = false;
-	const auto Character = CastChecked<ABasicEnemyCharacter>(
-		MatchingEnemy->Character
-	);
-	Character->SetState(EEnemyGameState::Inactive);
+	(*MatchingEnemy)->SetState(EEnemyGameState::Inactive);
 	// todo move to start location
 	return true;
 }
 
 AActor* ASpawnManager::GetRandomInactiveEnemyFromPool() {
-	const auto PoolEnemy = EnemiesPool.FindByPredicate(
+	const auto PoolEnemy = ActiveEnemyPool.FindByPredicate(
 		[](const FPooledEnemy& TempPoolEnemy) {
 			return !TempPoolEnemy.bActive;
 		}
 	);
-	if (!PoolEnemy)	{
+	if (!PoolEnemy) {
 		return nullptr;
 	}
-	return PoolEnemy->Character;
+	return IEnemyCharacter::Execute_GetCharacter(*PoolEnemy);
 }
 
-TArray<FPooledEnemy> ASpawnManager::GetEnemiesPool() {
-	return EnemiesPool;
+TArray<UEnemyCharacter*> ASpawnManager::GetActiveEnemies() {
+	return ActiveEnemyPool;
+}
+
+TArray<UEnemyCharacter*> ASpawnManager::GetInactiveEnemies() {
+	return InactiveEnemyPool;
 }
 
 void ASpawnManager::SpawnEnemy(
-	AActor* EnemyToSpawn,
+	UEnemyCharacter* EnemyToSpawn,
 	const ACharacterSpawner* Spawner
 ) {
-	EnemyToSpawn->SetActorLocationAndRotation(
+	if (!EnemyToSpawn) {
+		return;
+	}
+	EnemyToSpawn->GetCharacter()->SetActorLocationAndRotation(
 		Spawner->GetActorLocation(),
 		Spawner->GetActorRotation()
 	);
 
-	// todo make the fucking interface already
-	if (EnemyToSpawn->IsA(ABasicEnemyCharacter::StaticClass())) {
-		const auto BasicEnemy = Cast<ABasicEnemyCharacter>(EnemyToSpawn);
-		BasicEnemy->SetState(EEnemyGameState::Active);
-	}
+	EnemyToSpawn->SetState(EEnemyGameState::Active);
 }
 
 // void ASpawnManager::SpawnEnemiesFromPool(int Count) {
@@ -156,28 +157,6 @@ void ASpawnManager::SpawnEnemy(
 // 		UE_LOG(LogTopDown2, Error, TEXT("Invalid SpawnMode"));
 // 	}
 // }
-
-void ASpawnManager::MoveEnemiesToSpawner(
-	TArray<FPooledEnemy*> const& EnemiesToMove
-) {
-	const int CharactersCount = EnemiesToMove.Num();
-	for (int i = 0; i < SpawnersList.Num(); i++) {
-		if (i >= CharactersCount) {
-			break;
-		}
-		const auto Spawner = SpawnersList[i];
-		const auto Enemy = EnemiesToMove[i];
-		if (!Enemy) {
-			UE_LOG(
-				LogTopDown2,
-				Error,
-				TEXT("MoveEnemiesToSpawners element is null")
-			);
-			continue;
-		}
-		SpawnEnemy(Enemy->Character, Spawner);
-	}
-}
 
 void ASpawnManager::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);

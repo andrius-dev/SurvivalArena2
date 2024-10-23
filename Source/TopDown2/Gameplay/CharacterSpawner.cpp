@@ -6,27 +6,9 @@
 
 ACharacterSpawner::ACharacterSpawner() {
 	PrimaryActorTick.bCanEverTick = false;
-	SpawnedClass = ABasicEnemyCharacter::StaticClass();
 	ActorName = "DefaultName";
 }
 
 void ACharacterSpawner::BeginPlay() {
 	Super::BeginPlay();
-}
-
-// todo maybe this should be implemented in game mode
-AActor* ACharacterSpawner::LoadCharacterWithBehaviorTree(UBehaviorTree* BehaviorTree) {
-	const auto LoadedPawn = UAIBlueprintHelperLibrary::SpawnAIFromClass(
-		this,
-		SpawnedClass,
-		BehaviorTree,
-		GetActorLocation(),
-		GetActorRotation(),
-		bNoCollisionFail
-	);
-	OnCharacterLoaded.Broadcast(
-		LoadedPawn,
-		this
-	);
-	return LoadedPawn;
 }

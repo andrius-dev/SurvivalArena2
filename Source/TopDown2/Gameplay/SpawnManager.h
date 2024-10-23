@@ -18,7 +18,7 @@ struct FSpawnParams {
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category=AI)
-	TObjectPtr<UClass> EnemyClass;
+	TSubclassOf<UEnemyCharacter> EnemyClass;
 	
 	UPROPERTY(BlueprintReadWrite, Category=AI)
 	TObjectPtr<UBehaviorTree> BehaviorTree;
@@ -35,14 +35,22 @@ class TOPDOWN2_API ASpawnManager : public AActor
 public:	
 	ASpawnManager();
 
+	// todo rename functions a lil bit
+	/**
+	* @return instantiated inactive enemies 
+	* */
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<FPooledEnemy> InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize);
+	// todo const
+	TArray<UEnemyCharacter*> InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	void AddEnemyToPool(FSpawnParams EnemyToAdd);
 	
+	/**
+	* @return activated enemies
+	* */
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<FPooledEnemy> SpawnEnemiesOnAllSpawnersFromPoolTop();
+	TArray<const UEnemyCharacter*> SpawnEnemiesOnAllSpawnersFromPoolTop();
 
 	/**
 	* Resets defeated enemy and marks as inactive
@@ -61,21 +69,28 @@ public:
 	* Activates given enemy and moves it to Spawner if it belongs to pool 
 	*/
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void SpawnEnemy(AActor* EnemyToSpawn, const ACharacterSpawner* Spawner);
+	void SpawnEnemy(UEnemyCharacter* EnemyToSpawn, const ACharacterSpawner* Spawner);
 	
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<FPooledEnemy> GetEnemiesPool();
+	TArray<UEnemyCharacter*> GetActiveEnemies();
+	
+	UFUNCTION(BlueprintCallable, Category="AI")
+	TArray<UEnemyCharacter*> GetInactiveEnemies();
+	
 	
 	UPROPERTY()
 	bool bNoCollisionFail;
 	
 private:
 	UPROPERTY()
-	TArray<FPooledEnemy> EnemiesPool;
+	TArray<UEnemyCharacter*> ActiveEnemyPool;
+	
+	UPROPERTY()
+	TArray<UEnemyCharacter*> InactiveEnemyPool;
 	
 	UPROPERTY()
 	TArray<ACharacterSpawner*> SpawnersList;
@@ -85,6 +100,4 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "GameState")
 	UEnemySpawnFlow* SpawnMode = nullptr;
-
-	void MoveEnemiesToSpawner(TArray<FPooledEnemy*> const& EnemiesToMove);
 };
