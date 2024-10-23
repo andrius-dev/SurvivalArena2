@@ -22,21 +22,29 @@ EEnemyGameState ABasicEnemyCharacter::GetState() const {
 	return CurrentState;
 }
 
+void ABasicEnemyCharacter::PossessedBy(AController* NewController) {
+	Super::PossessedBy(NewController);
+	CachedPawn = NewController->GetPawn();
+}
+
 void ABasicEnemyCharacter::SetState(const EEnemyGameState NewState) {
+	if (!CachedPawn) {
+		return;
+	}
 	CurrentState = NewState;
 	bool bHidden;
 	bool bEnableCollision;
-
+	
 	switch (CurrentState) {
 	case EEnemyGameState::Active:
 		bHidden = false;
 		bEnableCollision = true;
-		GetController()->Possess(this);
+		Cast<AAIController>(GetController())->GetBrainComponent()->RestartLogic();
 		break;
 	case EEnemyGameState::Inactive:
 		bHidden = true;
 		bEnableCollision = false;
-		GetController()->UnPossess();
+		Cast<AAIController>(GetController())->GetBrainComponent()->StopLogic("");
 		break;
 	default: ;
 		bHidden = true;

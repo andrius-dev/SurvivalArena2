@@ -2,8 +2,9 @@
 
 #include <new>
 #include "CoreMinimal.h"
-#include "EnemySpawnMode.h"
+#include "EnemySpawnFlow.h"
 #include "GameModeSurvival.h"
+#include "PooledEnemy.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
 #include "GameFramework/Actor.h"
@@ -35,33 +36,46 @@ public:
 	ASpawnManager();
 
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<AActor*> InitializeEnemies(
-		UEnemySpawnMode* Mode,
-		TArray<FSpawnParams> SpawnParams
-	);
+	TArray<FPooledEnemy> InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void AddCharacterToList(ACharacter* NewCharacter);
+	void AddEnemyToPool(FSpawnParams EnemyToAdd);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void InitialEnemySpawn(int Count);
+	TArray<FPooledEnemy> SpawnEnemiesOnAllSpawnersFromPoolTop();
 
+	/**
+	* Resets defeated enemy and marks as inactive
+	* @return Whether given Enemy was found in pool and reset
+	*/
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	bool ReturnEnemyToPool(AActor* Enemy);
+
+	/**
+	* Gives enemy for spawning it later 
+	*/
+	UFUNCTION(BlueprintCallable, Category="AI")
+	AActor* GetRandomInactiveEnemyFromPool();
+
+	/**
+	* Activates given enemy and moves it to Spawner if it belongs to pool 
+	*/
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	void SpawnEnemy(AActor* EnemyToSpawn, const ACharacterSpawner* Spawner);
+	
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<AActor*> GetCharactersPool();
-	
-	UFUNCTION(BlueprintCallable, Category = "AI")
-	void SpawnEnemy(ABasicEnemyCharacter* EnemyToSpawn, ACharacterSpawner* Spawner);
+	TArray<FPooledEnemy> GetEnemiesPool();
 	
 	UPROPERTY()
 	bool bNoCollisionFail;
 	
 private:
 	UPROPERTY()
-	TArray<AActor*> CharactersPool;
+	TArray<FPooledEnemy> EnemiesPool;
 	
 	UPROPERTY()
 	TArray<ACharacterSpawner*> SpawnersList;
@@ -70,7 +84,7 @@ private:
 	TObjectPtr<AGameModeSurvival> GameModeSurvival = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, Category = "GameState")
-	UEnemySpawnMode* SpawnMode = nullptr;
+	UEnemySpawnFlow* SpawnMode = nullptr;
 
-	void MoveEnemiesToSpawnerCountMode(TArray<AActor*> const EnemiesToMove);
+	void MoveEnemiesToSpawner(TArray<FPooledEnemy*> const& EnemiesToMove);
 };

@@ -20,7 +20,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="AI")
 	EEnemyGameState GetState() const;
-	
+
+	virtual void PossessedBy(AController* NewController) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -32,6 +34,9 @@ private:
 	UBehaviorTree* DefaultBehaviorTree = nullptr;
 	
 	UPROPERTY()
-	EEnemyGameState CurrentState;	
+	EEnemyGameState CurrentState;
+	
+	UPROPERTY()
+	APawn* CachedPawn = nullptr;
 };
 
