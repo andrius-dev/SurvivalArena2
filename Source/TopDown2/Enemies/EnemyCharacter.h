@@ -1,19 +1,24 @@
 #pragma once
+#include "EnemyDefeatedListener.h"
 #include "EnemyGameState.h"
 #include "TopDown2/Components/CombatComponent.h"
 #include "TopDown2/Components/HealthComponent.h"
 #include "EnemyCharacter.generated.h"
 
 UINTERFACE(MinimalAPI, Blueprintable)
-class UEnemyCharacter : public UInterface {
+class UEnemyCharacter : public UInterface  {
 public:
 	GENERATED_BODY()
 };
 
-class IEnemyCharacter {
+class TOPDOWN2_API IEnemyCharacter {
 	GENERATED_BODY()
 	
 public:
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI")
+	void BindOnDefeatedEvent(const TScriptInterface<IEnemyDefeatedListener>& Listener);
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI")
 	void SetState(EEnemyGameState State);
 	
@@ -29,3 +34,4 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
 	UCombatComponent* GetCombatComponent();
 };
+

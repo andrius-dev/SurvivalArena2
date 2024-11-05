@@ -18,7 +18,7 @@ struct FSpawnParams {
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category=AI)
-	TSubclassOf<UEnemyCharacter> EnemyClass;
+	TSubclassOf<ACharacter> EnemyClass;
 	
 	UPROPERTY(BlueprintReadWrite, Category=AI)
 	TObjectPtr<UBehaviorTree> BehaviorTree;
@@ -35,13 +35,11 @@ class TOPDOWN2_API ASpawnManager : public AActor
 public:	
 	ASpawnManager();
 
-	// todo rename functions a lil bit
 	/**
 	* @return instantiated inactive enemies 
 	* */
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	// todo const
-	TArray<UEnemyCharacter*> InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize);
+	const TArray<TScriptInterface<IEnemyCharacter>>& InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	void AddEnemyToPool(FSpawnParams EnemyToAdd);
@@ -50,47 +48,47 @@ public:
 	* @return activated enemies
 	* */
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<const UEnemyCharacter*> SpawnEnemiesOnAllSpawnersFromPoolTop();
+	TArray<TScriptInterface<IEnemyCharacter>> SpawnEnemiesOnAllSpawnersFromPoolTop();
 
 	/**
 	* Resets defeated enemy and marks as inactive
 	* @return Whether given Enemy was found in pool and reset
 	*/
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	bool ReturnEnemyToPool(AActor* Enemy);
+	bool ReturnEnemyToPool(TScriptInterface<IEnemyCharacter> Enemy);
 
 	/**
 	* Gives enemy for spawning it later 
 	*/
 	UFUNCTION(BlueprintCallable, Category="AI")
-	AActor* GetRandomInactiveEnemyFromPool();
+	TScriptInterface<IEnemyCharacter> GetRandomInactiveEnemyFromPool();
 
 	/**
 	* Activates given enemy and moves it to Spawner if it belongs to pool 
 	*/
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void SpawnEnemy(UEnemyCharacter* EnemyToSpawn, const ACharacterSpawner* Spawner);
+	void SpawnEnemy(TScriptInterface<IEnemyCharacter> EnemyToSpawn, const ACharacterSpawner* Spawner);
 	
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	TArray<UEnemyCharacter*> GetActiveEnemies();
+	TArray<TScriptInterface<IEnemyCharacter>> GetActiveEnemies();
 	
 	UFUNCTION(BlueprintCallable, Category="AI")
-	TArray<UEnemyCharacter*> GetInactiveEnemies();
-	
+	TArray<TScriptInterface<IEnemyCharacter>> GetInactiveEnemies();
 	
 	UPROPERTY()
 	bool bNoCollisionFail;
 	
 private:
 	UPROPERTY()
-	TArray<UEnemyCharacter*> ActiveEnemyPool;
+	// todo typedef? like, holy shit
+	TArray<TScriptInterface<IEnemyCharacter>> ActiveEnemyPool;
 	
 	UPROPERTY()
-	TArray<UEnemyCharacter*> InactiveEnemyPool;
+	TArray<TScriptInterface<IEnemyCharacter>> InactiveEnemyPool;
 	
 	UPROPERTY()
 	TArray<ACharacterSpawner*> SpawnersList;

@@ -24,12 +24,9 @@ public:
 	virtual ACharacter* GetCharacter_Implementation() override;
 	virtual UHealthComponent* GetHealthComponent_Implementation() override;
 	
-	virtual void SetStateCpp(EEnemyGameState State) override;
-	virtual const EEnemyGameState GetStateCpp() override;
-	virtual ACharacter* GetCharacterCpp() override;
-	virtual UHealthComponent* GetHealthComponentCpp() override;
-	virtual UCombatComponent* GetCombatComponentCpp() override;
-	
+	virtual void
+	BindOnDefeatedEvent_Implementation(const TScriptInterface<IEnemyDefeatedListener>& Listener) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -38,12 +35,18 @@ private:
 	EEnemyGameState CurrentState;
 	
 	UPROPERTY()
-	TObjectPtr<APawn> CachedPawn = nullptr;
-	
-	UPROPERTY()
 	TObjectPtr<UHealthComponent> HealthComponent = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<AAIController> AIController = nullptr;
+
+	UPROPERTY()
+	TScriptInterface<IEnemyDefeatedListener> OnDefeatedListener = nullptr;
+
+	UFUNCTION()
+	void DispatchOnEnemyDefeated(UHealthComponent* EnemyHealthComponent);
 };
 

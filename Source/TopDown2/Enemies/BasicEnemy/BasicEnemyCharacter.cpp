@@ -1,26 +1,39 @@
 #include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
 #include "BasicEnemyController.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "TopDown2/Util/Log.h"
 
 ABasicEnemyCharacter::ABasicEnemyCharacter() {
 	CurrentState = EEnemyGameState::Inactive;
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	AIControllerClass = ABasicEnemyController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void ABasicEnemyCharacter::BeginPlay() {
 	Super::BeginPlay();
-	AIControllerClass = ABasicEnemyController::StaticClass();
-	CombatComponent = FindComponentByClass<UCombatComponent>();
-	HealthComponent = FindComponentByClass<UHealthComponent>();
+	InitializeComponents();
 	
-	if (!CombatComponent || !HealthComponent) {
-		UE_LOG(LogTopDown2, Error, TEXT("Combat/Health component not found on Enemy"))
+	if (!CombatComponent || !HealthComponent || !AIController) {
+		UE_LOG(LogTopDown2, Error, TEXT("Combat/Health/AI component not found on Enemy"))
 		UKismetSystemLibrary::QuitGame(
 			this, 
 			nullptr,
 			EQuitPreference::Quit,
 			true // bIgnorePlatformRestrictions
 		);
+	}
+
+	HealthComponent->OnDeath.AddUniqueDynamic(this, &ABasicEnemyCharacter::DispatchOnEnemyDefeated);
+}
+
+void ABasicEnemyCharacter::DispatchOnEnemyDefeated(UHealthComponent* EnemyHealthComponent) {
+	// todo probably leave only one of these
+	// OnEnemyDefeatedEvent.Broadcast(TScriptInterface<IEnemyCharacter>(this));
+	if (OnDefeatedListener) {
+		IEnemyDefeatedListener::Execute_OnEnemyDefeated(OnDefeatedListener.GetObject(), this);
 	}
 }
 
@@ -45,35 +58,18 @@ UHealthComponent* ABasicEnemyCharacter::GetHealthComponent_Implementation() {
 	return HealthComponent;
 }
 
-void ABasicEnemyCharacter::SetStateCpp(EEnemyGameState State) {
-	SetState(State);
-}
-
-const EEnemyGameState ABasicEnemyCharacter::GetStateCpp() {
-	return GetState();
-}
-
-ACharacter* ABasicEnemyCharacter::GetCharacterCpp() {
-	return GetCharacter();
-}
-
-UHealthComponent* ABasicEnemyCharacter::GetHealthComponentCpp() {
-	return GetHealthComponent();
-}
-
-UCombatComponent* ABasicEnemyCharacter::GetCombatComponentCpp() {
-	return GetCombatComponent();
+void ABasicEnemyCharacter
+::BindOnDefeatedEvent_Implementation(const TScriptInterface<IEnemyDefeatedListener>& Listener) {
+	UE_LOG(LogTopDown2, All, TEXT("Binding enemy defeated event"))
+	OnDefeatedListener = Listener;
 }
 
 void ABasicEnemyCharacter::PossessedBy(AController* NewController) {
 	Super::PossessedBy(NewController);
-	CachedPawn = NewController->GetPawn();
+    AIController = UAIBlueprintHelperLibrary::GetAIController(this);
 }
 
 void ABasicEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState) {
-	if (!CachedPawn) {
-		return;
-	}
 	CurrentState = NewState;
 	bool bHidden;
 	bool bEnableCollision;
@@ -82,12 +78,16 @@ void ABasicEnemyCharacter::SetState_Implementation(const EEnemyGameState NewStat
 	case EEnemyGameState::Active:
 		bHidden = false;
 		bEnableCollision = true;
-		Cast<AAIController>(GetController())->GetBrainComponent()->RestartLogic();
+		if (AIController && AIController->GetBrainComponent()) {
+            AIController->GetBrainComponent()->RestartLogic();
+		}
 		break;
 	case EEnemyGameState::Inactive:
 		bHidden = true;
 		bEnableCollision = false;
-		Cast<AAIController>(GetController())->GetBrainComponent()->StopLogic("");
+		if (AIController && AIController->GetBrainComponent()) {
+            AIController->GetBrainComponent()->StopLogic("");
+		}
 		break;
 	default: ;
 		bHidden = true;
