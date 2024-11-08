@@ -2,7 +2,6 @@
 #include "EnemyDefeatedListenerInterface.h"
 #include "EnemyGameState.h"
 #include "TopDown2/Components/CombatComponent.h"
-#include "TopDown2/Components/HealthComponent.h"
 #include "EnemyCharacterInterface.generated.h"
 
 UINTERFACE(MinimalAPI, Blueprintable)
@@ -25,9 +24,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI")
 	ACharacter* GetCharacter();
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Health")
-	UHealthComponent* GetHealthComponent();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
 	UCombatComponent* GetCombatComponent();

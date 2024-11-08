@@ -7,7 +7,6 @@
 ABasicEnemyCharacter::ABasicEnemyCharacter() {
 	CurrentState = EEnemyGameState::Inactive;
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	AIControllerClass = ABasicEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -16,7 +15,7 @@ void ABasicEnemyCharacter::BeginPlay() {
 	Super::BeginPlay();
 	InitializeComponents();
 	
-	if (!CombatComponent || !HealthComponent || !AIController) {
+	if (!CombatComponent || !AIController) {
 		UE_LOG(LogTopDown2, Error, TEXT("Combat/Health/AI component not found on Enemy"))
 		UKismetSystemLibrary::QuitGame(
 			this, 
@@ -28,7 +27,9 @@ void ABasicEnemyCharacter::BeginPlay() {
 
 }
 
-void ABasicEnemyCharacter::DispatchOnEnemyDefeated(UHealthComponent* EnemyHealthComponent) {
+void ABasicEnemyCharacter::DispatchOnEnemyDefeated(
+	UCombatComponent* EnemyCombatComponent
+) {
 	if (OnDefeatedListener) {
 		IEnemyDefeatedListenerInterface::Execute_OnEnemyDefeated(OnDefeatedListener.GetObject(), this);
 	}
@@ -51,16 +52,13 @@ ACharacter* ABasicEnemyCharacter::GetCharacter_Implementation() {
 	return this;
 }
 
-UHealthComponent* ABasicEnemyCharacter::GetHealthComponent_Implementation() {
-	return HealthComponent;
-}
 
 void ABasicEnemyCharacter
 ::BindOnDefeatedEvent_Implementation(UObject* Listener) {
 	UE_LOG(LogTopDown2, All, TEXT("Binding enemy defeated event"))
 	if (Listener->GetClass()->ImplementsInterface(UEnemyDefeatedListenerInterface::StaticClass())) {
 		OnDefeatedListener = Listener;
-		HealthComponent->OnDeath.AddUniqueDynamic(this, &ABasicEnemyCharacter::DispatchOnEnemyDefeated);
+		CombatComponent->OnDeath.AddUniqueDynamic(this, &ABasicEnemyCharacter::DispatchOnEnemyDefeated);
 		UE_LOG(LogTopDown2, All, TEXT("Bound enemy defeated event"))
 	} else {
 		UE_LOG(LogTopDown2, All, TEXT("Failed to bind enemy defeated event"))
@@ -73,11 +71,14 @@ void ABasicEnemyCharacter::PossessedBy(AController* NewController) {
 }
 
 void ABasicEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState) {
-	CurrentState = NewState;
 	bool bHidden;
 	bool bEnableCollision;
+
+	if  (CurrentState != NewState) {
+		CombatComponent->ResetHealth();
+	}
 	
-	switch (CurrentState) {
+	switch (NewState) {
 	case EEnemyGameState::Active:
 		bHidden = false;
 		bEnableCollision = true;
@@ -97,6 +98,7 @@ void ABasicEnemyCharacter::SetState_Implementation(const EEnemyGameState NewStat
 		bEnableCollision = false;
 	}
 
+	CurrentState = NewState;
 	SetActorHiddenInGame(bHidden);
 	SetActorEnableCollision(bEnableCollision);
 }

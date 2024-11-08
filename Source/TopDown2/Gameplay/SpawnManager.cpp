@@ -58,13 +58,16 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 					GetActorRotation(),
 					bNoCollisionFail
 				);
-			if (!SpawnedActor || !SpawnedActor->Implements<
-				UEnemyCharacterInterface>()) {
+			if (!SpawnedActor || !SpawnedActor->Implements<UEnemyCharacterInterface>()) {
 				continue;
 			}
 			SpawnedActor->SetActorLocationAndRotation(
 				GetActorLocation(),
 				GetActorRotation()
+			);
+			IEnemyCharacterInterface::Execute_SetState(
+				SpawnedActor,
+				EEnemyGameState::Inactive
 			);
 
 			const auto SpawnedCharacter = CastChecked<ACharacter>(SpawnedActor);
@@ -194,7 +197,7 @@ void ASpawnManager::SpawnEnemy(
 	);
 
 	IEnemyCharacterInterface::Execute_SetState(
-		EnemyToSpawn,
+		EnemyActor,
 		EEnemyGameState::Active
 	);
 }

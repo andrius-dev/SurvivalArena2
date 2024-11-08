@@ -29,12 +29,6 @@ public:
 	void HandleEnemyDefeated(AActor* Enemy);
 	
 	UFUNCTION(BlueprintCallable, Category="GameState")
-	void HandleEnemyAdded(AActor* Enemy);
-	
-	UFUNCTION(BlueprintCallable, Category="GameState")
-	void HandleEnemyListAdded(TArray<AActor*>& Enemies, bool IsInitial);
-	
-	UFUNCTION(BlueprintCallable, Category="GameState")
 	void HandleAllEnemiesRemoved();
 	
 	UPROPERTY(BlueprintAssignable, Category="GameState")
@@ -43,8 +37,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void AddEnemyIds(TArray<AActor*>& Enemies, const bool OnlyUnique);
-	
-	UPROPERTY()
-	TSet<uint32> EnemyIdSet;
+	UPROPERTY(BlueprintReadWrite, Category="GameState")
+	int DefeatedEnemyCountToWin = 0;	
+
+private:
+	UPROPERTY(VisibleAnywhere, Category="GameState")
+	int RemainingEnemyCount = 0;	
 };

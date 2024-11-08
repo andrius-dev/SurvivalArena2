@@ -5,6 +5,25 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
+	
+/**
+ *
+ * Declare blueprint events. 1st param is event name,
+ * and the following params are four type - name pairs.
+ */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
+	FOnHealthChanged,
+	UCombatComponent*, CombatComponent,
+	float, NewValue,
+	float, OldValue,
+	AActor*, Initiator
+);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+	FOnDeath,
+	UCombatComponent*, CombatComponent
+);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOPDOWN2_API UCombatComponent : public UActorComponent
 {
@@ -24,8 +43,45 @@ public:
 		return "CombatComponent";
 	}
 
+	const float DEFAULT_MAX_HEALTH = 100.f;
+
+	UPROPERTY(BlueprintAssignable, Category="Health")
+	FOnHealthChanged OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable, Category="Health")
+	FOnDeath OnDeath;
+
+	UFUNCTION(BlueprintCallable, Category="Health")
+	float GetMaxHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category="Health")
+	void SetCurrentHealth(float Health, bool bNotify);
+
+	/**
+	 * Sets CurrentHealth to MaxHealth
+	 */
+	UFUNCTION(BlueprintCallable, Category="Health")
+	void ResetHealth();
+
+	UFUNCTION(BlueprintCallable, Category="Health")
+	float GetCurrentHealth() const;
+
+	/**
+	 * Reduces CurrentHealth by Amount and broadcasts OnHealthChanged
+	 * @param Amount Raw attack value
+	 * @return Actual damage taken
+	 * @param Initiator Actor that attacked this component's owner
+	 */
+	UFUNCTION(BlueprintCallable, Category="Health")
+	float TakeDamage(const float Amount, AActor* Initiator);
+
 protected:
+	UPROPERTY(EditAnywhere)
+	float MaxHealth = DEFAULT_MAX_HEALTH;
 	
+	UPROPERTY(BlueprintReadWrite)
+	float CurrentHealth = MaxHealth;
+
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")

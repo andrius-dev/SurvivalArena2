@@ -22,7 +22,6 @@ public:
 	const EEnemyGameState GetState_Implementation() override;
 	UCombatComponent* GetCombatComponent_Implementation() override;
 	ACharacter* GetCharacter_Implementation() override;
-	UHealthComponent* GetHealthComponent_Implementation() override;
 	void BindOnDefeatedEvent_Implementation(UObject* Listener) override;
 
 protected:
@@ -31,9 +30,6 @@ protected:
 private:
 	UPROPERTY()
 	EEnemyGameState CurrentState;
-	
-	UPROPERTY()
-	TObjectPtr<UHealthComponent> HealthComponent = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
@@ -45,6 +41,6 @@ private:
 	TScriptInterface<IEnemyDefeatedListenerInterface> OnDefeatedListener = nullptr;
 
 	UFUNCTION()
-	void DispatchOnEnemyDefeated(UHealthComponent* EnemyHealthComponent);
+	void DispatchOnEnemyDefeated(UCombatComponent* EnemyCombatComponent);
 };
 

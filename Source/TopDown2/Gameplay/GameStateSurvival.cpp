@@ -2,25 +2,11 @@
 #include "GameStateSurvival.h"
 
 AGameStateSurvival::AGameStateSurvival() {
-	EnemyIdSet = TSet<uint32>();
 }
 
 void AGameStateSurvival::BeginPlay() {
 	Super::BeginPlay();
-}
-
-void AGameStateSurvival::AddEnemyIds(
-	TArray<AActor*>& Enemies,
-	const bool OnlyUnique
-) {
-	for (const auto Enemy : Enemies) {
-		if (OnlyUnique) {
-			if (EnemyIdSet.Contains(Enemy->GetUniqueID())) {
-				continue;
-			}	
-		}
-		EnemyIdSet.Add(Enemy->GetUniqueID());	
-	}
+	RemainingEnemyCount = DefeatedEnemyCountToWin;
 }
 
 void AGameStateSurvival::AddPlayerState(APlayerState* PlayerState) {
@@ -40,35 +26,15 @@ void AGameStateSurvival::PostInitializeComponents() {
 }
 
 int AGameStateSurvival::GetRemainingEnemyCount() const {
-	return EnemyIdSet.Num();
+	return RemainingEnemyCount;
 }
 
 void AGameStateSurvival::HandleEnemyDefeated(AActor* Enemy) {
-	EnemyIdSet.Remove(Enemy->GetUniqueID());
-	if (EnemyIdSet.IsEmpty()) {
+	RemainingEnemyCount--;
+	if (RemainingEnemyCount <= 0) {
 		OnAllEnemiesDefeated.Broadcast();
 	}
 }
 
-void AGameStateSurvival::HandleEnemyAdded(AActor* Enemy) {
-	if (EnemyIdSet.Contains(Enemy->GetUniqueID())) {
-		// UE_LOG(LogTopDown2, Error, TEXT("Trying to add the same enemy twice"));
-		return;	
-	}
-	EnemyIdSet.Add(Enemy->GetUniqueID());
-}
-
-void AGameStateSurvival::HandleEnemyListAdded(
-	TArray<AActor*>& Enemies,
-	const bool IsInitial
-) {
-	const bool CheckUnique = !IsInitial;
-	if (IsInitial) {
-		EnemyIdSet.Reset();
-	}
-	AddEnemyIds(Enemies, CheckUnique);	
-}
-
 void AGameStateSurvival::HandleAllEnemiesRemoved() {
-	EnemyIdSet.Reset();
 }
