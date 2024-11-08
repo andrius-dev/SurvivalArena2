@@ -1,9 +1,7 @@
 #include "SpawnManager.h"
 
 #include "AIController.h"
-#include "AudioDeviceNotificationSubsystem.h"
 #include "CharacterSpawner.h"
-#include "Algo/Count.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,7 +28,7 @@ void ASpawnManager::BeginPlay() {
 	}
 }
 
-const TArray<TScriptInterface<IEnemyCharacter>>&
+TArray<UObject*>
 ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 	InactiveEnemyPool.Empty();
 	ActiveEnemyPool.Empty();
@@ -38,27 +36,30 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 	for (int i = 0; i < EnemiesToInitialize.Num(); i++) {
 		const auto SpawnParam = EnemiesToInitialize[i];
 		// skip adding this enemy class if it doesn't implement the interface
-		if (!SpawnParam.EnemyClass->ImplementsInterface(UEnemyCharacter::StaticClass())) {
+		if (!SpawnParam.EnemyClass->ImplementsInterface(
+			UEnemyCharacterInterface::StaticClass()
+		)) {
 			UE_LOG(
 				LogTopDown2,
 				Warning,
 				TEXT("%s doesn't implement UEnemyCharacter"),
 				*SpawnParam.EnemyClass.Get()->GetName()
 			)
-			continue;		
+			continue;
 		}
-		
+
 		for (int j = 0; j < SpawnParam.Count; j++) {
 			const auto SpawnedActor =
-                UAIBlueprintHelperLibrary::SpawnAIFromClass(
-                    this,
-                    SpawnParam.EnemyClass,
-                    SpawnParam.BehaviorTree,
-                    GetActorLocation(),
-                    GetActorRotation(),
-                    bNoCollisionFail	
-                );
-			if (!SpawnedActor || !SpawnedActor->Implements<UEnemyCharacter>()) {
+				UAIBlueprintHelperLibrary::SpawnAIFromClass(
+					this,
+					SpawnParam.EnemyClass,
+					SpawnParam.BehaviorTree,
+					GetActorLocation(),
+					GetActorRotation(),
+					bNoCollisionFail
+				);
+			if (!SpawnedActor || !SpawnedActor->Implements<
+				UEnemyCharacterInterface>()) {
 				continue;
 			}
 			SpawnedActor->SetActorLocationAndRotation(
@@ -67,15 +68,17 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 			);
 
 			const auto SpawnedCharacter = CastChecked<ACharacter>(SpawnedActor);
-            const auto AIController = Cast<AAIController>(SpawnedCharacter->GetController());
+			const auto AIController = Cast<AAIController>(
+				SpawnedCharacter->GetController()
+			);
 
-			if (AIController != NULL) {
+			if (AIController) {
 				AIController->RunBehaviorTree(SpawnParam.BehaviorTree);
 			} else {
-				UE_LOG(LogTopDown2, Error, TEXT("Bleeeet"));
+				UE_LOG(LogTopDown2, Error, TEXT("AI controller not found"));
 			}
-			
-			InactiveEnemyPool.Add(TScriptInterface<IEnemyCharacter>(SpawnedActor));
+
+			InactiveEnemyPool.Add(SpawnedActor);
 		}
 	}
 
@@ -85,63 +88,71 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 void ASpawnManager::AddEnemyToPool(FSpawnParams EnemyToAdd) {
 }
 
-TArray<TScriptInterface<IEnemyCharacter>>
+TArray<UObject*>
 ASpawnManager::SpawnEnemiesOnAllSpawnersFromPoolTop() {
-	TMap<uint32, TScriptInterface<IEnemyCharacter>> EnemiesToActivate;
 	for (int i = 0; i < SpawnersList.Num(); i++) {
 		if (i >= InactiveEnemyPool.Num()) {
 			break;
 		}
 		const auto Spawner = SpawnersList[i];
 		const auto Enemy = InactiveEnemyPool[i];
-		EnemiesToActivate.Add(
-			IEnemyCharacter::Execute_GetCharacter(Enemy.GetObject())->
-			GetUniqueID(),
-			Enemy
-		);
-		SpawnEnemy(TScriptInterface(Enemy), Spawner);
-	}
-	InactiveEnemyPool.RemoveAll(
-		[EnemiesToActivate](TScriptInterface<IEnemyCharacter> Enemy) {
-			const auto Key = IEnemyCharacter
-				::Execute_GetCharacter(Enemy.GetObject())->GetUniqueID();
-			return EnemiesToActivate.Contains(Key);
+		const bool ImplementsInterface =
+			Enemy->GetClass()->ImplementsInterface(
+				UEnemyCharacterInterface::StaticClass()
+			);
+		if (ImplementsInterface) {
+			SpawnEnemy(Enemy, Spawner);
+		} else {
+			UE_LOG(
+				LogTopDown2,
+				Error,
+				TEXT(
+					"Trying to spawn  enemy that doesn't implement IEnemyCharacter"
+				)
+			);
+			UKismetSystemLibrary::QuitGame(
+				this,
+				nullptr,
+				EQuitPreference::Quit,
+				true
+			);
 		}
-	);
-	TArray<TScriptInterface<IEnemyCharacter>> SpawnedEnemies;
-	EnemiesToActivate.GenerateValueArray(SpawnedEnemies);
-	for(int i = 0; i < SpawnedEnemies.Num(); i++) {
-		ActiveEnemyPool.Add(SpawnedEnemies[i]);
 	}
 
-	return SpawnedEnemies;
+	//todo invalid return value
+	return ActiveEnemyPool;
 }
 
 bool ASpawnManager::ReturnEnemyToPool(
-	const TScriptInterface<IEnemyCharacter> Enemy
+	UObject* Enemy
 ) {
-	const auto EnemyObj = Enemy.GetObject();
-	const auto MatchingEnemy =
-		ActiveEnemyPool.FindByPredicate(
-			[EnemyObj](const TScriptInterface<IEnemyCharacter>& PoolEnemy) {
-				return PoolEnemy == EnemyObj;
-			}
+	InactiveEnemyPool.Add(Enemy);
+	const auto RemovedCount = ActiveEnemyPool.Remove(Enemy);
+	ActiveEnemyPool.Remove(Enemy);
+	
+	if (RemovedCount <= 0) {
+		UE_LOG(
+			LogTopDown2,
+			Error,
+			TEXT("Failed to return defeated enemy to pool")
 		);
-	if (!MatchingEnemy) {
+        UKismetSystemLibrary::QuitGame(
+                this,
+                nullptr,
+                EQuitPreference::Quit,
+                true
+            );
 		return false;
 	}
-    ActiveEnemyPool.Remove(MatchingEnemy->GetObjectRef());
-	InactiveEnemyPool.Add(MatchingEnemy->GetObjectRef());
 
-	IEnemyCharacter::Execute_SetState(
-		MatchingEnemy->GetObject(),
+	IEnemyCharacterInterface::Execute_SetState(
+		Enemy,
 		EEnemyGameState::Inactive
 	);
-	// todo move to start location
 	return true;
 }
 
-TScriptInterface<IEnemyCharacter>
+TScriptInterface<IEnemyCharacterInterface>
 ASpawnManager::GetRandomInactiveEnemyFromPool() {
 	if (InactiveEnemyPool.IsEmpty()) {
 		return nullptr;
@@ -149,67 +160,44 @@ ASpawnManager::GetRandomInactiveEnemyFromPool() {
 	return InactiveEnemyPool.Top();
 }
 
-TArray<TScriptInterface<IEnemyCharacter>> ASpawnManager::GetActiveEnemies() {
+TArray<UObject*> ASpawnManager::GetActiveEnemies() {
 	return ActiveEnemyPool;
 }
 
-TArray<TScriptInterface<IEnemyCharacter>> ASpawnManager::GetInactiveEnemies() {
+TArray<UObject*> ASpawnManager::GetInactiveEnemies() {
 	return InactiveEnemyPool;
 }
 
 void ASpawnManager::SpawnEnemy(
-	TScriptInterface<IEnemyCharacter> EnemyToSpawn,
+	UObject* EnemyToSpawn,
 	const ACharacterSpawner* Spawner
 ) {
-	if (!EnemyToSpawn) {
+	const bool bImplementsInterface =
+		EnemyToSpawn->GetClass()->ImplementsInterface(UEnemyCharacterInterface::StaticClass());
+	if (!EnemyToSpawn || !bImplementsInterface) {
 		UKismetSystemLibrary::QuitGame(
-			this, 
+			this,
 			nullptr,
 			EQuitPreference::Quit,
 			true // bIgnorePlatformRestrictions
 		);
 		return;
 	}
-	IEnemyCharacter::Execute_GetCharacter(EnemyToSpawn.GetObject())->
-		SetActorLocationAndRotation(
-			Spawner->GetActorLocation(),
-			Spawner->GetActorRotation()
-		);
+	
+	ActiveEnemyPool.Add(EnemyToSpawn);
+	InactiveEnemyPool.Remove(EnemyToSpawn);
+	const auto EnemyActor = CastChecked<AActor>(EnemyToSpawn);
 
-	IEnemyCharacter::Execute_SetState(
-		EnemyToSpawn.GetObject(),
+	EnemyActor->SetActorLocationAndRotation(
+		Spawner->GetActorLocation(),
+		Spawner->GetActorRotation()
+	);
+
+	IEnemyCharacterInterface::Execute_SetState(
+		EnemyToSpawn,
 		EEnemyGameState::Active
 	);
 }
-
-// void ASpawnManager::SpawnEnemiesFromPool(int Count) {
-// 	if (Count > EnemiesPool.Num()) {
-// 		UE_LOG(
-// 			LogTopDown2,
-// 			Warning,
-// 			TEXT("Enemy pool is less than Count, to be implemented")
-// 		);
-// 	}
-//
-// 	switch (SpawnMode->GetModeType()) {
-// 	case UEnemySpawnFlowContinuous::StaticClass():
-// 		if (Count <= SpawnersList.Num()) {
-// 			for (int i = 0; i < Count; i++) {
-// 				const auto Spawner = SpawnersList[i];
-// 				EnemiesPool[i]->Character->SetActorLocationAndRotation(
-// 					Spawner->GetActorLocation(),
-// 					Spawner->GetActorRotation()
-// 				);
-// 			}
-// 		}
-// 		break;
-// 	case UEnemySpawnModeWaves::StaticClass():
-// 		UE_LOG(LogTopDown2, Warning, TEXT("Wave mode is not implemented"));
-// 		break;
-// 	default:
-// 		UE_LOG(LogTopDown2, Error, TEXT("Invalid SpawnMode"));
-// 	}
-// }
 
 void ASpawnManager::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);

@@ -4,11 +4,11 @@
 #include "TopDown2/Enemies/EnemyGameState.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "GameFramework/Character.h"
-#include "TopDown2/Enemies/EnemyCharacter.h"
+#include "TopDown2/Enemies/EnemyCharacterInterface.h"
 #include "BasicEnemyCharacter.generated.h"
 
 UCLASS(Blueprintable, Category="AI")
-class TOPDOWN2_API ABasicEnemyCharacter : public ACharacter, public IEnemyCharacter
+class ABasicEnemyCharacter : public ACharacter, public IEnemyCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -18,14 +18,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PossessedBy(AController* NewController) override;
 	
-	virtual void SetState_Implementation(const EEnemyGameState NewState) override;
-	virtual const EEnemyGameState GetState_Implementation() override;
-	virtual UCombatComponent* GetCombatComponent_Implementation() override;
-	virtual ACharacter* GetCharacter_Implementation() override;
-	virtual UHealthComponent* GetHealthComponent_Implementation() override;
-	
-	virtual void
-	BindOnDefeatedEvent_Implementation(const TScriptInterface<IEnemyDefeatedListener>& Listener) override;
+	void SetState_Implementation(const EEnemyGameState NewState) override;
+	const EEnemyGameState GetState_Implementation() override;
+	UCombatComponent* GetCombatComponent_Implementation() override;
+	ACharacter* GetCharacter_Implementation() override;
+	UHealthComponent* GetHealthComponent_Implementation() override;
+	void BindOnDefeatedEvent_Implementation(UObject* Listener) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -44,7 +42,7 @@ private:
 	TObjectPtr<AAIController> AIController = nullptr;
 
 	UPROPERTY()
-	TScriptInterface<IEnemyDefeatedListener> OnDefeatedListener = nullptr;
+	TScriptInterface<IEnemyDefeatedListenerInterface> OnDefeatedListener = nullptr;
 
 	UFUNCTION()
 	void DispatchOnEnemyDefeated(UHealthComponent* EnemyHealthComponent);

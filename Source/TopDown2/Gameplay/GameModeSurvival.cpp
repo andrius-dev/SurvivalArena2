@@ -88,3 +88,7 @@ APlayerController* AGameModeSurvival::Login(
 
 	return NewPlayerController;
 }
+
+void AGameModeSurvival::OnEnemyDefeated_Implementation(UObject* Enemy) {
+	IEnemyDefeatedListenerInterface::OnEnemyDefeated_Implementation(Enemy);
+}

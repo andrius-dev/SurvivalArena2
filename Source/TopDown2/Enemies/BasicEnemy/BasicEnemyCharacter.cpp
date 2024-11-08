@@ -26,14 +26,11 @@ void ABasicEnemyCharacter::BeginPlay() {
 		);
 	}
 
-	HealthComponent->OnDeath.AddUniqueDynamic(this, &ABasicEnemyCharacter::DispatchOnEnemyDefeated);
 }
 
 void ABasicEnemyCharacter::DispatchOnEnemyDefeated(UHealthComponent* EnemyHealthComponent) {
-	// todo probably leave only one of these
-	// OnEnemyDefeatedEvent.Broadcast(TScriptInterface<IEnemyCharacter>(this));
 	if (OnDefeatedListener) {
-		IEnemyDefeatedListener::Execute_OnEnemyDefeated(OnDefeatedListener.GetObject(), this);
+		IEnemyDefeatedListenerInterface::Execute_OnEnemyDefeated(OnDefeatedListener.GetObject(), this);
 	}
 }
 
@@ -59,9 +56,15 @@ UHealthComponent* ABasicEnemyCharacter::GetHealthComponent_Implementation() {
 }
 
 void ABasicEnemyCharacter
-::BindOnDefeatedEvent_Implementation(const TScriptInterface<IEnemyDefeatedListener>& Listener) {
+::BindOnDefeatedEvent_Implementation(UObject* Listener) {
 	UE_LOG(LogTopDown2, All, TEXT("Binding enemy defeated event"))
-	OnDefeatedListener = Listener;
+	if (Listener->GetClass()->ImplementsInterface(UEnemyDefeatedListenerInterface::StaticClass())) {
+		OnDefeatedListener = Listener;
+		HealthComponent->OnDeath.AddUniqueDynamic(this, &ABasicEnemyCharacter::DispatchOnEnemyDefeated);
+		UE_LOG(LogTopDown2, All, TEXT("Bound enemy defeated event"))
+	} else {
+		UE_LOG(LogTopDown2, All, TEXT("Failed to bind enemy defeated event"))
+	}
 }
 
 void ABasicEnemyCharacter::PossessedBy(AController* NewController) {

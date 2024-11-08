@@ -9,7 +9,7 @@
 #include "TopDown2Character.generated.h"
 
 UCLASS(Blueprintable)
-class ATopDown2Character : public ACharacter
+class TOPDOWN2_API ATopDown2Character : public ACharacter
 {
 	GENERATED_BODY()
 

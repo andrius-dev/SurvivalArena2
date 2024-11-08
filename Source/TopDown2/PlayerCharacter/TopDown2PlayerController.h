@@ -13,7 +13,7 @@ class UInputAction;
 // todo map controller input and calculate it here instead of doing it
 // in character itself.
 UCLASS()
-class ATopDown2PlayerController : public APlayerController
+class TOPDOWN2_API ATopDown2PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
