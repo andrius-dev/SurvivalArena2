@@ -81,14 +81,10 @@ void UCombatComponent::DetectMeleeHits() {
 		if (!HitActor) {
 			continue;
 		}
-		const auto CombatComponent = HitActor->FindComponentByClass<
-			UCombatComponent>();
+		const auto CombatComponent = HitActor->FindComponentByClass<UCombatComponent>();
 
-		if (!CombatComponent ||
-			HitActorsIdSet.contains(HitActor->GetUniqueID()) ||
-			(!bDamageActorsOfSelfClass && HitActor->IsA(
-				GetOwner()->StaticClass()
-			))
+		if (!CombatComponent || HitActorsIdSet.contains(HitActor->GetUniqueID()) ||
+			(!bDamageActorsOfSelfClass && HitActor->IsA(GetOwner()->GetClass()))
 		) {
 			continue;
 		}

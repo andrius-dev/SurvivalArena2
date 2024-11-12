@@ -7,7 +7,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
 
 /**
- * 
+ * todo move score here
  */
 UCLASS()
 class TOPDOWN2_API AGameStateSurvival : public AGameStateBase
