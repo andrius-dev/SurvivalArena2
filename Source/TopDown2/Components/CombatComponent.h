@@ -66,6 +66,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetCurrentHealth() const;
 
+	UFUNCTION(BlueprintCallable, Category="Health")
+	void SetCanReceiveDamage(bool NewDamage);
+
+	UFUNCTION(BlueprintCallable, Category="Health")
+	bool GetCanReceiveDamage() const;
+
 	/**
 	 * Reduces CurrentHealth by Amount and broadcasts OnHealthChanged
 	 * @param Amount Raw attack value
@@ -116,4 +122,7 @@ private:
 	
 	UPROPERTY()
 	TArray<AActor*> ActorsToIgnoreTrace;
+
+	UPROPERTY()
+	bool bCanReceiveDamage = true;
 };

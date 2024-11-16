@@ -126,7 +126,18 @@ float UCombatComponent::GetCurrentHealth() const {
 	return CurrentHealth;
 }
 
+void UCombatComponent::SetCanReceiveDamage(bool NewDamage) {
+	bCanReceiveDamage = NewDamage;
+}
+
+bool UCombatComponent::GetCanReceiveDamage() const {
+	return bCanReceiveDamage;
+}
+
 float UCombatComponent::TakeDamage(const float Amount, AActor* Initiator) {
+	if(!bCanReceiveDamage) {
+		return 0.0f;
+	}
 	const float OldHealth = CurrentHealth;
 	CurrentHealth -= Amount;
 	if (CurrentHealth < 0.f) {

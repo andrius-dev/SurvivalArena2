@@ -29,7 +29,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MovementDeltaAngle = DEFAULT_MOVEMENT_DELTA_ANGLE;
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetMovementDirection();
+	
 	virtual void Tick(float DeltaSeconds) override;
+
 	
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const {
 		return TopDownCameraComponent;
@@ -86,6 +90,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> DodgeInputAction = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY()
 	TObjectPtr<ATopDown2PlayerController> PlayerController = nullptr;
+
+	UPROPERTY()
+	FVector3d MovementDirection;
+
+	UPROPERTY()
+	TObjectPtr<UCharacterMovementComponent> MovementComponent = nullptr;
 };

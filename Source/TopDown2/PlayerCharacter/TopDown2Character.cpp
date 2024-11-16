@@ -46,11 +46,19 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
+	MovementComponent = CastChecked<UCharacterMovementComponent>(ACharacter::GetMovementComponent());
 }
 
 void ATopDown2Character::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	DeltaTimeSecs = DeltaSeconds;
+}
+
+FVector ATopDown2Character::GetMovementDirection() {
+	if(!MovementComponent->IsMovementInProgress()) {
+		return FVector::Zero();
+	}
+	return MovementDirection;
 }
 
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -61,7 +69,7 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			LogTopDown2,
 			Error,
 			TEXT(
-				"'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
+				"'%s' Failed to find an Enhanced Input Component..! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
 			),
 			*GetNameSafe(this)
 		);
@@ -76,12 +84,15 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			}	
 		}	
 	);
-	// EnhancedInputComponent->BindAction(
-	// 	MovementInputAction,
-	// 	ETriggerEvent::Completed,
-	// 	this,
-	// 	&ATopDown2Character::StopMovement
-	// );
+	EnhancedInputComponent->BindActionValueLambda(
+		MovementInputAction,
+		ETriggerEvent::Canceled,
+		[this](const FInputActionValue& Value) {
+			if (!GetCharacterMovement()->IsFalling()) {
+				MovementDirection = FVector::Zero();
+			}	
+		}	
+	);
 	EnhancedInputComponent->BindActionValueLambda(
 		MouseLookInputAction,
 		ETriggerEvent::None,
@@ -128,6 +139,9 @@ void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Z);
 	
 	const auto OffsetInput = GamepadInput.RotateAngleAxis(-MovementDeltaAngle, UpDirection);
+	auto NewMovementDirection = ForwardDirection + RightDirection;
+	NewMovementDirection.Normalize();
+	MovementDirection = NewMovementDirection;
 	
 	AddMovementInput(ForwardDirection, OffsetInput.Y);
 	AddMovementInput(RightDirection, OffsetInput.X);
