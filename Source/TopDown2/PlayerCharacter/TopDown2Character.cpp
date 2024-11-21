@@ -12,7 +12,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "TopDown2/Util/Constants.h"
+#include "TopDown2/Util/GameMaths.h"
 #include "TopDown2/Util/Log.h"
 
 // todo: clean this up, most of these params should be set in blueprint
@@ -47,6 +47,9 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 	MovementComponent = CastChecked<UCharacterMovementComponent>(ACharacter::GetMovementComponent());
+	CameraRotationDelta = 5;
+	CameraPositiveRotator = FRotator3d(0.0, CameraRotationDelta, 0.0);
+	CameraNegativeRotator = FRotator3d(0.0, -CameraRotationDelta, 0.0);
 }
 
 void ATopDown2Character::Tick(const float DeltaSeconds) {
@@ -102,6 +105,27 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			}
 		}
 	);
+	EnhancedInputComponent->BindActionValueLambda(
+		PanCameraLeftInputAction,
+		ETriggerEvent::Triggered,
+		[this](const FInputActionValue& Value) {
+			const auto NewRotation = CameraBoom->GetComponentRotation() +
+				CameraNegativeRotator;
+			CameraBoom->SetWorldRotation(NewRotation);
+			MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
+		}	
+	);
+	EnhancedInputComponent->BindActionValueLambda(
+		PanCameraRightInputAction,
+		ETriggerEvent::Triggered,
+		[this](const FInputActionValue& Value) {
+			const auto NewRotation = CameraBoom->GetComponentRotation() +
+				CameraPositiveRotator;
+			CameraBoom->SetWorldRotation(NewRotation);
+			MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
+		}	
+	);
+
 }
 
 void ATopDown2Character::PossessedBy(AController* NewController) {
@@ -151,7 +175,6 @@ void ATopDown2Character::MouseLook(const FVector& Value, const float DeltaTime) 
 	FVector MouseDir = FVector::ZeroVector;
 	FVector MousePos = FVector::ZeroVector;
 	if (Value.IsZero()) {
-	
 		PlayerController->DeprojectMousePositionToWorld(MousePos, MouseDir);
 	} else {
 		const auto ScreenPos = FVector2D(Value.X, Value.Y);
@@ -202,5 +225,5 @@ void ATopDown2Character::MouseLook(const FVector& Value, const float DeltaTime) 
 }
 
 float ATopDown2Character::CalculateAngleFromGamepadInput(const FVector& GamepadInput) {
-	return atan2(GamepadInput.X, GamepadInput.Y) * Constants::RadToDeg;
+	return atan2(GamepadInput.X, GamepadInput.Y) * GameMaths::RadToDeg;
 }

@@ -55,10 +55,14 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	static float CalculateAngleFromGamepadInput(const FVector& GamepadInput);
+
+	/**
+	 * used to rotate character's camera around roll axis
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Camera)
+	double CameraRotationDelta;
 	
 	double DeltaTimeSecs;
-
-	int AttackInputCount = 0;
 	
 private:
 	/** Top down camera */
@@ -84,11 +88,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> ControllerLookInputAction = nullptr;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> JumpInputAction = nullptr;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Controller, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> DodgeInputAction = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> PanCameraLeftInputAction = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> PanCameraRightInputAction = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<ATopDown2PlayerController> PlayerController = nullptr;
@@ -98,4 +108,10 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> MovementComponent = nullptr;
+
+	UPROPERTY()
+	FRotator3d CameraPositiveRotator;
+
+	UPROPERTY()
+	FRotator3d CameraNegativeRotator;
 };
