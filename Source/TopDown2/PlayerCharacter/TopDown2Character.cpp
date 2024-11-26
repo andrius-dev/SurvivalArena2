@@ -47,9 +47,9 @@ ATopDown2Character::ATopDown2Character() {
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 	MovementComponent = CastChecked<UCharacterMovementComponent>(ACharacter::GetMovementComponent());
-	CameraRotationDelta = 5;
-	CameraPositiveRotator = FRotator3d(0.0, CameraRotationDelta, 0.0);
-	CameraNegativeRotator = FRotator3d(0.0, -CameraRotationDelta, 0.0);
+	CameraRotationDelta = 45;
+	CameraPositiveRotator = FRotator3d(0.0, -CameraRotationDelta, 0.0);
+	CameraNegativeRotator = FRotator3d(0.0, CameraRotationDelta, 0.0);
 }
 
 void ATopDown2Character::Tick(const float DeltaSeconds) {

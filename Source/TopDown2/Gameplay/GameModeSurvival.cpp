@@ -4,19 +4,6 @@ class AGameSession;
 
 AGameModeSurvival::AGameModeSurvival() {
 	bSpawnPlayerOnStart = true;
-	Score = 0;
-}
-
-int AGameModeSurvival::GetScore() const {
-	return Score;
-}
-
-void AGameModeSurvival::SetScore(const int NewValue) {
-	Score = NewValue;
-}
-
-FString AGameModeSurvival::GetFormattedScore() const {
-	return FString::FromInt(Score);
 }
 
 APlayerController* AGameModeSurvival::SpawnPlayerController(

@@ -1,14 +1,16 @@
 #include "CharacterSpawner.h"
 
-#include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
-#include "Kismet/GameplayStatics.h"
-
 ACharacterSpawner::ACharacterSpawner() {
 	PrimaryActorTick.bCanEverTick = false;
-	ActorName = "DefaultName";
+	EnemySpawnFlow = ESpawnerType::Manual;
+	AutoSpawnDelay = 0.0;
+	AutoSpawnDelayOnStart = 2.0;
 }
 
 void ACharacterSpawner::BeginPlay() {
 	Super::BeginPlay();
+
+	if (EnemySpawnFlow == ESpawnerType::TimedAutomatic) {
+			
+	}
 }

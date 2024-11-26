@@ -2,6 +2,7 @@
 #include "GameStateSurvival.h"
 
 AGameStateSurvival::AGameStateSurvival() {
+	Score = 0;
 }
 
 void AGameStateSurvival::BeginPlay() {
@@ -11,6 +12,14 @@ void AGameStateSurvival::BeginPlay() {
 
 void AGameStateSurvival::AddPlayerState(APlayerState* PlayerState) {
 	Super::AddPlayerState(PlayerState);
+}
+
+int AGameStateSurvival::GetScore() const {
+	return Score;
+}
+
+FString AGameStateSurvival::GetFormattedScore() const {
+	return FString::FromInt(Score);
 }
 
 void AGameStateSurvival::RemovePlayerState(APlayerState* PlayerState) {
@@ -31,6 +40,9 @@ int AGameStateSurvival::GetRemainingEnemyCount() const {
 
 void AGameStateSurvival::HandleEnemyDefeated(AActor* Enemy) {
 	RemainingEnemyCount--;
+	// todo add score handling based on enemy
+	Score += 100;
+	
 	if (RemainingEnemyCount <= 0) {
 		OnAllEnemiesDefeated.Broadcast();
 	}

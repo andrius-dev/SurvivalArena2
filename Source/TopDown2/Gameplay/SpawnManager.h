@@ -2,7 +2,6 @@
 
 #include <new>
 #include "CoreMinimal.h"
-#include "EnemySpawnFlow.h"
 #include "GameModeSurvival.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
@@ -15,7 +14,6 @@ USTRUCT(BlueprintType, Category="GameState")
 struct TOPDOWN2_API FSpawnParams {
 	GENERATED_USTRUCT_BODY()
 
-public:
 	UPROPERTY(BlueprintReadWrite, Category=AI)
 	TSubclassOf<ACharacter> EnemyClass;
 	
@@ -83,7 +81,6 @@ protected:
 	
 private:
 	UPROPERTY()
-	// todo typedef? like, holy shit
 	TArray<UObject*> ActiveEnemyPool;
 	
 	UPROPERTY()
@@ -94,7 +91,4 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<AGameModeSurvival> GameModeSurvival = nullptr;
-	
-	UPROPERTY(VisibleAnywhere, Category = "GameState")
-	UEnemySpawnFlow* SpawnMode = nullptr;
 };

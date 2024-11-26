@@ -6,9 +6,16 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
 
-/**
- * todo move score here
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
+	FOnScoreChanged,
+	AGameMode*,
+	GameMode,
+	int,
+	NewValue,
+	int,
+	OldValue
+);
+
 UCLASS()
 class TOPDOWN2_API AGameStateSurvival : public AGameStateBase
 {
@@ -33,6 +40,15 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category="GameState")
 	FOnAllEnemiesDefeated OnAllEnemiesDefeated;
+	
+	UPROPERTY(BlueprintAssignable, Category="Score")
+	FOnScoreChanged OnScoreChanged;
+
+	UFUNCTION(BlueprintCallable, Category="Score")
+	int GetScore() const;
+
+	UFUNCTION(BlueprintPure, Category="Score")
+	FString GetFormattedScore() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,5 +58,8 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="GameState")
-	int RemainingEnemyCount = 0;	
+	int RemainingEnemyCount = 0;
+	
+	UPROPERTY(VisibleAnywhere)
+	int Score;
 };
