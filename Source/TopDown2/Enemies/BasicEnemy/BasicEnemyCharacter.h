@@ -22,7 +22,6 @@ public:
 	const EEnemyGameState GetState_Implementation() override;
 	UCombatComponent* GetCombatComponent_Implementation() override;
 	ACharacter* GetCharacter_Implementation() override;
-	void BindOnDefeatedEvent_Implementation(UObject* Listener) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,11 +35,5 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AAIController> AIController = nullptr;
-
-	UPROPERTY()
-	TScriptInterface<IEnemyDefeatedListenerInterface> OnDefeatedListener = nullptr;
-
-	UFUNCTION()
-	void DispatchOnEnemyDefeated(UCombatComponent* EnemyCombatComponent);
 };
 

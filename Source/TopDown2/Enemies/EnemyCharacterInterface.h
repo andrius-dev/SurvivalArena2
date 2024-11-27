@@ -14,9 +14,6 @@ class TOPDOWN2_API IEnemyCharacterInterface {
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI")
-	void BindOnDefeatedEvent(UObject* Listener);
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI")
 	void SetState(EEnemyGameState State);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI")

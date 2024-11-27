@@ -2,7 +2,6 @@
 
 #include <new>
 #include "CoreMinimal.h"
-#include "GameModeSurvival.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
 #include "GameFramework/Actor.h"
@@ -88,7 +87,4 @@ private:
 	
 	UPROPERTY()
 	TArray<ACharacterSpawner*> SpawnersList;
-	
-	UPROPERTY()
-	TObjectPtr<AGameModeSurvival> GameModeSurvival = nullptr;
 };

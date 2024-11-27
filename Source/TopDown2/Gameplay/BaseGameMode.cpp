@@ -1,19 +1,44 @@
-#include "GameModeSurvival.h"
+#include "BaseGameMode.h"
+
+#include "GameFramework/GameStateBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "TopDown2/Util/Log.h"
 
 class AGameSession;
 
-AGameModeSurvival::AGameModeSurvival() {
+ABaseGameMode::ABaseGameMode() {
 	bSpawnPlayerOnStart = true;
+
+	if (!SpawnManager) {
+		UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, true);
+		return;
+	}
 }
 
-APlayerController* AGameModeSurvival::SpawnPlayerController(
+void ABaseGameMode::BeginPlay() {
+	Super::BeginPlay();
+
+	const auto SpawnActor =
+		UGameplayStatics::GetActorOfClass(this, ASpawnManager::StaticClass());
+	verify(SpawnActor);
+	SpawnManager = CastChecked<ASpawnManager>(SpawnActor);
+	const auto PooledEnemies = SpawnManager->InitEnemyPool(EnemiesToSpawn);
+	UE_LOG(LogTopDown2, All, TEXT("Initializing %s enemies"), EnemiesToSpawn.Num());
+
+	for (const auto Enemy : PooledEnemies) {
+		IEnemyCharacterInterface::Execute_GetCombatComponent(Enemy)
+			->OnDefeat.AddUniqueDynamic(this, &ABaseGameMode::OnEnemyDefeated);
+	}
+}
+
+APlayerController* ABaseGameMode::SpawnPlayerController(
 	ENetRole InRemoteRole,
 	const FString& Options
 ) {
 	return Super::SpawnPlayerController(InRemoteRole, Options);
 }
 
-APlayerController* AGameModeSurvival::Login(
+APlayerController* ABaseGameMode::Login(
 	UPlayer* NewPlayer,
 	ENetRole InRemoteRole,
 	const FString& Portal,
@@ -31,7 +56,7 @@ APlayerController* AGameModeSurvival::Login(
 			ErrorMessage
 		);
 	}
-	
+
 	const auto TempGameSession = GameSession;
 	if (TempGameSession == nullptr) {
 		ErrorMessage = TEXT(
@@ -76,6 +101,8 @@ APlayerController* AGameModeSurvival::Login(
 	return NewPlayerController;
 }
 
-void AGameModeSurvival::OnEnemyDefeated_Implementation(UObject* Enemy) {
-	IEnemyDefeatedListenerInterface::OnEnemyDefeated_Implementation(Enemy);
+void ABaseGameMode::OnEnemyDefeated(UObject* Enemy) {
+	if (GameState->Implements<UGameStateInterface>()) {
+		IGameStateInterface::Execute_HandleEnemyDefeated(GameState, Enemy);
+	}
 }

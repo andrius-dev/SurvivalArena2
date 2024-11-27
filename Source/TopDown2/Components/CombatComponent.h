@@ -20,8 +20,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
 );
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-	FOnDeath,
-	UCombatComponent*, CombatComponent
+	FOnDefeat,
+	UObject*, Owner 
 );
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -49,7 +49,7 @@ public:
 	FOnHealthChanged OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category="Health")
-	FOnDeath OnDeath;
+	FOnDefeat OnDefeat;
 
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetMaxHealth() const;

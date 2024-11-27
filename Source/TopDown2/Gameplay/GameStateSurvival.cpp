@@ -22,6 +22,16 @@ FString AGameStateSurvival::GetFormattedScore() const {
 	return FString::FromInt(Score);
 }
 
+void AGameStateSurvival::HandleEnemyDefeated_Implementation(UObject* Enemy) {
+	RemainingEnemyCount--;
+	// todo add score handling based on enemy
+	Score += 100;
+	
+	if (RemainingEnemyCount <= 0) {
+		OnAllEnemiesDefeated.Broadcast();
+	}
+}
+
 void AGameStateSurvival::RemovePlayerState(APlayerState* PlayerState) {
 	Super::RemovePlayerState(PlayerState);
 }
@@ -36,17 +46,4 @@ void AGameStateSurvival::PostInitializeComponents() {
 
 int AGameStateSurvival::GetRemainingEnemyCount() const {
 	return RemainingEnemyCount;
-}
-
-void AGameStateSurvival::HandleEnemyDefeated(AActor* Enemy) {
-	RemainingEnemyCount--;
-	// todo add score handling based on enemy
-	Score += 100;
-	
-	if (RemainingEnemyCount <= 0) {
-		OnAllEnemiesDefeated.Broadcast();
-	}
-}
-
-void AGameStateSurvival::HandleAllEnemiesRemoved() {
 }

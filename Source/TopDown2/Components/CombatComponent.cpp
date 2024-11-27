@@ -152,7 +152,7 @@ float UCombatComponent::TakeDamage(const float Amount, AActor* Initiator) {
 	);
 
 	if (CurrentHealth == 0) {
-		OnDeath.Broadcast(this);
+		OnDefeat.Broadcast(GetOwner());
 	}
 
 	// there will be calculations later

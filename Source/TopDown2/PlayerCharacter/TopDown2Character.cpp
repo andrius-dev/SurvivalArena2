@@ -57,13 +57,6 @@ void ATopDown2Character::Tick(const float DeltaSeconds) {
 	DeltaTimeSecs = DeltaSeconds;
 }
 
-FVector ATopDown2Character::GetMovementDirection() {
-	if(!MovementComponent->IsMovementInProgress()) {
-		return FVector::Zero();
-	}
-	return MovementDirection;
-}
-
 void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	// Set up action bindings
 	const auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
@@ -92,7 +85,6 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		ETriggerEvent::Canceled,
 		[this](const FInputActionValue& Value) {
 			if (!GetCharacterMovement()->IsFalling()) {
-				MovementDirection = FVector::Zero();
 			}	
 		}	
 	);
@@ -133,9 +125,10 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	if (!PlayerController || !PlayerController->IsLocalController()) {
 		return;
 	}
-	PlayerController->SetShowMouseCursor(true); // true
+	PlayerController->SetShowMouseCursor(true);
 	PlayerController->bEnableMouseOverEvents = true; // true
 	PlayerController->SetInputMode(FInputModeGameOnly());
+	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 }
 
 void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
@@ -162,10 +155,7 @@ void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
 	const auto UpDirection =
 		FRotationMatrix(FRotator::ZeroRotator).GetUnitAxis(EAxis::Z);
 	
-	const auto OffsetInput = GamepadInput.RotateAngleAxis(-MovementDeltaAngle, UpDirection);
-	auto NewMovementDirection = ForwardDirection + RightDirection;
-	NewMovementDirection.Normalize();
-	MovementDirection = NewMovementDirection;
+	const auto OffsetInput = GamepadInput.RotateAngleAxis(MovementDeltaAngle, UpDirection);
 	
 	AddMovementInput(ForwardDirection, OffsetInput.Y);
 	AddMovementInput(RightDirection, OffsetInput.X);

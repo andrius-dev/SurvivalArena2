@@ -1,13 +1,13 @@
 #pragma once
 
-#include <vector>
-
 #include "CoreMinimal.h"
+#include "GameStateInterface.h"
+#include "SpawnManager.h"
 #include "GameFramework/GameModeBase.h"
 #include "TopDown2/PlayerCharacter/TopDown2Character.h"
 #include "GameFramework/GameSession.h"
 #include "TopDown2/Enemies/EnemyDefeatedListenerInterface.h"
-#include "GameModeSurvival.generated.h"
+#include "BaseGameMode.generated.h"
 
 
 /**
@@ -15,12 +15,16 @@
  * Online feature - game master. He/she will control how enemies spawn
  */
 UCLASS()
-class TOPDOWN2_API AGameModeSurvival : public AGameModeBase, public IEnemyDefeatedListenerInterface {
+class TOPDOWN2_API ABaseGameMode : public AGameModeBase {
 	GENERATED_BODY()
 
 public:
-	AGameModeSurvival();
-	
+	ABaseGameMode();
+
+protected:
+	virtual void BeginPlay() override;
+
+public:
 	virtual APlayerController* SpawnPlayerController(
 		ENetRole InRemoteRole,
 		const FString& Options
@@ -35,13 +39,20 @@ public:
 		FString& ErrorMessage
 	) override;
 
-	virtual void OnEnemyDefeated_Implementation(UObject* Enemy) override;
+	UFUNCTION()
+	virtual void OnEnemyDefeated(UObject* Enemy);
 
 protected:
 	UPROPERTY(EditAnywhere, Category="GameMode")
 	bool bSpawnPlayerOnStart = true;
 
+	UPROPERTY(EditAnywhere, Category="GameMode")
+	TArray<FSpawnParams> EnemiesToSpawn;
+
 private:
-	UPROPERTY(VisibleAnywhere, Category="GameMode")
+	UPROPERTY()
 	TObjectPtr<ATopDown2Character> PlayerCharacter = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<ASpawnManager> SpawnManager = nullptr;
 };

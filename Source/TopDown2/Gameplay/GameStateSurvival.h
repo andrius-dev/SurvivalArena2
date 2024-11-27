@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameStateInterface.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameStateSurvival.generated.h"
 
@@ -17,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
 );
 
 UCLASS()
-class TOPDOWN2_API AGameStateSurvival : public AGameStateBase
+class TOPDOWN2_API AGameStateSurvival : public AGameStateBase, public IGameStateInterface
 {
 	GENERATED_BODY()
 
@@ -31,24 +32,20 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="GameState")
 	int GetRemainingEnemyCount() const;
-
-	UFUNCTION(BlueprintCallable, Category="GameState")
-	void HandleEnemyDefeated(AActor* Enemy);
-	
-	UFUNCTION(BlueprintCallable, Category="GameState")
-	void HandleAllEnemiesRemoved();
 	
 	UPROPERTY(BlueprintAssignable, Category="GameState")
 	FOnAllEnemiesDefeated OnAllEnemiesDefeated;
 	
-	UPROPERTY(BlueprintAssignable, Category="Score")
+	UPROPERTY(BlueprintAssignable, Category="GameState")
 	FOnScoreChanged OnScoreChanged;
 
-	UFUNCTION(BlueprintCallable, Category="Score")
+	UFUNCTION(BlueprintCallable, Category="GameState")
 	int GetScore() const;
 
-	UFUNCTION(BlueprintPure, Category="Score")
+	UFUNCTION(BlueprintPure, Category="GameState")
 	FString GetFormattedScore() const;
+
+	virtual void HandleEnemyDefeated_Implementation(UObject* Enemy) override;
 
 protected:
 	virtual void BeginPlay() override;

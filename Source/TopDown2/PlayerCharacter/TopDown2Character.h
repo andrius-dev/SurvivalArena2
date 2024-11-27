@@ -28,9 +28,6 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	float MovementDeltaAngle = DEFAULT_MOVEMENT_DELTA_ANGLE;
-
-	UFUNCTION(BlueprintCallable)
-	FVector GetMovementDirection();
 	
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -102,9 +99,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATopDown2PlayerController> PlayerController = nullptr;
-
-	UPROPERTY()
-	FVector3d MovementDirection;
 
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> MovementComponent = nullptr;
