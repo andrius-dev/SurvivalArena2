@@ -2,10 +2,16 @@
 
 #include <new>
 #include "CoreMinimal.h"
+#include "CharacterSpawner.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
 #include "GameFramework/Actor.h"
 #include "SpawnManager.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+	FOnEnemySpawned,
+	UObject*, Enemy
+);
 
 class ACharacterSpawner;
 
@@ -30,6 +36,9 @@ class TOPDOWN2_API ASpawnManager : public AActor
 	
 public:	
 	ASpawnManager();
+
+	UPROPERTY(BlueprintAssignable, Category="GameState")
+	FOnEnemySpawned OnEnemySpawned;
 
 	/**
 	* @return instantiated inactive enemies 
@@ -63,7 +72,17 @@ public:
 	* Activates given enemy and moves it to Spawner if it belongs to pool 
 	*/
 	UFUNCTION(BlueprintCallable, Category = "AI")
-	void SpawnEnemy(UObject* EnemyToSpawn, const ACharacterSpawner* Spawner);
+	void SpawnEnemyAtLocation(
+		UObject* EnemyToSpawn,
+		const FVector& Location,
+		const FRotator& Rotation
+	);
+
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	void SpawnEnemy(
+		UObject* EnemyToSpawn,
+		const ACharacterSpawner* Spawner
+	);
 	
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

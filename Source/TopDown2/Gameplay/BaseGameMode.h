@@ -1,14 +1,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStateInterface.h"
 #include "SpawnManager.h"
 #include "GameFramework/GameModeBase.h"
 #include "TopDown2/PlayerCharacter/TopDown2Character.h"
-#include "GameFramework/GameSession.h"
-#include "TopDown2/Enemies/EnemyDefeatedListenerInterface.h"
 #include "BaseGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+	FOnEnemyDefeated,
+	TScriptInterface<IEnemyCharacterInterface>, Enemy
+);
 
 /**
  * Game loop description to be added here
@@ -39,16 +40,26 @@ public:
 		FString& ErrorMessage
 	) override;
 
-	UFUNCTION()
-	virtual void OnEnemyDefeated(UObject* Enemy);
+	// todo prolly move to game state
+	UPROPERTY(BlueprintAssignable, Category="GameMode")
+	FOnEnemyDefeated OnEnemyDefeated;
 
 protected:
 	UPROPERTY(EditAnywhere, Category="GameMode")
 	bool bSpawnPlayerOnStart = true;
 
-	UPROPERTY(EditAnywhere, Category="GameMode")
-	TArray<FSpawnParams> EnemiesToSpawn;
+	UFUNCTION(BlueprintCallable, Category="GameMode")
+	ASpawnManager* GetSpawnManager();
 
+	/**
+	 * Creates enemy characters, registers events and places them in object pool
+	 * @param EnemiesToSpawn 
+	 */
+	UFUNCTION(BlueprintCallable, Category="GameMode")
+	void InitEnemies(const TArray<FSpawnParams> EnemiesToSpawn);
+
+	UFUNCTION(BlueprintCallable, Category="GameMode")
+	virtual void HandleEnemyDefeated(UObject* Enemy);
 private:
 	UPROPERTY()
 	TObjectPtr<ATopDown2Character> PlayerCharacter = nullptr;

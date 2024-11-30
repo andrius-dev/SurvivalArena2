@@ -38,14 +38,15 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category="GameState")
 	FOnScoreChanged OnScoreChanged;
-
-	UFUNCTION(BlueprintCallable, Category="GameState")
-	int GetScore() const;
-
+	
+	virtual float GetScore_Implementation() override;
+	
 	UFUNCTION(BlueprintPure, Category="GameState")
 	FString GetFormattedScore() const;
 
-	virtual void HandleEnemyDefeated_Implementation(UObject* Enemy) override;
+	virtual void HandleEnemyDefeated_Implementation(AActor* Enemy) override;
+	
+	virtual void HandleEnemySpawned_Implementation(AActor* Enemy) override;
 
 protected:
 	virtual void BeginPlay() override;

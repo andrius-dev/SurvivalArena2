@@ -1,8 +1,10 @@
 #include "BaseGameMode.h"
 
+#include "GameStateInterface.h"
 #include "GameFramework/GameStateBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "TopDown2/Util/Log.h"
+#include "GameFramework/GameSession.h"
 
 class AGameSession;
 
@@ -16,18 +18,25 @@ ABaseGameMode::ABaseGameMode() {
 }
 
 void ABaseGameMode::BeginPlay() {
-	Super::BeginPlay();
-
 	const auto SpawnActor =
 		UGameplayStatics::GetActorOfClass(this, ASpawnManager::StaticClass());
 	verify(SpawnActor);
 	SpawnManager = CastChecked<ASpawnManager>(SpawnActor);
+	Super::BeginPlay();
+}
+
+void ABaseGameMode::InitEnemies(const TArray<FSpawnParams> EnemiesToSpawn) {
+	if (!SpawnManager) {
+		const auto SpawnActor =
+			UGameplayStatics::GetActorOfClass(this, ASpawnManager::StaticClass());
+		SpawnManager = CastChecked<ASpawnManager>(SpawnActor);
+	}
 	const auto PooledEnemies = SpawnManager->InitEnemyPool(EnemiesToSpawn);
 	UE_LOG(LogTopDown2, All, TEXT("Initializing %s enemies"), EnemiesToSpawn.Num());
 
 	for (const auto Enemy : PooledEnemies) {
 		IEnemyCharacterInterface::Execute_GetCombatComponent(Enemy)
-			->OnDefeat.AddUniqueDynamic(this, &ABaseGameMode::OnEnemyDefeated);
+			->OnDefeat.AddDynamic(this, &ABaseGameMode::HandleEnemyDefeated);
 	}
 }
 
@@ -101,8 +110,30 @@ APlayerController* ABaseGameMode::Login(
 	return NewPlayerController;
 }
 
-void ABaseGameMode::OnEnemyDefeated(UObject* Enemy) {
-	if (GameState->Implements<UGameStateInterface>()) {
-		IGameStateInterface::Execute_HandleEnemyDefeated(GameState, Enemy);
+void ABaseGameMode::HandleEnemyDefeated(UObject* Enemy) {
+	if (
+		GameState->Implements<UGameStateInterface>()
+		&& Enemy->Implements<UEnemyCharacterInterface>()
+	) {
+		const auto EnemyActor = Cast<AActor>(Enemy);
+		IGameStateInterface::Execute_HandleEnemyDefeated(GameState, EnemyActor);
+		UE_LOG(
+				LogTopDown2,
+				Error,
+				TEXT("Broadcasting thing"),
+				*Enemy->GetName()
+			);
+		OnEnemyDefeated.Broadcast(Enemy);
+	} else {
+		UE_LOG(
+			LogTopDown2,
+			Error,
+			TEXT("%s doesn't implement IGameStateInterface"),
+			*Enemy->GetName()
+		);
 	}
+}
+
+ASpawnManager* ABaseGameMode::GetSpawnManager() {
+	return SpawnManager;
 }

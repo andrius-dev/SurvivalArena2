@@ -14,7 +14,7 @@ void AGameStateSurvival::AddPlayerState(APlayerState* PlayerState) {
 	Super::AddPlayerState(PlayerState);
 }
 
-int AGameStateSurvival::GetScore() const {
+float AGameStateSurvival::GetScore_Implementation() {
 	return Score;
 }
 
@@ -22,7 +22,7 @@ FString AGameStateSurvival::GetFormattedScore() const {
 	return FString::FromInt(Score);
 }
 
-void AGameStateSurvival::HandleEnemyDefeated_Implementation(UObject* Enemy) {
+void AGameStateSurvival::HandleEnemyDefeated_Implementation(AActor* Enemy) {
 	RemainingEnemyCount--;
 	// todo add score handling based on enemy
 	Score += 100;
@@ -30,6 +30,10 @@ void AGameStateSurvival::HandleEnemyDefeated_Implementation(UObject* Enemy) {
 	if (RemainingEnemyCount <= 0) {
 		OnAllEnemiesDefeated.Broadcast();
 	}
+}
+
+void AGameStateSurvival::HandleEnemySpawned_Implementation(AActor* Enemy) {
+	IGameStateInterface::HandleEnemySpawned_Implementation(Enemy);
 }
 
 void AGameStateSurvival::RemovePlayerState(APlayerState* PlayerState) {

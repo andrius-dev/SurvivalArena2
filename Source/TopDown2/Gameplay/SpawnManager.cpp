@@ -11,6 +11,8 @@
 ASpawnManager::ASpawnManager() {
 	PrimaryActorTick.bCanEverTick = false;
 	bNoCollisionFail = false;
+	InactiveEnemyPool = TArray<UObject*>();
+	ActiveEnemyPool = TArray<UObject*>();	
 }
 
 void ASpawnManager::BeginPlay() {
@@ -175,31 +177,36 @@ void ASpawnManager::SpawnEnemy(
 	UObject* EnemyToSpawn,
 	const ACharacterSpawner* Spawner
 ) {
-	const bool bImplementsInterface =
-		EnemyToSpawn->GetClass()->ImplementsInterface(UEnemyCharacterInterface::StaticClass());
-	if (!EnemyToSpawn || !bImplementsInterface) {
-		UKismetSystemLibrary::QuitGame(
-			this,
-			nullptr,
-			EQuitPreference::Quit,
-			true // bIgnorePlatformRestrictions
-		);
+	SpawnEnemyAtLocation(EnemyToSpawn, Spawner->GetActorLocation(), Spawner->GetActorRotation());	
+}
+
+void ASpawnManager::SpawnEnemyAtLocation(
+	UObject* EnemyToSpawn,
+	const FVector& Location,
+	const FRotator& Rotation
+) {
+	if (!EnemyToSpawn) {
+		UE_LOG(LogTopDown2, Error, TEXT("Enemy is null"));
 		return;
 	}
-	
+	const bool bImplementsInterface =
+		EnemyToSpawn->GetClass()->ImplementsInterface(UEnemyCharacterInterface::StaticClass());
+	if (!bImplementsInterface) {
+		UE_LOG(LogTopDown2, Error, TEXT("Enemy doesnt' impelement the interface"));
+		return;
+	}
+
 	ActiveEnemyPool.Add(EnemyToSpawn);
 	InactiveEnemyPool.Remove(EnemyToSpawn);
 	const auto EnemyActor = CastChecked<AActor>(EnemyToSpawn);
 
-	EnemyActor->SetActorLocationAndRotation(
-		Spawner->GetActorLocation(),
-		Spawner->GetActorRotation()
-	);
+	EnemyActor->SetActorLocationAndRotation(Location, Rotation);
 
 	IEnemyCharacterInterface::Execute_SetState(
 		EnemyActor,
 		EEnemyGameState::Active
 	);
+	OnEnemySpawned.Broadcast(EnemyToSpawn);
 }
 
 void ASpawnManager::EndPlay(const EEndPlayReason::Type EndPlayReason) {

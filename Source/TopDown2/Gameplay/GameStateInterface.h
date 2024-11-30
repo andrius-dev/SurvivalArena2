@@ -11,5 +11,11 @@ class TOPDOWN2_API IGameStateInterface {
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="GameState")
-	void HandleEnemyDefeated(UObject* Enemy);
+	void HandleEnemyDefeated(AActor* Enemy);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="GameState")
+	void HandleEnemySpawned(AActor* Enemy);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="GameState")
+	float GetScore();
 };
