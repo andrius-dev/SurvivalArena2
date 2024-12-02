@@ -46,11 +46,12 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 				Warning,
 				TEXT("%s doesn't implement UEnemyCharacter"),
 				*SpawnParam.EnemyClass.Get()->GetName()
-			)
+			);
 			continue;
 		}
 
 		for (int j = 0; j < SpawnParam.Count; j++) {
+			// todo don't run behavior tree on spawn! this function does
 			const auto SpawnedActor =
 				UAIBlueprintHelperLibrary::SpawnAIFromClass(
 					this,
@@ -71,17 +72,18 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 				SpawnedActor,
 				EEnemyGameState::Inactive
 			);
-
+			IEnemyCharacterInterface::Execute_EventSpawned(SpawnedActor, nullptr);
 			const auto SpawnedCharacter = CastChecked<ACharacter>(SpawnedActor);
 			const auto AIController = Cast<AAIController>(
 				SpawnedCharacter->GetController()
 			);
+			// AIController->UseBlackboard(SpawnParam.BehaviorTree->GetBlackboardAsset(),);
 
-			if (AIController) {
-				AIController->RunBehaviorTree(SpawnParam.BehaviorTree);
-			} else {
-				UE_LOG(LogTopDown2, Error, TEXT("AI controller not found"));
-			}
+			// if (AIController) {
+			// 	AIController->RunBehaviorTree(SpawnParam.BehaviorTree);
+			// } else {
+			// 	UE_LOG(LogTopDown2, Error, TEXT("AI controller not found"));
+			// }
 
 			InactiveEnemyPool.Add(SpawnedActor);
 		}

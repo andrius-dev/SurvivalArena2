@@ -1,17 +1,17 @@
-#include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
-#include "BasicEnemyController.h"
+#include "TopDown2/Enemies/BasicEnemy/BaseEnemyCharacter.h"
+#include "BaseEnemyController.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "TopDown2/Util/Log.h"
 
-ABasicEnemyCharacter::ABasicEnemyCharacter() {
+ABaseEnemyCharacter::ABaseEnemyCharacter() {
 	CurrentState = EEnemyGameState::Inactive;
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
-	AIControllerClass = ABasicEnemyController::StaticClass();
+	AIControllerClass = ABaseEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
-void ABasicEnemyCharacter::BeginPlay() {
+void ABaseEnemyCharacter::BeginPlay() {
 	Super::BeginPlay();
 	InitializeComponents();
 	
@@ -27,28 +27,32 @@ void ABasicEnemyCharacter::BeginPlay() {
 
 }
 
-void ABasicEnemyCharacter::Tick(const float DeltaTime) {
+void ABaseEnemyCharacter::Tick(const float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-const EEnemyGameState ABasicEnemyCharacter::GetState_Implementation() {
+const EEnemyGameState ABaseEnemyCharacter::GetState_Implementation() {
 	return CurrentState;
 }
 
-UCombatComponent* ABasicEnemyCharacter::GetCombatComponent_Implementation() {
+UCombatComponent* ABaseEnemyCharacter::GetCombatComponent_Implementation() {
 	return CombatComponent;
 }
 
-ACharacter* ABasicEnemyCharacter::GetCharacter_Implementation() {
+ACharacter* ABaseEnemyCharacter::GetCharacter_Implementation() {
 	return this;
 }
 
-void ABasicEnemyCharacter::PossessedBy(AController* NewController) {
+void ABaseEnemyCharacter::PossessedBy(AController* NewController) {
 	Super::PossessedBy(NewController);
     AIController = UAIBlueprintHelperLibrary::GetAIController(this);
 }
 
-void ABasicEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState) {
+void ABaseEnemyCharacter::EventSpawned_Implementation(AActor* Spawner) {
+	IEnemyCharacterInterface::EventSpawned_Implementation(Spawner);
+}
+
+void ABaseEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState) {
 	bool bHidden;
 	bool bEnableCollision;
 

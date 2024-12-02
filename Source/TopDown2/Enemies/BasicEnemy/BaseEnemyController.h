@@ -2,16 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "BasicEnemyController.generated.h"
+#include "BaseEnemyController.generated.h"
 
 UCLASS()
-class TOPDOWN2_API ABasicEnemyController : public AAIController
+class TOPDOWN2_API ABaseEnemyController : public AAIController
 {
 	GENERATED_BODY()
 	
 public:
 	// Sets default values for this character's properties
-	ABasicEnemyController();
+	ABaseEnemyController();
 	
 	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TArray<UClass*> KickableAssTypes;

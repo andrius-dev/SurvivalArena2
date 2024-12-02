@@ -24,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
 	UCombatComponent* GetCombatComponent();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
+	void EventSpawned(AActor* Spawner);
 };

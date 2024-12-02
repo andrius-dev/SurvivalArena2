@@ -4,7 +4,7 @@
 #include "CoreMinimal.h"
 #include "CharacterSpawner.h"
 #include "BehaviorTree/BehaviorTree.h"
-#include "TopDown2/Enemies/BasicEnemy/BasicEnemyCharacter.h"
+#include "TopDown2/Enemies/BasicEnemy/BaseEnemyCharacter.h"
 #include "GameFramework/Actor.h"
 #include "SpawnManager.generated.h"
 

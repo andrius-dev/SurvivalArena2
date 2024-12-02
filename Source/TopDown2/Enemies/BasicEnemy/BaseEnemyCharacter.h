@@ -5,19 +5,19 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "GameFramework/Character.h"
 #include "TopDown2/Enemies/EnemyCharacterInterface.h"
-#include "BasicEnemyCharacter.generated.h"
+#include "BaseEnemyCharacter.generated.h"
 
 UCLASS(Blueprintable, Category="AI")
-class ABasicEnemyCharacter : public ACharacter, public IEnemyCharacterInterface
+class ABaseEnemyCharacter : public ACharacter, public IEnemyCharacterInterface
 {
 	GENERATED_BODY()
 
 public:
-	ABasicEnemyCharacter();
+	ABaseEnemyCharacter();
 	
 	virtual void Tick(float DeltaTime) override;
 	virtual void PossessedBy(AController* NewController) override;
-	
+	virtual void EventSpawned_Implementation(AActor* Spawner) override;
 	void SetState_Implementation(const EEnemyGameState NewState) override;
 	const EEnemyGameState GetState_Implementation() override;
 	UCombatComponent* GetCombatComponent_Implementation() override;
