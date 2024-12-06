@@ -43,6 +43,14 @@ ACharacter* ABaseEnemyCharacter::GetCharacter_Implementation() {
 	return this;
 }
 
+AActor* ABaseEnemyCharacter::GetTargetActor_Implementation() {
+	return TargetActor;
+}
+
+void ABaseEnemyCharacter::SetTargetActor_Implementation(AActor* NewTargetActor) {
+	TargetActor = NewTargetActor;
+}
+
 void ABaseEnemyCharacter::PossessedBy(AController* NewController) {
 	Super::PossessedBy(NewController);
     AIController = UAIBlueprintHelperLibrary::GetAIController(this);

@@ -1,21 +1,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CharacterAnimationInputs.h"
 #include "InputAction.h"
 #include "InputActionValue.h"
-#include "TopDown2PlayerController.h"
+#include "BasePlayerController.h"
+#include "PlayerCharacterInterface.h"
 #include "GameFramework/Character.h"
-#include "TopDown2Character.generated.h"
+#include "BasePlayerCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class TOPDOWN2_API ATopDown2Character : public ACharacter
+class TOPDOWN2_API ABasePlayerCharacter : public ACharacter, public IPlayerCharacterInterface
 {
 	GENERATED_BODY()
 
 public:
-	ATopDown2Character();
-
+	ABasePlayerCharacter();
 	const float DEFAULT_MOVEMENT_DELTA_ANGLE = 45.f;
 	
 	// Higher means rotation will be more abrubt.
@@ -29,8 +28,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MovementDeltaAngle = DEFAULT_MOVEMENT_DELTA_ANGLE;
 	
+	virtual ACharacter* GetCharacter_Implementation() override;
+	virtual UCombatComponent* GetCombatComponent_Implementation() override;
+	
 	virtual void Tick(float DeltaSeconds) override;
-
 	
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const {
 		return TopDownCameraComponent;
@@ -98,10 +99,13 @@ private:
 	TObjectPtr<UInputAction> PanCameraRightInputAction = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<ATopDown2PlayerController> PlayerController = nullptr;
+	TObjectPtr<ABasePlayerController> PlayerController = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> MovementComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UCombatComponent> CombatComponent = nullptr;
 
 	UPROPERTY()
 	FRotator3d CameraPositiveRotator;

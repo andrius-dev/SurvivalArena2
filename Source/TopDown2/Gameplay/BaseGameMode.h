@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "SpawnManager.h"
 #include "GameFramework/GameModeBase.h"
-#include "TopDown2/PlayerCharacter/TopDown2Character.h"
+#include "TopDown2/PlayerCharacter/BasePlayerCharacter.h"
 #include "BaseGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
@@ -62,7 +62,7 @@ protected:
 	virtual void HandleEnemyDefeated(UObject* Enemy);
 private:
 	UPROPERTY()
-	TObjectPtr<ATopDown2Character> PlayerCharacter = nullptr;
+	TObjectPtr<ABasePlayerCharacter> PlayerCharacter = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<ASpawnManager> SpawnManager = nullptr;

@@ -1,7 +1,7 @@
-#include "TopDown2Character.h"
+#include "BasePlayerCharacter.h"
 
 #include "EnhancedInputComponent.h"
-#include "TopDown2PlayerController.h"
+#include "BasePlayerController.h"
 #include "AI/NavigationSystemBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -16,7 +16,7 @@
 #include "TopDown2/Util/Log.h"
 
 // todo: clean this up, most of these params should be set in blueprint
-ATopDown2Character::ATopDown2Character() {
+ABasePlayerCharacter::ABasePlayerCharacter() {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	DeltaTimeSecs = 0.0;
@@ -50,14 +50,23 @@ ATopDown2Character::ATopDown2Character() {
 	CameraRotationDelta = 45;
 	CameraPositiveRotator = FRotator3d(0.0, -CameraRotationDelta, 0.0);
 	CameraNegativeRotator = FRotator3d(0.0, CameraRotationDelta, 0.0);
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>("CombatComponent");
 }
 
-void ATopDown2Character::Tick(const float DeltaSeconds) {
+ACharacter* ABasePlayerCharacter::GetCharacter_Implementation() {
+	return this;
+}
+
+UCombatComponent* ABasePlayerCharacter::GetCombatComponent_Implementation() {
+	return CombatComponent;
+}
+
+void ABasePlayerCharacter::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	DeltaTimeSecs = DeltaSeconds;
 }
 
-void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	// Set up action bindings
 	const auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (!EnhancedInputComponent) {
@@ -120,8 +129,8 @@ void ATopDown2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 }
 
-void ATopDown2Character::PossessedBy(AController* NewController) {
-	PlayerController = Cast<ATopDown2PlayerController>(NewController);
+void ABasePlayerCharacter::PossessedBy(AController* NewController) {
+	PlayerController = Cast<ABasePlayerController>(NewController);
 	if (!PlayerController || !PlayerController->IsLocalController()) {
 		return;
 	}
@@ -131,7 +140,7 @@ void ATopDown2Character::PossessedBy(AController* NewController) {
 	MovementDeltaAngle = CameraBoom->GetComponentTransform().GetRotation().Z;
 }
 
-void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
+void ABasePlayerCharacter::AddMovement(const FInputActionValue& Value) {
 	if (Controller == nullptr) {
 		UE_LOG(LogTopDown2, Error, TEXT("Controller is null"));
 		return;
@@ -161,7 +170,7 @@ void ATopDown2Character::AddMovement(const FInputActionValue& Value) {
 	AddMovementInput(RightDirection, OffsetInput.X);
 }
 
-void ATopDown2Character::MouseLook(const FVector& Value, const float DeltaTime) {
+void ABasePlayerCharacter::MouseLook(const FVector& Value, const float DeltaTime) {
 	FVector MouseDir = FVector::ZeroVector;
 	FVector MousePos = FVector::ZeroVector;
 	if (Value.IsZero()) {
@@ -214,6 +223,6 @@ void ATopDown2Character::MouseLook(const FVector& Value, const float DeltaTime) 
 	DrawDebugSphere(GetWorld(), Intersection, 10.f, 16, FColor::Red, false);
 }
 
-float ATopDown2Character::CalculateAngleFromGamepadInput(const FVector& GamepadInput) {
+float ABasePlayerCharacter::CalculateAngleFromGamepadInput(const FVector& GamepadInput) {
 	return atan2(GamepadInput.X, GamepadInput.Y) * GameMaths::RadToDeg;
 }

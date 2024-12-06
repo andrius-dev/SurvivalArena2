@@ -25,8 +25,7 @@ void UCombatComponent::BeginPlay() {
 	}
 
 	if (!EquippedWeaponMesh) {
-		EquippedWeaponMesh = Owner->FindComponentByClass<
-			UWeaponMeshComponent>();
+		EquippedWeaponMesh = Owner->FindComponentByClass<UWeaponMeshComponent>();
 	}
 	if (EquippedWeaponMesh) {
 		if (!BladeStart) {

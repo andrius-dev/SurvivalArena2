@@ -1,4 +1,4 @@
-#include "TopDown2PlayerController.h"
+#include "BasePlayerController.h"
 
 #include "GameFramework/Pawn.h"
 #include "Engine/World.h"
@@ -7,10 +7,10 @@
 #include "TopDown2/TopDown2.h"
 #include "TopDown2/Util/Log.h"
 
-ATopDown2PlayerController::ATopDown2PlayerController() {
+ABasePlayerController::ABasePlayerController() {
 }
 
-void ATopDown2PlayerController::BeginPlay() {
+void ABasePlayerController::BeginPlay() {
 	Super::BeginPlay();
 	const auto InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (!InputSubsystem) {
@@ -23,6 +23,6 @@ void ATopDown2PlayerController::BeginPlay() {
 	InputSubsystem->AddMappingContext(MappingContextController, 0, Options);
 }
 
-void ATopDown2PlayerController::SetupInputComponent() {
+void ABasePlayerController::SetupInputComponent() {
 	Super::SetupInputComponent();
 }

@@ -1,6 +1,6 @@
 #include "BaseEnemyController.h"
 
-#include "TopDown2/PlayerCharacter/TopDown2Character.h"
+#include "TopDown2/PlayerCharacter/BasePlayerCharacter.h"
 #include "TopDown2/Util/Log.h"
 
 // Sets default values

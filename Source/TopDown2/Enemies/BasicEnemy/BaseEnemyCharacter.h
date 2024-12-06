@@ -22,6 +22,9 @@ public:
 	const EEnemyGameState GetState_Implementation() override;
 	UCombatComponent* GetCombatComponent_Implementation() override;
 	ACharacter* GetCharacter_Implementation() override;
+	
+	virtual AActor* GetTargetActor_Implementation() override;
+	virtual void SetTargetActor_Implementation(AActor* NewTargetActor) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,5 +38,8 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AAIController> AIController = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<AActor> TargetActor = nullptr;
 };
 

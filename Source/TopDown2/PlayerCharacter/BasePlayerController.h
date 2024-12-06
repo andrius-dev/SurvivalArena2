@@ -4,18 +4,18 @@
 #include "EnhancedInputSubsystemInterface.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
-#include "TopDown2PlayerController.generated.h"
+#include "BasePlayerController.generated.h"
 
 class UNiagaraSystem;
 class UInputAction;
 
 UCLASS()
-class TOPDOWN2_API ATopDown2PlayerController : public APlayerController
+class TOPDOWN2_API ABasePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
-	ATopDown2PlayerController();
+	ABasePlayerController();
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))

@@ -27,4 +27,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
 	void EventSpawned(AActor* Spawner);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
+	void SetTargetActor(AActor* NewTargetActor);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="AI|Combat")
+	AActor* GetTargetActor();
 };
