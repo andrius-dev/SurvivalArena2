@@ -19,7 +19,7 @@ void AGameStateSpawnDestruction::HandleSpawnerDestroyed(AActor* Spawner) {
 	CheckIfLevelCleared();
 }
 
-void AGameStateSpawnDestruction::SetSpawners(TArray<AActor*> Spawners) {
+void AGameStateSpawnDestruction::SetSpawners(const TArray<AActor*>& Spawners) {
 	ActiveSpawners = Spawners;
 }
 

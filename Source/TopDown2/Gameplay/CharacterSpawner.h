@@ -9,6 +9,9 @@
 
 class ACharacterSpawner;
 
+/**
+ * todo move blueprint functions here
+ */
 UCLASS()
 class TOPDOWN2_API ACharacterSpawner : public AActor
 {
@@ -18,13 +21,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	UPROPERTY(BlueprintReadWrite, Category="AI")
-	bool bNoCollisionFail = false;
-
-	// todo not sure about this one
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
-	TSubclassOf<UEnemyCharacterInterface> DefaultSpawnedClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
 	ESpawnerType EnemySpawnFlow;

@@ -18,10 +18,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void EventSpawned_Implementation(AActor* Spawner) override;
-	void SetState_Implementation(const EEnemyGameState NewState) override;
-	const EEnemyGameState GetState_Implementation() override;
-	UCombatComponent* GetCombatComponent_Implementation() override;
-	ACharacter* GetCharacter_Implementation() override;
+	virtual void SetState_Implementation(const EEnemyGameState NewState) override;
+	virtual const EEnemyGameState GetState_Implementation() override;
+	virtual UCombatComponent* GetCombatComponent_Implementation() override;
+	virtual ACharacter* GetCharacter_Implementation() override;
 	
 	virtual AActor* GetTargetActor_Implementation() override;
 	virtual void SetTargetActor_Implementation(AActor* NewTargetActor) override;

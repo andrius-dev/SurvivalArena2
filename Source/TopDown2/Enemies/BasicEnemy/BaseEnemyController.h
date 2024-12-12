@@ -10,23 +10,16 @@ class TOPDOWN2_API ABaseEnemyController : public AAIController
 	GENERATED_BODY()
 	
 public:
-	// Sets default values for this character's properties
 	ABaseEnemyController();
 	
 	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
-	TArray<UClass*> KickableAssTypes;
-	
-	UPROPERTY(Category=AI, EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
-	UBehaviorTree* BaseBehaviourTree;
+	TArray<UClass*> DamageablePawnTypes;
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="AI|Components|PawnSensing")
-	bool IsKickableAss(APawn* InPawn);
+	bool CanDamagePawn(APawn* InPawn);
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void OnPossess(APawn* InPawn) override;
-
-private:
-	void LogPawnAction(const FString& PawnAction, const FString& Name);
 };

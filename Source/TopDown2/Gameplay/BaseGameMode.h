@@ -40,7 +40,7 @@ public:
 		FString& ErrorMessage
 	) override;
 
-	// todo prolly move to game state
+	// todo move to game state
 	UPROPERTY(BlueprintAssignable, Category="GameMode")
 	FOnEnemyDefeated OnEnemyDefeated;
 

@@ -15,7 +15,6 @@
 #include "TopDown2/Util/GameMaths.h"
 #include "TopDown2/Util/Log.h"
 
-// todo: clean this up, most of these params should be set in blueprint
 ABasePlayerCharacter::ABasePlayerCharacter() {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);

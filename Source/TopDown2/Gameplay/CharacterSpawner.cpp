@@ -9,8 +9,4 @@ ACharacterSpawner::ACharacterSpawner() {
 
 void ACharacterSpawner::BeginPlay() {
 	Super::BeginPlay();
-
-	if (EnemySpawnFlow == ESpawnerType::TimedAutomatic) {
-			
-	}
 }

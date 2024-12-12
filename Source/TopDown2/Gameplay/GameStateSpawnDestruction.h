@@ -18,7 +18,7 @@ public:
 	void HandleSpawnerDestroyed(AActor* Spawner);
 
 	UFUNCTION(BlueprintCallable, Category="GameState")
-	void SetSpawners(TArray<AActor*> Spawners);
+	void SetSpawners(const TArray<AActor*>& Spawners);
 	
 	virtual float GetScore_Implementation() override;
 

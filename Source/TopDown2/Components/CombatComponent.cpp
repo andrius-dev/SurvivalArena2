@@ -105,7 +105,7 @@ float UCombatComponent::GetMaxHealth() const {
 	return MaxHealth;
 }
 
-void UCombatComponent::SetCurrentHealth(float Health, bool bNotify) {
+void UCombatComponent::SetCurrentHealth(const float Health, const bool bNotify) {
 	if (bNotify) {
 		OnHealthChanged.Broadcast(
 			this,
