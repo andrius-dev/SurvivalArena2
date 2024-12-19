@@ -1,29 +1,29 @@
 
-#include "TopDown2/GAS/CombatCharacterAttributeSet.h"
+#include "TopDown2/GAS/CombatAttributeSet.h"
 
-UCombatCharacterAttributeSet::UCombatCharacterAttributeSet() {
+UCombatAttributeSet::UCombatAttributeSet() {
 }
 
-bool UCombatCharacterAttributeSet::PreGameplayEffectExecute(
+bool UCombatAttributeSet::PreGameplayEffectExecute(
 	FGameplayEffectModCallbackData& Data
 ) {
 	return Super::PreGameplayEffectExecute(Data);
 }
 
-void UCombatCharacterAttributeSet::PostGameplayEffectExecute(
+void UCombatAttributeSet::PostGameplayEffectExecute(
 	const FGameplayEffectModCallbackData& Data
 ) {
 	Super::PostGameplayEffectExecute(Data);
 }
 
-void UCombatCharacterAttributeSet::PreAttributeChange(
+void UCombatAttributeSet::PreAttributeChange(
 	const FGameplayAttribute& Attribute,
 	float& NewValue
 ) {
 	Super::PreAttributeChange(Attribute, NewValue);
 }
 
-void UCombatCharacterAttributeSet::PostAttributeChange(
+void UCombatAttributeSet::PostAttributeChange(
 	const FGameplayAttribute& Attribute,
 	float OldValue,
 	float NewValue
@@ -31,6 +31,6 @@ void UCombatCharacterAttributeSet::PostAttributeChange(
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 }
 
-void UCombatCharacterAttributeSet::InitFromMetaDataTable(const UDataTable* DataTable) {
+void UCombatAttributeSet::InitFromMetaDataTable(const UDataTable* DataTable) {
 	Super::InitFromMetaDataTable(DataTable);
 }

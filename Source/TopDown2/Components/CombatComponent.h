@@ -1,10 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HealthBarInterface.h"
 #include "WeaponMeshComponent.h"
 #include "Components/ActorComponent.h"
+#include "TopDown2/GAS/CombatAttributeSet.h"
 #include "CombatComponent.generated.h"
-
 	
 /**
  *
@@ -12,7 +13,7 @@
  * and the following params are four type - name pairs.
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
-	FOnHealthChanged,
+	FHealth_AttributeChanged,
 	UCombatComponent*, CombatComponent,
 	float, NewValue,
 	float, OldValue,
@@ -20,7 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
 );
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-	FOnDefeat,
+	FDefeatStarted,
 	UObject*, Owner 
 );
 
@@ -32,10 +33,6 @@ class TOPDOWN2_API UCombatComponent : public UActorComponent
 public:	
 	UCombatComponent();
 
-	// todo should be the same as collider
-	const float DEFAULT_HIT_RADIUS = 20.f;
-	const float DEFAULT_DAMAGE = 5.f;
-
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void DetectMeleeHits();
 	
@@ -43,26 +40,15 @@ public:
 		return "CombatComponent";
 	}
 
-	const float DEFAULT_MAX_HEALTH = 100.f;
+	UPROPERTY(BlueprintAssignable, Category="Health")
+	FHealth_AttributeChanged OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category="Health")
-	FOnHealthChanged OnHealthChanged;
-
-	UPROPERTY(BlueprintAssignable, Category="Health")
-	FOnDefeat OnDefeat;
-
+	FDefeatStarted DefeatStarted;
+	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetMaxHealth() const;
-
-	UFUNCTION(BlueprintCallable, Category="Health")
-	void SetCurrentHealth(float Health, bool bNotify);
-
-	/**
-	 * Sets CurrentHealth to MaxHealth
-	 */
-	UFUNCTION(BlueprintCallable, Category="Health")
-	void ResetHealth();
-
+	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetCurrentHealth() const;
 
@@ -71,7 +57,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Health")
 	bool GetCanReceiveDamage() const;
-
+	
+	// todo gameplay effect? idduno
 	/**
 	 * Reduces CurrentHealth by Amount and broadcasts OnHealthChanged
 	 * @param Amount Raw attack value
@@ -82,36 +69,34 @@ public:
 	float TakeDamage(const float Amount, AActor* Initiator);
 
 protected:
-	UPROPERTY(EditAnywhere)
-	float MaxHealth = DEFAULT_MAX_HEALTH;
-	
-	UPROPERTY(BlueprintReadWrite)
-	float CurrentHealth = MaxHealth;
-
-	virtual void BeginPlay() override;
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	TObjectPtr<UWeaponMeshComponent> EquippedWeaponMesh = nullptr;
+	
+	UPROPERTY(BlueprintReadWrite, Category="Combat")
+	TScriptInterface<IHealthBarInterface> HealthWidget;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	bool bDamageActorsOfSelfClass = true;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Combat")
 	TArray<FName> TagsToIgnoreDamage;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
-	float DamagePerHit = DEFAULT_DAMAGE;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
-	float HitRadius = DEFAULT_HIT_RADIUS;
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	FLinearColor AttackTraceMissColor;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	FLinearColor AttackTraceHitColor;
 
-private:	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Combat")
+	TObjectPtr<const UCombatAttributeSet> AttributeSet;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Combat")
+	TObjectPtr<const UAbilitySystemComponent> AbilitySystemComponent;
+
+	virtual void BeginPlay() override;
+
+private:
+	// todo separate to a weapon component
 	UPROPERTY(VisibleAnywhere, Category="Combat")
 	TObjectPtr<UStaticMeshSocket const> BladeStart = nullptr;
 
@@ -119,6 +104,9 @@ private:
 	TObjectPtr<UStaticMeshSocket const> BladeEnd = nullptr;
 
 	FVector GetSocketLocation(const UStaticMeshSocket* Socket) const;
+
+	UFUNCTION()
+	void InitAbilitySystem();
 	
 	UPROPERTY()
 	TArray<AActor*> ActorsToIgnoreTrace;

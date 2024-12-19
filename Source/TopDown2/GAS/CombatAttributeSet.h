@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "CombatCharacterAttributeSet.generated.h"
+#include "CombatAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName)\
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName)\
@@ -15,28 +15,28 @@
  * Attributes for characters that receive and/or deal damage 
  */
 UCLASS()
-class TOPDOWN2_API UCombatCharacterAttributeSet : public UAttributeSet
+class TOPDOWN2_API UCombatAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category="Combat|Attributes")
 	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UCombatCharacterAttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UCombatAttributeSet, Health);
 	
 	UPROPERTY(BlueprintReadOnly, Category="Combat|Attributes")
 	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UCombatCharacterAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UCombatAttributeSet, MaxHealth);
 	
 	UPROPERTY(BlueprintReadOnly, Category="Combat|Attributes")
 	FGameplayAttributeData BaseDefence;
-	ATTRIBUTE_ACCESSORS(UCombatCharacterAttributeSet, BaseDefence);
+	ATTRIBUTE_ACCESSORS(UCombatAttributeSet, BaseDefence);
 	
 	UPROPERTY(BlueprintReadOnly, Category="Combat|Attributes")	
 	FGameplayAttributeData BaseAttack;
-	ATTRIBUTE_ACCESSORS(UCombatCharacterAttributeSet, BaseAttack);
+	ATTRIBUTE_ACCESSORS(UCombatAttributeSet, BaseAttack);
 	
-	UCombatCharacterAttributeSet();
+	UCombatAttributeSet();
 	
 	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
 	

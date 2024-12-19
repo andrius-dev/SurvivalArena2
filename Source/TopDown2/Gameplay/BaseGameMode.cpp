@@ -36,7 +36,7 @@ void ABaseGameMode::InitEnemies(const TArray<FSpawnParams> EnemiesToSpawn) {
 
 	for (const auto Enemy : PooledEnemies) {
 		IEnemyCharacterInterface::Execute_GetCombatComponent(Enemy)
-			->OnDefeat.AddDynamic(this, &ABaseGameMode::HandleEnemyDefeated);
+			->DefeatStarted.AddDynamic(this, &ABaseGameMode::HandleEnemyDefeated);
 	}
 }
 

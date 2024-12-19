@@ -27,6 +27,9 @@ void ABaseEnemyCharacter::BeginPlay() {
 
 }
 
+void ABaseEnemyCharacter::InitAttributes() {
+}
+
 void ABaseEnemyCharacter::Tick(const float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
@@ -49,6 +52,11 @@ AActor* ABaseEnemyCharacter::GetTargetActor_Implementation() {
 
 void ABaseEnemyCharacter::SetTargetActor_Implementation(AActor* NewTargetActor) {
 	TargetActor = NewTargetActor;
+}
+
+void ABaseEnemyCharacter::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+	InitAttributes();
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController) {

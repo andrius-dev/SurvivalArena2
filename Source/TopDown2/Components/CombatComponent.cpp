@@ -1,7 +1,5 @@
 #include "TopDown2/Components/CombatComponent.h"
 
-#include <set>
-
 #include "WeaponMeshComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
@@ -9,7 +7,6 @@
 
 UCombatComponent::UCombatComponent() {
 	PrimaryComponentTick.bCanEverTick = true;
-	HitRadius = DEFAULT_HIT_RADIUS;
 	ActorsToIgnoreTrace = TArray<AActor*>();
 	bDamageActorsOfSelfClass = false;
 	AttackTraceHitColor = FLinearColor::Green;
@@ -24,25 +21,25 @@ void UCombatComponent::BeginPlay() {
 		return;
 	}
 
+	// todo init these in base characters.
 	if (!EquippedWeaponMesh) {
 		EquippedWeaponMesh = Owner->FindComponentByClass<UWeaponMeshComponent>();
 	}
 	if (EquippedWeaponMesh) {
-		if (!BladeStart) {
-			BladeStart = EquippedWeaponMesh->
-				GetSocketByName("SocketBladeStart");
+		if (!IsValid(BladeStart)) {
+			BladeStart = EquippedWeaponMesh->GetSocketByName("SocketBladeStart");
 		}
-		if (!BladeEnd) {
+		if (!IsValid(BladeEnd)) {
 			BladeEnd = EquippedWeaponMesh->GetSocketByName("SocketBladeEnd");
 		}
 	}
+	
+	InitAbilitySystem();
 }
 
-FVector UCombatComponent::GetSocketLocation(
-	const UStaticMeshSocket* Socket
-) const {
+FVector UCombatComponent::GetSocketLocation(const UStaticMeshSocket* Socket) const {
 	FTransform Transform;
-	bool IsSuccess = Socket->GetSocketTransform(Transform, EquippedWeaponMesh);
+	const bool IsSuccess = Socket->GetSocketTransform(Transform, EquippedWeaponMesh);
 	if (!IsSuccess) {
 		UE_LOG(LogTopDown2, Error, TEXT("Failed to get socket transform"));
 		return FVector();
@@ -73,7 +70,7 @@ void UCombatComponent::DetectMeleeHits() {
 		AttackTraceHitColor
 	);
 
-	auto HitActorsIdSet = std::set<uint32>();
+	auto HitActorsIdSet = TSet<uint32>();
 
 	for (const FHitResult& TempResult : HitResults) {
 		const auto HitActor = TempResult.GetActor();
@@ -81,9 +78,11 @@ void UCombatComponent::DetectMeleeHits() {
 			continue;
 		}
 		const auto CombatComponent = HitActor->FindComponentByClass<UCombatComponent>();
+		const bool IsAllowedToDamage =!bDamageActorsOfSelfClass && HitActor->IsA(GetOwner()->GetClass()); 
 
-		if (!CombatComponent || HitActorsIdSet.contains(HitActor->GetUniqueID()) ||
-			(!bDamageActorsOfSelfClass && HitActor->IsA(GetOwner()->GetClass()))
+		if (!IsValid(CombatComponent) ||
+			HitActorsIdSet.Contains(HitActor->GetUniqueID()) ||
+			IsAllowedToDamage	
 		) {
 			continue;
 		}
@@ -96,33 +95,34 @@ void UCombatComponent::DetectMeleeHits() {
 			continue;
 		}
 
-		HitActorsIdSet.insert(HitActor->GetUniqueID());
-		CombatComponent->TakeDamage(DamagePerHit, this->GetOwner());
+		HitActorsIdSet.Add(HitActor->GetUniqueID());
 	}
+}
+
+void UCombatComponent::InitAbilitySystem() {
+	AbilitySystemComponent = GetOwner()->FindComponentByClass<UAbilitySystemComponent>();
+	if (!IsValid(AbilitySystemComponent)) {
+		UE_LOG(LogTopDown2, Error, TEXT("%s Failed to get ability system component"), *GetNameSafe(this));
+		return;
+	}
+	AttributeSet = AbilitySystemComponent->GetSet<UCombatAttributeSet>();
+	if (!IsValid(AttributeSet)) {
+		UE_LOG(LogTopDown2, Error, TEXT("%s Has invalid attribute set"), *GetNameSafe(this));
+		return;
+	}
+	
 }
 
 float UCombatComponent::GetMaxHealth() const {
-	return MaxHealth;
-}
-
-void UCombatComponent::SetCurrentHealth(const float Health, const bool bNotify) {
-	if (bNotify) {
-		OnHealthChanged.Broadcast(
-			this,
-			CurrentHealth,
-			Health,
-			this->GetOwner()
-		);
-	}
-	CurrentHealth = Health;
-}
-
-void UCombatComponent::ResetHealth() {
-	CurrentHealth = MaxHealth;
+	return IsValid(AttributeSet)
+		? AttributeSet->GetHealth()
+		: 0.0f;
 }
 
 float UCombatComponent::GetCurrentHealth() const {
-	return CurrentHealth;
+	return IsValid(AttributeSet)
+		? AttributeSet->GetHealth()
+		: 0.0f;
 }
 
 void UCombatComponent::SetCanReceiveDamage(bool NewDamage) {
@@ -151,7 +151,7 @@ float UCombatComponent::TakeDamage(const float Amount, AActor* Initiator) {
 	);
 
 	if (CurrentHealth == 0) {
-		OnDefeat.Broadcast(GetOwner());
+		DefeatStarted.Broadcast(GetOwner());
 	}
 
 	// there will be calculations later
