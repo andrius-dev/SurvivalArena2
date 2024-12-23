@@ -34,3 +34,7 @@ void UCombatAttributeSet::PostAttributeChange(
 void UCombatAttributeSet::InitFromMetaDataTable(const UDataTable* DataTable) {
 	Super::InitFromMetaDataTable(DataTable);
 }
+
+void UCombatAttributeSet::ResetHealth() {
+	SetHealth(GetMaxHealth());
+}

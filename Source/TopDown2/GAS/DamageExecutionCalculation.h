@@ -4,6 +4,7 @@
 #include "GameplayEffectExecutionCalculation.h"
 #include "DamageExecutionCalculation.generated.h"
 
+struct FDamageStatics;
 /**
  * Calculates damage taken
  */
@@ -14,6 +15,8 @@ class TOPDOWN2_API UDamageExecutionCalculation : public UGameplayEffectExecution
 
 public:
 	UDamageExecutionCalculation();
+	
+	static FDamageStatics& GetDamageStatics();
 
 	virtual void Execute_Implementation(
 		const FGameplayEffectCustomExecutionParameters& ExecutionParams,

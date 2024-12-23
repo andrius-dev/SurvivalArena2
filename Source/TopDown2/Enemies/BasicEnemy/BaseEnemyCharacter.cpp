@@ -9,6 +9,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter() {
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	AIControllerClass = ABaseEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	CharacterAttributeSet = CreateDefaultSubobject<UCombatAttributeSet>(TEXT("CombatAttributeSet"));
 }
 
 void ABaseEnemyCharacter::BeginPlay() {
@@ -72,8 +73,8 @@ void ABaseEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState
 	bool bHidden;
 	bool bEnableCollision;
 
-	if  (CurrentState != NewState) {
-		CombatComponent->ResetHealth();
+	if  (IsValid(CharacterAttributeSet) && CurrentState != NewState) {
+		CharacterAttributeSet->ResetHealth();
 	}
 	
 	switch (NewState) {

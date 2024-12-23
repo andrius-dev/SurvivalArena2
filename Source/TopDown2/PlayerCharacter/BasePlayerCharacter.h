@@ -40,27 +40,25 @@ protected:
 	UFUNCTION(BlueprintCallable, Category=AbilitySystem)
 	void InitAttributes();
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AbilitySystem");
+	TSoftObjectPtr<UCombatAttributeSet> CombatAttributeSet = nullptr;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	TObjectPtr<UCameraComponent> TopDownCameraComponent = nullptr;
+	
 	/**
 	 * used to rotate character's camera around roll axis
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Camera)
 	double CameraRotationDelta;
 
-public:
-
-protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 	virtual void PossessedBy(AController* NewController) override;
 	
+	
 private:
 
-	// Components
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=AbilitySystem, meta = (AllowPrivateAccess = "true"));
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCameraComponent> TopDownCameraComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom = nullptr;

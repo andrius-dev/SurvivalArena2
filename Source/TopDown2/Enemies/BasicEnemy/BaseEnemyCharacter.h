@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemInterface.h"
 #include "TopDown2/Enemies/EnemyGameState.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "GameFramework/Character.h"
@@ -12,7 +11,7 @@ class UCombatAttributeSet;
 class UAbilitySystemComponent;
 
 UCLASS(Blueprintable, Category="AI")
-class ABaseEnemyCharacter : public ACharacter, public IAbilitySystemInterface, public IEnemyCharacterInterface
+class ABaseEnemyCharacter : public ACharacter, public IEnemyCharacterInterface
 {
 	GENERATED_BODY()
 

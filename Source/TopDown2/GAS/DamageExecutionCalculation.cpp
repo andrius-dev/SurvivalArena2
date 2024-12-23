@@ -1,10 +1,28 @@
 #include "TopDown2/GAS/DamageExecutionCalculation.h"
 
+#include "CombatAttributeSet.h"
+
 struct FDamageStatics {
 	FGameplayEffectAttributeCaptureDefinition BaseDamageDef;
 	
-	
-	FDamageStatics() {}
+	FDamageStatics() {
+		BaseDamageDef = FGameplayEffectAttributeCaptureDefinition(
+			UCombatAttributeSet::GetBaseAttackAttribute(),
+			EGameplayEffectAttributeCaptureSource::Source,
+			true // inSnapshot
+		);
+	}
+};
+
+// todo clean-up
+
+UDamageExecutionCalculation::UDamageExecutionCalculation() {
+	RelevantAttributesToCapture.Add(GetDamageStatics().BaseDamageDef);
+}
+
+FDamageStatics& UDamageExecutionCalculation::GetDamageStatics() {
+	static FDamageStatics DamageStatics;
+	return DamageStatics;
 }
 
 void UDamageExecutionCalculation::Execute_Implementation(
@@ -12,5 +30,4 @@ void UDamageExecutionCalculation::Execute_Implementation(
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput
 ) const {
 	float Damage = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(
-		
+}

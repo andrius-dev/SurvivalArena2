@@ -34,7 +34,7 @@ public:
 	UCombatComponent();
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
-	void DetectMeleeHits();
+	const TArray<FHitResult> DetectMeleeHits();
 	
 	virtual FString GetReadableName() const override {
 		return "CombatComponent";

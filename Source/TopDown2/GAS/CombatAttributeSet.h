@@ -56,4 +56,9 @@ public:
 	) override;
 	
 	virtual void InitFromMetaDataTable(const UDataTable* DataTable) override;
+
+	/**
+	 * Sets CurrentHealth to MaxHealth
+	 */
+	void ResetHealth();
 };
