@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "TopDown2/Enemies/EnemyGameState.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "GameFramework/Character.h"
@@ -11,7 +12,10 @@ class UCombatAttributeSet;
 class UAbilitySystemComponent;
 
 UCLASS(Blueprintable, Category="AI")
-class ABaseEnemyCharacter : public ACharacter, public IEnemyCharacterInterface
+class ABaseEnemyCharacter :
+	public ACharacter,
+	public IEnemyCharacterInterface,
+	public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -37,19 +41,21 @@ public:
 	virtual void SetTargetActor_Implementation(AActor* NewTargetActor) override;
 	
 	virtual void PostInitializeComponents() override;
+	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=AbilitySystem)
-	TObjectPtr<UCombatAttributeSet> CharacterAttributeSet;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="AbilitySystem")
+	TObjectPtr<UCombatAttributeSet> CombatAttributeSet;
 
 	UFUNCTION(BlueprintCallable)
 	void InitAttributes();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=AbilitySystem, meta = (AllowPrivateAccess = "true"));
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystem = nullptr;
 	
 	UPROPERTY()
 	EEnemyGameState CurrentState;

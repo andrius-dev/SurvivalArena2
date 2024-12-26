@@ -53,6 +53,7 @@ ABasePlayerCharacter::ABasePlayerCharacter() {
 	CameraPositiveRotator = FRotator3d(0.0, -CameraRotationDelta, 0.0);
 	CameraNegativeRotator = FRotator3d(0.0, CameraRotationDelta, 0.0);
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	CombatAttributeSet = CreateDefaultSubobject<UAttributeSet>(TEXT("CombatAttributeSet"));
 }
 
 ACharacter* ABasePlayerCharacter::GetCharacter_Implementation() {
@@ -71,13 +72,17 @@ void ABasePlayerCharacter::PostInitializeComponents() {
 void ABasePlayerCharacter::BeginPlay() {
 	Super::BeginPlay();
 
+	AbilitySystemComponent = FindComponentByClass<UAbilitySystemComponent>();
 	InitAttributes();
-	// AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 }
 
 void ABasePlayerCharacter::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	DeltaTimeSecs = DeltaSeconds;
+}
+
+UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const {
+	return AbilitySystemComponent;
 }
 
 void ABasePlayerCharacter::InitAttributes() {

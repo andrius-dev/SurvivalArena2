@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "InputAction.h"
 #include "InputActionValue.h"
 #include "BasePlayerController.h"
@@ -12,18 +12,25 @@
 #include "BasePlayerCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class TOPDOWN2_API ABasePlayerCharacter : public ACharacter, public IPlayerCharacterInterface
+class TOPDOWN2_API ABasePlayerCharacter :
+	public ACharacter,
+	public IPlayerCharacterInterface,
+	public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	ABasePlayerCharacter();
 	
+	
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaSeconds) override;
 	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
 	virtual ACharacter* GetCharacter_Implementation() override;
+	
 	
 	virtual UCombatComponent* GetCombatComponent_Implementation() override;
 	
@@ -37,10 +44,11 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float MovementDeltaAngle;
 
+protected:
 	UFUNCTION(BlueprintCallable, Category=AbilitySystem)
 	void InitAttributes();
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AbilitySystem");
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="AbilitySystem");
 	TSoftObjectPtr<UCombatAttributeSet> CombatAttributeSet = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -59,6 +67,8 @@ protected:
 	
 private:
 
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom = nullptr;
