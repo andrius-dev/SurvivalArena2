@@ -3,13 +3,13 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffectExtension.h"
+#include "BaseAttributeSet.h"
 #include "CombatAttributeSet.generated.h"
 
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName)\
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName)\
-	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName)\
-	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName)\
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
+
+// declare attribute changed
 
 /**
  * Attributes for characters that receive and/or deal damage 
@@ -35,6 +35,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Combat|Attributes")	
 	FGameplayAttributeData BaseAttack;
 	ATTRIBUTE_ACCESSORS(UCombatAttributeSet, BaseAttack);
+
+	mutable FAttributeEvent OnHealthChanged;
+
+	FAttributeEvent OnMaxHealthChanged;
+
+	FAttributeEvent OnHealthDepleted;
 	
 	UCombatAttributeSet();
 	
@@ -61,4 +67,16 @@ public:
 	 * Sets CurrentHealth to MaxHealth
 	 */
 	void ResetHealth();
+
+
+private:
+	UFUNCTION()
+	void LogAttributeValue(const FGameplayAttribute& Attribute, const float Value) const;
+	
+	UFUNCTION()
+	void HandleAttributeChange(
+		const FGameplayAttribute& Attribute,
+		const float OldValue,
+		const float NewValue
+    );
 };

@@ -10,6 +10,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter() {
 	AIControllerClass = ABaseEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	CombatAttributeSet = CreateDefaultSubobject<UCombatAttributeSet>(TEXT("CombatAttributeSet"));
+	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 }
 
 void ABaseEnemyCharacter::BeginPlay() {

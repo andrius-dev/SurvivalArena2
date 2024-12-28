@@ -50,11 +50,6 @@ FVector UCombatComponent::GetSocketLocation(const UStaticMeshSocket* Socket) con
 const TArray<FHitResult> UCombatComponent::DetectMeleeHits() {
 	TArray<FHitResult> HitResults;
 
-	// if (!BladeStart || !BladeEnd) {
-		// UE_LOG(LogTopDown2, Error, TEXT("Invalid socket locations"))
-		// return;
-	// }
-
 	UKismetSystemLibrary::LineTraceMulti(
 		GetOwner(),
 		GetSocketLocation(BladeStart),
@@ -113,15 +108,16 @@ void UCombatComponent::InitAbilitySystem() {
 	}
 	AttributeSet = AbilitySystemComponent->GetSet<UCombatAttributeSet>();
 	if (!IsValid(AttributeSet)) {
-		UE_LOG(LogTopDown2, Error, TEXT("%s Has invalid attribute set"), *GetNameSafe(this));
+		UE_LOG(LogTopDown2, Error, TEXT("%s Has invalid attribute set"), *GetNameSafe(GetOwner()));
 		return;
 	}
-	
+
+	AttributeSet->OnHealthChanged.AddUObject(this, &UCombatComponent::HandleHealthChanged);
 }
 
 float UCombatComponent::GetMaxHealth() const {
 	return IsValid(AttributeSet)
-		? AttributeSet->GetHealth()
+		? AttributeSet->GetMaxHealth()
 		: 0.0f;
 }
 
@@ -139,27 +135,14 @@ bool UCombatComponent::GetCanReceiveDamage() const {
 	return bCanReceiveDamage;
 }
 
-float UCombatComponent::TakeDamage(const float Amount, AActor* Initiator) {
-	if(!bCanReceiveDamage) {
-		return 0.0f;
-	}
-	// const float OldHealth = CurrentHealth;
-	// CurrentHealth -= Amount;
-	// if (CurrentHealth < 0.f) {
-	// 	CurrentHealth = 0.f;
-	// }
-	//
-	// OnHealthChanged.Broadcast(
-	// 	this,
-	// 	OldHealth,
-	// 	CurrentHealth,
-	// 	Initiator
-	// );
-	//
-	// if (CurrentHealth == 0) {
-	// 	DefeatStarted.Broadcast(GetOwner());
-	// }
-
-	// there will be calculations later
-	return Amount;
+void UCombatComponent::HandleHealthChanged(
+	AActor* Instigator,
+	AActor* DamageCauser,
+	const FGameplayEffectSpec* DamageEffectSpec,
+	float DamageMagnitude,
+	const float OldValue,
+	const float NewValue
+) {
+	UE_LOG(LogTopDown2, All, TEXT("Health changed: %s"), NewValue);
+	OnHealthChanged.Broadcast(this, OldValue, NewValue, Instigator);
 }

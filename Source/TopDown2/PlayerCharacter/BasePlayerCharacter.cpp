@@ -86,9 +86,6 @@ UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const
 }
 
 void ABasePlayerCharacter::InitAttributes() {
-	// if (IsValid(AbilitySystem.Get())) {
-			
-	// }
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {

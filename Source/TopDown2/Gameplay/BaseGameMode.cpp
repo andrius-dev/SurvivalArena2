@@ -18,11 +18,14 @@ ABaseGameMode::ABaseGameMode() {
 }
 
 void ABaseGameMode::BeginPlay() {
+	Super::BeginPlay();
 	const auto SpawnActor =
 		UGameplayStatics::GetActorOfClass(this, ASpawnManager::StaticClass());
-	verify(SpawnActor);
+	if (!IsValid(SpawnActor)) {
+		UE_LOG(LogTopDown2, Error, TEXT("SpawnActor is null"));
+		return;
+	}
 	SpawnManager = CastChecked<ASpawnManager>(SpawnActor);
-	Super::BeginPlay();
 }
 
 void ABaseGameMode::InitEnemies(const TArray<FSpawnParams> EnemiesToSpawn) {

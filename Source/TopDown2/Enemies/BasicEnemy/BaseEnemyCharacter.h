@@ -52,9 +52,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void InitAttributes();
-
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=AbilitySystem, meta = (AllowPrivateAccess = "true"));
+	
+	UPROPERTY(BlueprintReadOnly, Category="AbilitySystem", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystem = nullptr;
 	
 	UPROPERTY()

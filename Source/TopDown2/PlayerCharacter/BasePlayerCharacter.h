@@ -31,7 +31,6 @@ public:
 	
 	virtual ACharacter* GetCharacter_Implementation() override;
 	
-	
 	virtual UCombatComponent* GetCombatComponent_Implementation() override;
 	
 	virtual void PostInitializeComponents() override;

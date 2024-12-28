@@ -1,5 +1,5 @@
-
 #include "TopDown2/GAS/CombatAttributeSet.h"
+#include "TopDown2/Util/Log.h"
 
 UCombatAttributeSet::UCombatAttributeSet() {
 }
@@ -25,10 +25,13 @@ void UCombatAttributeSet::PreAttributeChange(
 
 void UCombatAttributeSet::PostAttributeChange(
 	const FGameplayAttribute& Attribute,
-	float OldValue,
-	float NewValue
+	const float OldValue,
+	const float NewValue
 ) {
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	LogAttributeValue(Attribute, NewValue);
+
+	HandleAttributeChange(Attribute, OldValue, NewValue);
 }
 
 void UCombatAttributeSet::InitFromMetaDataTable(const UDataTable* DataTable) {
@@ -37,4 +40,34 @@ void UCombatAttributeSet::InitFromMetaDataTable(const UDataTable* DataTable) {
 
 void UCombatAttributeSet::ResetHealth() {
 	SetHealth(GetMaxHealth());
+}
+
+void UCombatAttributeSet::LogAttributeValue(
+	const FGameplayAttribute& Attribute,
+	const float Value
+) const {
+	const auto LogFormat = FString(TEXT("{0} attribute changed: {1}: {2}"));
+	const auto LogText = FString::Format(
+		*LogFormat,
+		{
+			*GetNameSafe(GetOwningActor()),
+			*Attribute.GetName(),
+			Value
+		}
+	);
+	UE_LOG(LogTopDown2, Warning, TEXT("%s"), *LogText);
+}
+
+void UCombatAttributeSet::HandleAttributeChange(
+	const FGameplayAttribute& Attribute,
+	const float OldValue,
+	const float NewValue
+) {
+	if (Attribute == GetHealthAttribute()) {
+		const float NormalisedValue = NewValue < 0.f ? 0.f : NewValue;
+		OnHealthChanged.Broadcast(nullptr, nullptr, nullptr, 1.f, OldValue, NormalisedValue);
+		if (NormalisedValue == 0.0f) {
+			OnHealthDepleted.Broadcast(nullptr, nullptr, nullptr, 1.0f, 0.f, 0.f);
+		}
+	}
 }

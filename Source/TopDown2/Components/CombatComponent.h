@@ -25,6 +25,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
 	UObject*, Owner 
 );
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+	FDefeatEnded,
+	UObject*, Owner 
+);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOPDOWN2_API UCombatComponent : public UActorComponent
 {
@@ -43,8 +48,11 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Health")
 	FHealth_AttributeChanged OnHealthChanged;
 
-	UPROPERTY(BlueprintAssignable, Category="Health")
+	UPROPERTY(BlueprintAssignable, Category="Combat")
 	FDefeatStarted DefeatStarted;
+	
+	UPROPERTY(BlueprintAssignable, Category="Combat")
+	FDefeatStarted DefeatEnded;
 	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetMaxHealth() const;
@@ -58,16 +66,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Health")
 	bool GetCanReceiveDamage() const;
 	
-	// todo gameplay effect? idduno
-	/**
-	 * Reduces CurrentHealth by Amount and broadcasts OnHealthChanged
-	 * @param Amount Raw attack value
-	 * @return Actual damage taken
-	 * @param Initiator Actor that attacked this component's owner
-	 */
-	UFUNCTION(BlueprintCallable, Category="Health")
-	float TakeDamage(const float Amount, AActor* Initiator);
-
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	TObjectPtr<UWeaponMeshComponent> EquippedWeaponMesh = nullptr;
@@ -102,15 +100,24 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category="Combat")
 	TObjectPtr<UStaticMeshSocket const> BladeEnd = nullptr;
-
-	FVector GetSocketLocation(const UStaticMeshSocket* Socket) const;
-
-	UFUNCTION()
-	void InitAbilitySystem();
 	
 	UPROPERTY()
 	TArray<AActor*> ActorsToIgnoreTrace;
 
 	UPROPERTY()
 	bool bCanReceiveDamage = true;
+
+	void HandleHealthChanged(
+		AActor* Instigator,
+		AActor* DamageCauser,
+		const FGameplayEffectSpec* DamageEffectSpec,
+		float DamageMagnitude,
+		float OldValue,
+		float NewValue
+	);
+
+	FVector GetSocketLocation(const UStaticMeshSocket* Socket) const;
+
+	UFUNCTION()
+	void InitAbilitySystem();
 };
