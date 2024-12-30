@@ -67,7 +67,7 @@ void UCombatAttributeSet::HandleAttributeChange(
 		const float NormalisedValue = NewValue < 0.f ? 0.f : NewValue;
 		OnHealthChanged.Broadcast(nullptr, nullptr, nullptr, 1.f, OldValue, NormalisedValue);
 		if (NormalisedValue == 0.0f) {
-			OnHealthDepleted.Broadcast(nullptr, nullptr, nullptr, 1.0f, 0.f, 0.f);
+			OnHealthDepleted.Broadcast();
 		}
 	}
 }

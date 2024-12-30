@@ -22,7 +22,10 @@ public:
 	UInputMappingContext* MappingContextKeyboardMouse;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputMappingContext* MappingContextController;
+
 protected:
+	virtual void BeginPlayingState() override;
+
 	virtual void SetupInputComponent() override;
 	// To add mapping context
 	virtual void BeginPlay();

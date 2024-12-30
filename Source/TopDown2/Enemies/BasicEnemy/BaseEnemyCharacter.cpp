@@ -80,7 +80,7 @@ void ABaseEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState
 	if  (IsValid(CombatAttributeSet) && CurrentState != NewState) {
 		CombatAttributeSet->ResetHealth();
 	}
-	
+
 	switch (NewState) {
 	case EEnemyGameState::Active:
 		bHidden = false;

@@ -15,19 +15,25 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
 	FHealth_AttributeChanged,
 	UCombatComponent*, CombatComponent,
-	float, NewValue,
 	float, OldValue,
+	float, NewValue,
 	AActor*, Initiator
 );
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-	FDefeatStarted,
+	FOnDefeatStarted,
 	UObject*, Owner 
 );
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-	FDefeatEnded,
+	FOnDefeatEnded,
 	UObject*, Owner 
+);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
+	FOnDetectedMeleeHit,
+	UObject*, Owner,
+	const TArray<FHitResult>, HitResults
 );
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -38,8 +44,9 @@ class TOPDOWN2_API UCombatComponent : public UActorComponent
 public:	
 	UCombatComponent();
 
+	// todo return combat components or something?
 	UFUNCTION(BlueprintCallable, Category="Combat")
-	const TArray<FHitResult> DetectMeleeHits();
+	const TArray<AActor*> DetectMeleeHits(const TArray<AActor*>& ActorsToIgnore);
 	
 	virtual FString GetReadableName() const override {
 		return "CombatComponent";
@@ -49,10 +56,14 @@ public:
 	FHealth_AttributeChanged OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category="Combat")
-	FDefeatStarted DefeatStarted;
+	FOnDefeatStarted OnDefeatStarted;
 	
 	UPROPERTY(BlueprintAssignable, Category="Combat")
-	FDefeatStarted DefeatEnded;
+	FOnDefeatEnded OnDefeatEnded;
+
+	// todo: needs to be in melee component or something
+	UPROPERTY(BlueprintAssignable, Category="Combat")
+	FOnDetectedMeleeHit OnDetectedMeleeHit;
 	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetMaxHealth() const;
@@ -115,6 +126,12 @@ private:
 		float OldValue,
 		float NewValue
 	);
+
+	UFUNCTION()
+	void HandleDefeatStarted();
+
+	UFUNCTION()
+	void HandleDefeatEnded();
 
 	FVector GetSocketLocation(const UStaticMeshSocket* Socket) const;
 

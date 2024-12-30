@@ -45,16 +45,20 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
-	virtual void BeginPlay() override;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="AbilitySystem")
 	TObjectPtr<UCombatAttributeSet> CombatAttributeSet;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="AbilitySystem")
+	TObjectPtr<UGameplayEffect> GameplayEffect_InitAttributes;
+	
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable)
 	void InitAttributes();
+
 private:
 	
-	UPROPERTY(BlueprintReadOnly, Category="AbilitySystem", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AbilitySystem", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystem = nullptr;
 	
 	UPROPERTY()

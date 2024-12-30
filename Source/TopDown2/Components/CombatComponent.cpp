@@ -16,6 +16,8 @@ UCombatComponent::UCombatComponent() {
 void UCombatComponent::BeginPlay() {
 	Super::BeginPlay();
 
+	InitAbilitySystem();
+	
 	const auto Owner = MakeWeakObjectPtr(GetOwner());
 	if (Owner == nullptr) {
 		return;
@@ -34,7 +36,6 @@ void UCombatComponent::BeginPlay() {
 		}
 	}
 	
-	InitAbilitySystem();
 }
 
 FVector UCombatComponent::GetSocketLocation(const UStaticMeshSocket* Socket) const {
@@ -47,17 +48,18 @@ FVector UCombatComponent::GetSocketLocation(const UStaticMeshSocket* Socket) con
 	return Transform.GetLocation();
 }
 
-const TArray<FHitResult> UCombatComponent::DetectMeleeHits() {
+const TArray<AActor*> UCombatComponent::DetectMeleeHits(
+	const TArray<AActor*>& ActorsToIgnore
+) {
 	TArray<FHitResult> HitResults;
-
+	
 	UKismetSystemLibrary::LineTraceMulti(
 		GetOwner(),
 		GetSocketLocation(BladeStart),
 		GetSocketLocation(BladeEnd),
 		ETraceTypeQuery::TraceTypeQuery2,
-		false,
-		// bTraceComplex
-		ActorsToIgnoreTrace,
+		false,	// bTraceComplex
+		ActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
 		HitResults,
 		true,
@@ -65,39 +67,22 @@ const TArray<FHitResult> UCombatComponent::DetectMeleeHits() {
 		AttackTraceHitColor
 	);
 
+	// todo filter out actors that don't have health
 	const auto FilteredResults = HitResults.FilterByPredicate([](const FHitResult& HitResult) {
 			return true;
         }
 	);
 
-	// auto HitActorsIdSet = TSet<uint32>();
-	//
-	// for (const FHitResult& TempResult : HitResults) {
-	// 	const auto HitActor = TempResult.GetActor();
-	// 	if (!HitActor) {
-	// 		continue;
-	// 	}
-	// 	const auto CombatComponent = HitActor->FindComponentByClass<UCombatComponent>();
-	// 	const bool IsAllowedToDamage =!bDamageActorsOfSelfClass && HitActor->IsA(GetOwner()->GetClass()); 
-	//
-	// 	if (!IsValid(CombatComponent) ||
-	// 		HitActorsIdSet.Contains(HitActor->GetUniqueID()) ||
-	// 		IsAllowedToDamage	
-	// 	) {
-	// 		continue;
-	// 	}
-	// 	const bool bTagIgnored = TagsToIgnoreDamage.ContainsByPredicate(
-	// 		[HitActor](const FName& Tag) {
-	// 			return HitActor->ActorHasTag(Tag);
-	// 		}
-	// 	);
-	// 	if (bTagIgnored) {
-	// 		continue;
-	// 	}
-	//
-	// 	HitActorsIdSet.Add(HitActor->GetUniqueID());
-	// }
-	return FilteredResults;
+	if (!FilteredResults.IsEmpty()) {
+		OnDetectedMeleeHit.Broadcast(this, FilteredResults);
+	}
+
+	auto HitActors = TArray<AActor*>();
+	for (const auto& HitResult : HitResults) {
+		HitActors.Add(HitResult.GetActor());
+	}
+	
+	return HitActors;
 }
 
 void UCombatComponent::InitAbilitySystem() {
@@ -113,6 +98,8 @@ void UCombatComponent::InitAbilitySystem() {
 	}
 
 	AttributeSet->OnHealthChanged.AddUObject(this, &UCombatComponent::HandleHealthChanged);
+	// todo implement defeat started and ended.
+	AttributeSet->OnHealthDepleted.AddDynamic(this, &ThisClass::HandleDefeatStarted);
 }
 
 float UCombatComponent::GetMaxHealth() const {
@@ -145,4 +132,12 @@ void UCombatComponent::HandleHealthChanged(
 ) {
 	UE_LOG(LogTopDown2, All, TEXT("Health changed: %s"), NewValue);
 	OnHealthChanged.Broadcast(this, OldValue, NewValue, Instigator);
+}
+
+void UCombatComponent::HandleDefeatStarted() {
+	OnDefeatStarted.Broadcast(GetOwner());
+}
+
+void UCombatComponent::HandleDefeatEnded() {
+	OnDefeatEnded.Broadcast(GetOwner());
 }

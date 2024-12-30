@@ -9,7 +9,7 @@
 
 
 
-// declare attribute changed
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthDepleted);
 
 /**
  * Attributes for characters that receive and/or deal damage 
@@ -40,7 +40,7 @@ public:
 
 	FAttributeEvent OnMaxHealthChanged;
 
-	FAttributeEvent OnHealthDepleted;
+	mutable FOnHealthDepleted OnHealthDepleted;
 	
 	UCombatAttributeSet();
 	
