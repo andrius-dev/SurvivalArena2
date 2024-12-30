@@ -18,11 +18,14 @@ ABaseGameMode::ABaseGameMode() {
 }
 
 void ABaseGameMode::BeginPlay() {
+	Super::BeginPlay();
 	const auto SpawnActor =
 		UGameplayStatics::GetActorOfClass(this, ASpawnManager::StaticClass());
-	verify(SpawnActor);
+	if (!IsValid(SpawnActor)) {
+		UE_LOG(LogTopDown2, Error, TEXT("SpawnActor is null"));
+		return;
+	}
 	SpawnManager = CastChecked<ASpawnManager>(SpawnActor);
-	Super::BeginPlay();
 }
 
 void ABaseGameMode::InitEnemies(const TArray<FSpawnParams> EnemiesToSpawn) {
@@ -34,9 +37,10 @@ void ABaseGameMode::InitEnemies(const TArray<FSpawnParams> EnemiesToSpawn) {
 	const auto PooledEnemies = SpawnManager->InitEnemyPool(EnemiesToSpawn);
 	UE_LOG(LogTopDown2, All, TEXT("Initializing %s enemies"), EnemiesToSpawn.Num());
 
+	// todo: this event fires but is not used in blueprints. use this one in the future 
 	for (const auto Enemy : PooledEnemies) {
 		IEnemyCharacterInterface::Execute_GetCombatComponent(Enemy)
-			->OnDefeat.AddDynamic(this, &ABaseGameMode::HandleEnemyDefeated);
+			->OnDefeatStarted.AddDynamic(this, &ABaseGameMode::HandleEnemyDefeated);
 	}
 }
 
@@ -108,6 +112,13 @@ APlayerController* ABaseGameMode::Login(
 	}
 
 	return NewPlayerController;
+}
+
+AActor* ABaseGameMode::FindPlayerStart_Implementation(
+	AController* Player,
+	const FString& IncomingName
+) {
+	return Super::FindPlayerStart_Implementation(Player, IncomingName);
 }
 
 void ABaseGameMode::HandleEnemyDefeated(UObject* Enemy) {

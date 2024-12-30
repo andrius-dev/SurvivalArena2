@@ -1,7 +1,5 @@
 #include "TopDown2/Components/CombatComponent.h"
 
-#include <set>
-
 #include "WeaponMeshComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
@@ -9,7 +7,6 @@
 
 UCombatComponent::UCombatComponent() {
 	PrimaryComponentTick.bCanEverTick = true;
-	HitRadius = DEFAULT_HIT_RADIUS;
 	ActorsToIgnoreTrace = TArray<AActor*>();
 	bDamageActorsOfSelfClass = false;
 	AttackTraceHitColor = FLinearColor::Green;
@@ -19,30 +16,31 @@ UCombatComponent::UCombatComponent() {
 void UCombatComponent::BeginPlay() {
 	Super::BeginPlay();
 
+	InitAbilitySystem();
+	
 	const auto Owner = MakeWeakObjectPtr(GetOwner());
 	if (Owner == nullptr) {
 		return;
 	}
 
+	// todo init these in base characters.
 	if (!EquippedWeaponMesh) {
 		EquippedWeaponMesh = Owner->FindComponentByClass<UWeaponMeshComponent>();
 	}
 	if (EquippedWeaponMesh) {
-		if (!BladeStart) {
-			BladeStart = EquippedWeaponMesh->
-				GetSocketByName("SocketBladeStart");
+		if (!IsValid(BladeStart)) {
+			BladeStart = EquippedWeaponMesh->GetSocketByName("SocketBladeStart");
 		}
-		if (!BladeEnd) {
+		if (!IsValid(BladeEnd)) {
 			BladeEnd = EquippedWeaponMesh->GetSocketByName("SocketBladeEnd");
 		}
 	}
+	
 }
 
-FVector UCombatComponent::GetSocketLocation(
-	const UStaticMeshSocket* Socket
-) const {
+FVector UCombatComponent::GetSocketLocation(const UStaticMeshSocket* Socket) const {
 	FTransform Transform;
-	bool IsSuccess = Socket->GetSocketTransform(Transform, EquippedWeaponMesh);
+	const bool IsSuccess = Socket->GetSocketTransform(Transform, EquippedWeaponMesh);
 	if (!IsSuccess) {
 		UE_LOG(LogTopDown2, Error, TEXT("Failed to get socket transform"));
 		return FVector();
@@ -50,22 +48,18 @@ FVector UCombatComponent::GetSocketLocation(
 	return Transform.GetLocation();
 }
 
-void UCombatComponent::DetectMeleeHits() {
+const TArray<AActor*> UCombatComponent::DetectMeleeHits(
+	const TArray<AActor*>& ActorsToIgnore
+) {
 	TArray<FHitResult> HitResults;
-
-	if (!BladeStart || !BladeEnd) {
-		UE_LOG(LogTopDown2, Error, TEXT("Invalid socket locations"))
-		return;
-	}
-
+	
 	UKismetSystemLibrary::LineTraceMulti(
 		GetOwner(),
 		GetSocketLocation(BladeStart),
 		GetSocketLocation(BladeEnd),
 		ETraceTypeQuery::TraceTypeQuery2,
-		false,
-		// bTraceComplex
-		ActorsToIgnoreTrace,
+		false,	// bTraceComplex
+		ActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
 		HitResults,
 		true,
@@ -73,56 +67,51 @@ void UCombatComponent::DetectMeleeHits() {
 		AttackTraceHitColor
 	);
 
-	auto HitActorsIdSet = std::set<uint32>();
+	// todo filter out actors that don't have health
+	const auto FilteredResults = HitResults.FilterByPredicate([](const FHitResult& HitResult) {
+			return true;
+        }
+	);
 
-	for (const FHitResult& TempResult : HitResults) {
-		const auto HitActor = TempResult.GetActor();
-		if (!HitActor) {
-			continue;
-		}
-		const auto CombatComponent = HitActor->FindComponentByClass<UCombatComponent>();
-
-		if (!CombatComponent || HitActorsIdSet.contains(HitActor->GetUniqueID()) ||
-			(!bDamageActorsOfSelfClass && HitActor->IsA(GetOwner()->GetClass()))
-		) {
-			continue;
-		}
-		const bool bTagIgnored = TagsToIgnoreDamage.ContainsByPredicate(
-			[HitActor](const FName& Tag) {
-				return HitActor->ActorHasTag(Tag);
-			}
-		);
-		if (bTagIgnored) {
-			continue;
-		}
-
-		HitActorsIdSet.insert(HitActor->GetUniqueID());
-		CombatComponent->TakeDamage(DamagePerHit, this->GetOwner());
+	if (!FilteredResults.IsEmpty()) {
+		OnDetectedMeleeHit.Broadcast(this, FilteredResults);
 	}
+
+	auto HitActors = TArray<AActor*>();
+	for (const auto& HitResult : HitResults) {
+		HitActors.Add(HitResult.GetActor());
+	}
+	
+	return HitActors;
+}
+
+void UCombatComponent::InitAbilitySystem() {
+	AbilitySystemComponent = GetOwner()->FindComponentByClass<UAbilitySystemComponent>();
+	if (!IsValid(AbilitySystemComponent)) {
+		UE_LOG(LogTopDown2, Error, TEXT("%s Failed to get ability system component"), *GetNameSafe(this));
+		return;
+	}
+	AttributeSet = AbilitySystemComponent->GetSet<UCombatAttributeSet>();
+	if (!IsValid(AttributeSet)) {
+		UE_LOG(LogTopDown2, Error, TEXT("%s Has invalid attribute set"), *GetNameSafe(GetOwner()));
+		return;
+	}
+
+	AttributeSet->OnHealthChanged.AddUObject(this, &UCombatComponent::HandleHealthChanged);
+	// todo implement defeat started and ended.
+	AttributeSet->OnHealthDepleted.AddDynamic(this, &ThisClass::HandleDefeatStarted);
 }
 
 float UCombatComponent::GetMaxHealth() const {
-	return MaxHealth;
-}
-
-void UCombatComponent::SetCurrentHealth(const float Health, const bool bNotify) {
-	if (bNotify) {
-		OnHealthChanged.Broadcast(
-			this,
-			CurrentHealth,
-			Health,
-			this->GetOwner()
-		);
-	}
-	CurrentHealth = Health;
-}
-
-void UCombatComponent::ResetHealth() {
-	CurrentHealth = MaxHealth;
+	return IsValid(AttributeSet)
+		? AttributeSet->GetMaxHealth()
+		: 0.0f;
 }
 
 float UCombatComponent::GetCurrentHealth() const {
-	return CurrentHealth;
+	return IsValid(AttributeSet)
+		? AttributeSet->GetHealth()
+		: 0.0f;
 }
 
 void UCombatComponent::SetCanReceiveDamage(bool NewDamage) {
@@ -133,27 +122,22 @@ bool UCombatComponent::GetCanReceiveDamage() const {
 	return bCanReceiveDamage;
 }
 
-float UCombatComponent::TakeDamage(const float Amount, AActor* Initiator) {
-	if(!bCanReceiveDamage) {
-		return 0.0f;
-	}
-	const float OldHealth = CurrentHealth;
-	CurrentHealth -= Amount;
-	if (CurrentHealth < 0.f) {
-		CurrentHealth = 0.f;
-	}
+void UCombatComponent::HandleHealthChanged(
+	AActor* Instigator,
+	AActor* DamageCauser,
+	const FGameplayEffectSpec* DamageEffectSpec,
+	float DamageMagnitude,
+	const float OldValue,
+	const float NewValue
+) {
+	UE_LOG(LogTopDown2, All, TEXT("Health changed: %s"), NewValue);
+	OnHealthChanged.Broadcast(this, OldValue, NewValue, Instigator);
+}
 
-	OnHealthChanged.Broadcast(
-		this,
-		OldHealth,
-		CurrentHealth,
-		Initiator
-	);
+void UCombatComponent::HandleDefeatStarted() {
+	OnDefeatStarted.Broadcast(GetOwner());
+}
 
-	if (CurrentHealth == 0) {
-		OnDefeat.Broadcast(GetOwner());
-	}
-
-	// there will be calculations later
-	return Amount;
+void UCombatComponent::HandleDefeatEnded() {
+	OnDefeatEnded.Broadcast(GetOwner());
 }

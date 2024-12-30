@@ -23,6 +23,10 @@ void ABasePlayerController::BeginPlay() {
 	InputSubsystem->AddMappingContext(MappingContextController, 0, Options);
 }
 
+void ABasePlayerController::BeginPlayingState() {
+	Super::BeginPlayingState();
+}
+
 void ABasePlayerController::SetupInputComponent() {
 	Super::SetupInputComponent();
 }

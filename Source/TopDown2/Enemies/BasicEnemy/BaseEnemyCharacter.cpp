@@ -9,6 +9,8 @@ ABaseEnemyCharacter::ABaseEnemyCharacter() {
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	AIControllerClass = ABaseEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	CombatAttributeSet = CreateDefaultSubobject<UCombatAttributeSet>(TEXT("CombatAttributeSet"));
+	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 }
 
 void ABaseEnemyCharacter::BeginPlay() {
@@ -24,7 +26,9 @@ void ABaseEnemyCharacter::BeginPlay() {
 			true // bIgnorePlatformRestrictions
 		);
 	}
+}
 
+void ABaseEnemyCharacter::InitAttributes() {
 }
 
 void ABaseEnemyCharacter::Tick(const float DeltaTime) {
@@ -51,6 +55,15 @@ void ABaseEnemyCharacter::SetTargetActor_Implementation(AActor* NewTargetActor) 
 	TargetActor = NewTargetActor;
 }
 
+void ABaseEnemyCharacter::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+	InitAttributes();
+}
+
+UAbilitySystemComponent* ABaseEnemyCharacter::GetAbilitySystemComponent() const {
+	return AbilitySystem;
+}
+
 void ABaseEnemyCharacter::PossessedBy(AController* NewController) {
 	Super::PossessedBy(NewController);
     AIController = UAIBlueprintHelperLibrary::GetAIController(this);
@@ -64,10 +77,10 @@ void ABaseEnemyCharacter::SetState_Implementation(const EEnemyGameState NewState
 	bool bHidden;
 	bool bEnableCollision;
 
-	if  (CurrentState != NewState) {
-		CombatComponent->ResetHealth();
+	if  (IsValid(CombatAttributeSet) && CurrentState != NewState) {
+		CombatAttributeSet->ResetHealth();
 	}
-	
+
 	switch (NewState) {
 	case EEnemyGameState::Active:
 		bHidden = false;

@@ -2,7 +2,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "BasePlayerController.h"
-#include "AI/NavigationSystemBase.h"
+#include "Animation/AnimAttributes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -21,18 +21,21 @@ ABasePlayerCharacter::ABasePlayerCharacter() {
 	DeltaTimeSecs = 0.0;
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Don't rotate character to camera direction
+	// Rotation
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+	RotationEase = 10.f;
+	RotationMaxSpeed = 25.f;
 	
-	// Configure character movement
+	// Character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+	MovementDeltaAngle = 45;
 
-	// Create a camera boom...
+	// Camera boom
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
@@ -40,7 +43,7 @@ ABasePlayerCharacter::ABasePlayerCharacter() {
 	CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
-	// Create a camera...
+	// Camera
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
@@ -49,7 +52,8 @@ ABasePlayerCharacter::ABasePlayerCharacter() {
 	CameraRotationDelta = 45;
 	CameraPositiveRotator = FRotator3d(0.0, -CameraRotationDelta, 0.0);
 	CameraNegativeRotator = FRotator3d(0.0, CameraRotationDelta, 0.0);
-	CombatComponent = CreateDefaultSubobject<UCombatComponent>("CombatComponent");
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	CombatAttributeSet = CreateDefaultSubobject<UAttributeSet>(TEXT("CombatAttributeSet"));
 }
 
 ACharacter* ABasePlayerCharacter::GetCharacter_Implementation() {
@@ -60,9 +64,28 @@ UCombatComponent* ABasePlayerCharacter::GetCombatComponent_Implementation() {
 	return CombatComponent;
 }
 
+void ABasePlayerCharacter::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+	InitAttributes();
+}
+
+void ABasePlayerCharacter::BeginPlay() {
+	Super::BeginPlay();
+
+	AbilitySystemComponent = FindComponentByClass<UAbilitySystemComponent>();
+	InitAttributes();
+}
+
 void ABasePlayerCharacter::Tick(const float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	DeltaTimeSecs = DeltaSeconds;
+}
+
+UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const {
+	return AbilitySystemComponent;
+}
+
+void ABasePlayerCharacter::InitAttributes() {
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {

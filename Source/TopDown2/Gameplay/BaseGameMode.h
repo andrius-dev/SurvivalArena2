@@ -43,6 +43,10 @@ public:
 	// todo move to game state
 	UPROPERTY(BlueprintAssignable, Category="GameMode")
 	FOnEnemyDefeated OnEnemyDefeated;
+	virtual AActor* FindPlayerStart_Implementation(
+		AController* Player,
+		const FString& IncomingName
+	) override;
 
 protected:
 	UPROPERTY(EditAnywhere, Category="GameMode")
