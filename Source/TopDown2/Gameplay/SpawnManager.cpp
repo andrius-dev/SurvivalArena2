@@ -72,18 +72,6 @@ ASpawnManager::InitEnemyPool(TArray<FSpawnParams> EnemiesToInitialize) {
 				SpawnedActor,
 				EEnemyGameState::Inactive
 			);
-			IEnemyCharacterInterface::Execute_EventSpawned(SpawnedActor, nullptr);
-			const auto SpawnedCharacter = CastChecked<ACharacter>(SpawnedActor);
-			const auto AIController = Cast<AAIController>(
-				SpawnedCharacter->GetController()
-			);
-			// AIController->UseBlackboard(SpawnParam.BehaviorTree->GetBlackboardAsset(),);
-
-			// if (AIController) {
-			// 	AIController->RunBehaviorTree(SpawnParam.BehaviorTree);
-			// } else {
-			// 	UE_LOG(LogTopDown2, Error, TEXT("AI controller not found"));
-			// }
 
 			InactiveEnemyPool.Add(SpawnedActor);
 		}
@@ -209,6 +197,8 @@ void ASpawnManager::SpawnEnemyAtLocation(
 		EEnemyGameState::Active
 	);
 	OnEnemySpawned.Broadcast(EnemyToSpawn);
+	
+	IEnemyCharacterInterface::Execute_EventSpawned(EnemyToSpawn, nullptr);
 }
 
 void ASpawnManager::EndPlay(const EEndPlayReason::Type EndPlayReason) {

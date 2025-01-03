@@ -70,6 +70,7 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController) {
 }
 
 void ABaseEnemyCharacter::EventSpawned_Implementation(AActor* Spawner) {
+	// todo: need
 	IEnemyCharacterInterface::EventSpawned_Implementation(Spawner);
 }
 
