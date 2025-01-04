@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStateEvents.h"
 #include "GameStateInterface.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameStateSurvival.generated.h"
