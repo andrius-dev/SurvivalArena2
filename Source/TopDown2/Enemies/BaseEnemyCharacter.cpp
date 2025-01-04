@@ -1,4 +1,4 @@
-#include "TopDown2/Enemies/BasicEnemy/BaseEnemyCharacter.h"
+#include "TopDown2/Enemies/BaseEnemyCharacter.h"
 #include "BaseEnemyController.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"

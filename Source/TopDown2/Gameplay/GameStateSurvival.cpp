@@ -28,7 +28,7 @@ void AGameStateSurvival::HandleEnemyDefeated_Implementation(AActor* Enemy) {
 	Score += 100;
 	
 	if (RemainingEnemyCount <= 0) {
-		OnAllEnemiesDefeated.Broadcast();
+		OnLevelCleared.Broadcast();
 	}
 }
 
