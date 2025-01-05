@@ -15,7 +15,8 @@ public class TopDown2 : ModuleRules {
 			"Niagara",
 			"EnhancedInput",
 			"GameplayTags",
-			"UMG"
+			"UMG",
+			"CommonUI"
 		});
 		if (Target.bBuildEditor) {
 			PrivateDependencyModuleNames.AddRange(new string[] {"LevelEditor", "UnrealEd"});
