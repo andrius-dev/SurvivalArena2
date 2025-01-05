@@ -5,18 +5,6 @@
 #include "GameFramework/GameStateBase.h"
 #include "GameStateSurvival.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllEnemiesDefeated);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
-	FOnScoreChanged,
-	AGameMode*,
-	GameMode,
-	int,
-	NewValue,
-	int,
-	OldValue
-);
-
 UCLASS()
 class TOPDOWN2_API AGameStateSurvival : public AGameStateBase, public IGameStateInterface
 {
@@ -34,7 +22,7 @@ public:
 	int GetRemainingEnemyCount() const;
 	
 	UPROPERTY(BlueprintAssignable, Category="GameState")
-	FOnAllEnemiesDefeated OnAllEnemiesDefeated;
+	FOnLevelCleared OnLevelCleared;
 	
 	UPROPERTY(BlueprintAssignable, Category="GameState")
 	FOnScoreChanged OnScoreChanged;

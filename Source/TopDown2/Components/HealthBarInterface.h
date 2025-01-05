@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Blueprint/UserWidget.h"
 #include "HealthBarInterface.generated.h"
 
 UINTERFACE(MinimalAPI, Blueprintable)
@@ -18,17 +19,8 @@ class TOPDOWN2_API IHealthBarInterface
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void SetMaxHealth(const float NewMaxHealth);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void SetCurrentHealth(const float NewCurrentHealth);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat|Health")
-	void DecreaseHealth(const float DeltaHealth);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void IncreaseHealth(const float DeltaHealth);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetHealth(const float NewHealth, const float NewMaxHealth);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetPositionInCanvas(const FVector2D& NewPosition);
@@ -38,4 +30,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetSize(const FVector2D& NewSize);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UUserWidget* GetParentWidget();
 };

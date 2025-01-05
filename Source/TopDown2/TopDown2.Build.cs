@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 using UnrealBuildTool;
 
 public class TopDown2 : ModuleRules {
@@ -16,16 +14,14 @@ public class TopDown2 : ModuleRules {
 			"AIModule",
 			"Niagara",
 			"EnhancedInput",
-			"GameplayTags"
+			"GameplayTags",
+			"UMG",
+			"CommonUI"
 		});
-		 if (Target.bBuildEditor)
-		  {
-			PrivateDependencyModuleNames.AddRange(new string[] { "LevelEditor", "UnrealEd" });
-		  }
-		  else
-		  {
+		if (Target.bBuildEditor) {
+			PrivateDependencyModuleNames.AddRange(new string[] {"LevelEditor", "UnrealEd"});
+		} else {
 			PrivateDependencyModuleNames.AddRange(new string[] { });
-		  }
+		}
 	}
-
 }

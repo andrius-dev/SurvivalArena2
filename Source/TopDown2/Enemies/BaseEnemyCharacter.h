@@ -11,6 +11,8 @@
 class UCombatAttributeSet;
 class UAbilitySystemComponent;
 
+// todo: add a spawnable actor interface/component for enemies, bullets, etc.
+
 UCLASS(Blueprintable, Category="AI")
 class ABaseEnemyCharacter :
 	public ACharacter,
