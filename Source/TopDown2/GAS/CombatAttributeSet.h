@@ -38,7 +38,7 @@ public:
 
 	mutable FAttributeEvent OnHealthChanged;
 
-	FAttributeEvent OnMaxHealthChanged;
+	mutable FAttributeEvent OnMaxHealthChanged;
 
 	mutable FOnHealthDepleted OnHealthDepleted;
 	

@@ -53,17 +53,17 @@ public:
 	}
 
 	UPROPERTY(BlueprintAssignable, Category="Health")
-	FHealth_AttributeChanged OnHealthChanged;
+	mutable FHealth_AttributeChanged OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category="Combat")
-	FOnDefeatStarted OnDefeatStarted;
+	mutable FOnDefeatStarted OnDefeatStarted;
 	
 	UPROPERTY(BlueprintAssignable, Category="Combat")
-	FOnDefeatEnded OnDefeatEnded;
+	mutable FOnDefeatEnded OnDefeatEnded;
 
 	// todo: needs to be in melee component or something
 	UPROPERTY(BlueprintAssignable, Category="Combat")
-	FOnDetectedMeleeHit OnDetectedMeleeHit;
+	mutable FOnDetectedMeleeHit OnDetectedMeleeHit;
 	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float GetMaxHealth() const;

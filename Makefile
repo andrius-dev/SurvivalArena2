@@ -2,25 +2,42 @@
 # *DO NOT EDIT*
 
 UNREALROOTPATH = /home/andrius/.local/bin/UnrealEngine5
-GAMEPROJECTFILE =/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject
 
 TARGETS = \
+	LiveLinkHub-Linux-DebugGame  \
+	LiveLinkHub-Linux-Development  \
+	LiveLinkHub \
+	DotNetPerforceLib \
+	EventLoopUnitTests \
 	UnrealEditor-Linux-DebugGame  \
-	UnrealEditor-Linux-Shipping  \
+	UnrealEditor-Linux-Development  \
 	UnrealEditor \
+	UnrealGame-Android-DebugGame  \
+	UnrealGame-Android-Development  \
+	UnrealGame-Android-Shipping  \
 	UnrealGame-Linux-DebugGame  \
+	UnrealGame-Linux-Development  \
 	UnrealGame-Linux-Shipping  \
+	UnrealGame-LinuxArm64-DebugGame  \
+	UnrealGame-LinuxArm64-Development  \
+	UnrealGame-LinuxArm64-Shipping  \
 	UnrealGame \
+	TopDown2-Android-DebugGame  \
+	TopDown2-Android-Development  \
+	TopDown2-Android-Shipping  \
 	TopDown2-Linux-DebugGame  \
+	TopDown2-Linux-Development  \
 	TopDown2-Linux-Shipping  \
+	TopDown2-LinuxArm64-DebugGame  \
+	TopDown2-LinuxArm64-Development  \
+	TopDown2-LinuxArm64-Shipping  \
 	TopDown2 \
 	TopDown2Editor-Linux-DebugGame  \
-	TopDown2Editor-Linux-Shipping  \
+	TopDown2Editor-Linux-Development  \
 	TopDown2Editor\
 	configure
 
-BUILD = bash "$(UNREALROOTPATH)/Engine/Build/BatchFiles/Linux/Build.sh"
-PROJECTBUILD = "$(UNREALROOTPATH)/Engine/Binaries/ThirdParty/DotNet/6.0.302/linux/dotnet" "$(UNREALROOTPATH)/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.dll"
+BUILD = "$(UNREALROOTPATH)/Engine/Build/BatchFiles/RunUBT.sh"
 
 all: StandardSet
 
@@ -31,44 +48,93 @@ StandardSet: RequiredTools UnrealFrontend TopDown2Editor UnrealInsights
 DebugSet: RequiredTools UnrealFrontend-Linux-Debug TopDown2Editor-Linux-Debug
 
 
+LiveLinkHub-Linux-DebugGame:
+	 $(BUILD) LiveLinkHub Linux DebugGame  $(ARGS)
+
+LiveLinkHub-Linux-Development:
+	 $(BUILD) LiveLinkHub Linux Development  $(ARGS)
+
+LiveLinkHub: LiveLinkHub-Linux-Development
+
+DotNetPerforceLib: DotNetPerforceLib-Linux-Development
+
+EventLoopUnitTests: EventLoopUnitTests-Linux-Development
+
 UnrealEditor-Linux-DebugGame:
 	 $(BUILD) UnrealEditor Linux DebugGame  $(ARGS)
 
-UnrealEditor-Linux-Shipping:
-	 $(BUILD) UnrealEditor Linux Shipping  $(ARGS)
-
-UnrealEditor:
+UnrealEditor-Linux-Development:
 	 $(BUILD) UnrealEditor Linux Development  $(ARGS)
+
+UnrealEditor: UnrealEditor-Linux-Development
+
+UnrealGame-Android-DebugGame:
+	 $(BUILD) UnrealGame Android DebugGame  $(ARGS)
+
+UnrealGame-Android-Development:
+	 $(BUILD) UnrealGame Android Development  $(ARGS)
+
+UnrealGame-Android-Shipping:
+	 $(BUILD) UnrealGame Android Shipping  $(ARGS)
 
 UnrealGame-Linux-DebugGame:
 	 $(BUILD) UnrealGame Linux DebugGame  $(ARGS)
 
+UnrealGame-Linux-Development:
+	 $(BUILD) UnrealGame Linux Development  $(ARGS)
+
 UnrealGame-Linux-Shipping:
 	 $(BUILD) UnrealGame Linux Shipping  $(ARGS)
 
-UnrealGame:
-	 $(BUILD) UnrealGame Linux Development  $(ARGS)
+UnrealGame-LinuxArm64-DebugGame:
+	 $(BUILD) UnrealGame LinuxArm64 DebugGame  $(ARGS)
+
+UnrealGame-LinuxArm64-Development:
+	 $(BUILD) UnrealGame LinuxArm64 Development  $(ARGS)
+
+UnrealGame-LinuxArm64-Shipping:
+	 $(BUILD) UnrealGame LinuxArm64 Shipping  $(ARGS)
+
+UnrealGame: UnrealGame-Linux-Development
+
+TopDown2-Android-DebugGame:
+	 $(BUILD) TopDown2 Android DebugGame  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
+
+TopDown2-Android-Development:
+	 $(BUILD) TopDown2 Android Development  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
+
+TopDown2-Android-Shipping:
+	 $(BUILD) TopDown2 Android Shipping  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
 
 TopDown2-Linux-DebugGame:
-	 $(PROJECTBUILD) TopDown2 Linux DebugGame  -project="$(GAMEPROJECTFILE)" $(ARGS)
+	 $(BUILD) TopDown2 Linux DebugGame  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
+
+TopDown2-Linux-Development:
+	 $(BUILD) TopDown2 Linux Development  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
 
 TopDown2-Linux-Shipping:
-	 $(PROJECTBUILD) TopDown2 Linux Shipping  -project="$(GAMEPROJECTFILE)" $(ARGS)
+	 $(BUILD) TopDown2 Linux Shipping  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
 
-TopDown2:
-	 $(PROJECTBUILD) TopDown2 Linux Development  -project="$(GAMEPROJECTFILE)" $(ARGS)
+TopDown2-LinuxArm64-DebugGame:
+	 $(BUILD) TopDown2 LinuxArm64 DebugGame  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
+
+TopDown2-LinuxArm64-Development:
+	 $(BUILD) TopDown2 LinuxArm64 Development  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
+
+TopDown2-LinuxArm64-Shipping:
+	 $(BUILD) TopDown2 LinuxArm64 Shipping  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
+
+TopDown2: TopDown2-Linux-Development
 
 TopDown2Editor-Linux-DebugGame:
-	 $(PROJECTBUILD) TopDown2Editor Linux DebugGame  -project="$(GAMEPROJECTFILE)" $(ARGS)
+	 $(BUILD) TopDown2Editor Linux DebugGame  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
 
-TopDown2Editor-Linux-Shipping:
-	 $(PROJECTBUILD) TopDown2Editor Linux Shipping  -project="$(GAMEPROJECTFILE)" $(ARGS)
+TopDown2Editor-Linux-Development:
+	 $(BUILD) TopDown2Editor Linux Development  -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" $(ARGS)
 
-TopDown2Editor:
-	 $(PROJECTBUILD) TopDown2Editor Linux Development  -project="$(GAMEPROJECTFILE)" $(ARGS)
+TopDown2Editor: TopDown2Editor-Linux-Development
 
 configure:
-	xbuild /property:Configuration=Development /verbosity:quiet /nologo "$(UNREALROOTPATH)/Engine/Source/Programs/UnrealBuildTool/UnrealBuildTool.csproj"
-	$(PROJECTBUILD) -projectfiles -project="\"$(GAMEPROJECTFILE)\"" -game -engine 
+	$(BUILD) -ProjectFiles -Project="/home/andrius/Projektai/Games/TopDown2/TopDown2.uproject" -Game 
 
 .PHONY: $(TARGETS)
